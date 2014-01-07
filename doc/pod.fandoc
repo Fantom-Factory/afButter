@@ -1,0 +1,34 @@
+Overview [#overview]
+********************
+Because I gotta!
+
+
+
+Install [#Install]
+******************
+Install 'HTTPY' with the Fantom Respository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+
+  $ fanr install -r http://repo.status302.com/fanr/ afHTTPY
+
+Or to install manually, download the pod from [Status302]`http://repo.status302.com/browse/afHTTPY` and copy it to '%FAN_HOME%/lib/fan/'.
+
+To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
+
+  depends = ["sys 1.0", ..., "afHTTPY 0+"]
+
+
+
+Quick Start [#quickStart]
+*************************
+pre>
+  Example here
+<pre
+
+
+
+Release Notes [#releaseNotes]
+*****************************
+
+v0.0.2 [#v0.0.2]
+----------------
+ - New: Preview Release 
