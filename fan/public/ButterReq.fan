@@ -7,7 +7,12 @@ class ButterReq {
 	Str:Str 		headers	:= Str:Str[:] { caseInsensitive = true }
 	SocketOptions?	options
 	
-	new make(Uri uri) {
+	new make(|This|? f := null) {
+		f?.call(this)
+	}
+
+	new makeFromUri(Uri uri, Str method := "GET") {
 		this.uri = uri
+		this.method = method
 	}
 }

@@ -2,8 +2,8 @@
 
 class FollowRedriectsMiddleware : ButterMiddleware {
 	Bool followRedirects
-	override ButterRes doReq(ButterReq req, Butter butter) {
-		return butter.doReq(req)
+	override ButterRes doRequest(Butter butter, ButterReq req) {
+		return butter.doRequest(req)
 	}
 }
  

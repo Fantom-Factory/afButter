@@ -1,8 +1,12 @@
 
 internal const class ErrMsgs {
 
-	static Str typeNotFound(Type type) {
-		"Could not find type ${type.qname}"
+	static Str middlewareNotSupplied() {
+		"Middleware is empty"
+	}
+
+	static Str terminatorNotFound(Type type) {
+		"Middleware $type.qname is not a terminator / did not process the request"
 	}
 	
 }

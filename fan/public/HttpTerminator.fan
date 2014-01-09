@@ -1,8 +1,7 @@
 
-// TODO: should this be middleware or butter?
 class HttpTerminator : ButterMiddleware {
 	
-	override ButterRes doReq(ButterReq req, Butter butter) {
+	override ButterRes doRequest(Butter butter, ButterReq req) {
 		ButterRes()
 	}
 }
