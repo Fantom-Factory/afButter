@@ -4,12 +4,12 @@ mixin ButterHelper : Butter {
 	
 	abstract Butter butter
 	
-	override ButterRes doReq(Uri uri, Str method := "GET") {
-		butter.doReq(uri, method)
+	override ButterResponse get(Uri uri) {
+		butter.get(uri)
 	}
 
-	override ButterRes doRequest(ButterReq req) {
-		butter.doRequest(req)
+	override ButterResponse sendRequest(ButterRequest req) {
+		butter.sendRequest(req)
 	}
 
 	override ButterMiddleware findMiddleware(Type middlewareType) {

@@ -1,4 +1,4 @@
 
 mixin ButterMiddleware {
-	abstract ButterRes doRequest(Butter butter, ButterReq req)
+	abstract ButterResponse sendRequest(Butter butter, ButterRequest req)
 }

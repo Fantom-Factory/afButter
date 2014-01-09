@@ -12,7 +12,7 @@ internal class TestButterBasic : ButterTest {
 		
 		echo(wrapper.followRedirects)
 		
-		wrapper.doReq(`http://www.alienfactory.co.uk`)
+		wrapper.get(`http://www.alienfactory.co.uk`)
 		
 	}
 
@@ -25,7 +25,7 @@ internal class TestButterBasic : ButterTest {
 	Void testNoTerminator() {
 		but	:= Butter.churnOut([T_PassThroughMiddleware(StrBuf(), "")])
 		verifyButterErrMsg(ErrMsgs.terminatorNotFound(T_PassThroughMiddleware#)) {
-			but.doReq(`/`)
+			but.get(`/`)
 		}
 	}
 	
@@ -37,10 +37,10 @@ internal class TestButterBasic : ButterTest {
 			T_NullTerminator(stack, "3")
 		])
 
-		but.doReq(`/`)
+		but.get(`/`)
 		verifyEq(stack.toStr, "12321")
 
-		but.doReq(`/`)
+		but.get(`/`)
 		verifyEq(stack.toStr, "1232112321")
 	}
 	
@@ -59,9 +59,9 @@ internal class T_PassThroughMiddleware : ButterMiddleware {
 		this.stack = stack
 		this.id = id
 	}
-	override ButterRes doRequest(Butter butter, ButterReq req) {
+	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		res := butter.doRequest(req)
+		res := butter.sendRequest(req)
 		stack.add(id)
 		return res
 	}
@@ -74,8 +74,8 @@ internal class T_NullTerminator : ButterMiddleware {
 		this.stack = stack
 		this.id = id
 	}
-	override ButterRes doRequest(Butter butter, ButterReq req) {
+	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		return ButterRes()
+		return ButterResponse()
 	}
 }

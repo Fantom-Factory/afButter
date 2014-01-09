@@ -1,6 +1,10 @@
 
 internal const class ErrMsgs {
 
+	static Str reqUriHasNoScheme(Uri uri) {
+		"Request URI must have a scheme, such as `http://` : `$uri`"
+	}
+	
 	static Str middlewareNotSupplied() {
 		"Middleware is empty"
 	}
