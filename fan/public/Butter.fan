@@ -5,21 +5,24 @@ internal class ButterChain : Butter {
 	private Int?				depth
 	
 	new make(ButterMiddleware[] middleware) {
+		if (middleware.isEmpty)
+			throw ArgErr(ErrMsgs.middlewareNotSupplied)
+
 		this.middleware = middleware
 	}
-	
-	override ButterRes doReq(ButterReq req)	{
+
+	override ButterRes doReq(Uri uri, Str method := "GET") {
+		doRequest(ButterReq(uri, method))
+	}
+
+	override ButterRes doRequest(ButterReq req)	{
 		depth = (depth == null) ? 0 : depth + 1
 		try {
-
-			// TODO: test!
-			if (depth >= middleware.size) {
-				// log.warn Terminator not supplied / middleare type is not a terminator
-				throw Err()
+			if (depth >= middleware.size) 
 				// throw 'cos what can we return?
-			}
+				throw ButterErr(ErrMsgs.terminatorNotFound(middleware.last.typeof))
 			
-			return middleware[depth].doReq(req, this)
+			return middleware[depth].doRequest(this, req)
 			
 		} finally {
 			depth = (depth == 0) ? null : depth - 1
@@ -34,7 +37,9 @@ internal class ButterChain : Butter {
 
 
 mixin Butter {
-	abstract ButterRes doReq(ButterReq req)	
+	abstract ButterRes doReq(Uri uri, Str method := "GET")
+
+	abstract ButterRes doRequest(ButterReq req)	
 	
 	abstract ButterMiddleware findMiddleware(Type middlewareType)
 	
@@ -44,15 +49,19 @@ mixin Butter {
 }
 
 mixin ButterMiddleware {
-	abstract ButterRes doReq(ButterReq req, Butter butter)
+	abstract ButterRes doRequest(Butter butter, ButterReq req)
 }
 
 mixin ButterHelper : Butter {
 	
 	abstract Butter butter
 	
-	override ButterRes doReq(ButterReq req) {
-		butter.doReq(req)
+	override ButterRes doReq(Uri uri, Str method := "GET") {
+		butter.doReq(uri, method)
+	}
+
+	override ButterRes doRequest(ButterReq req) {
+		butter.doRequest(req)
 	}
 
 	override ButterMiddleware findMiddleware(Type middlewareType) {
