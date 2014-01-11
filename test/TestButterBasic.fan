@@ -46,7 +46,7 @@ internal class TestButterBasic : ButterTest {
 	
 }
 
-internal class MyButterDish : FollowRedriectsDish {
+internal class MyButterDish : FollowRedirectsDish {
 	override Butter butter
 	new make(Butter butter) { this.butter = butter }
 }

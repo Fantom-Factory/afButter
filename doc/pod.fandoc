@@ -1,6 +1,16 @@
 Overview [#overview]
 ********************
-Because I gotta!
+A library to ease HTTP requests.
+
+
+'Butter' is a replacement for `web::WebClient`
+
+Butter provides an extensible chain of middleware for making HTTP requests and processing the response.
+The adpotion of the Middleware pattern allows you to seemlessly enhance and modify the behaviour of 'Butter'.
+
+a library for making HTTP requests, lets you
+
+'Butter' was inspired by Ruby's [Faraday]`https://github.com/lostisland/faraday` library.
 
 
 

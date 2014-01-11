@@ -28,7 +28,7 @@ internal class ButterChain : Butter {
 		}
 	}
 	
-	override ButterMiddleware findMiddleware(Type middlewareType) {
-		middleware.findType(middlewareType).first
+	override ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true) {
+		middleware.findType(middlewareType).first ?: (checked ? throw ButterErr(ErrMsgs.chainMiddlewareNotFound(middlewareType), middleware.map { it.typeof.qname }) : null) 
 	}
 }

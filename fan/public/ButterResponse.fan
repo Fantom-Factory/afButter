@@ -1,11 +1,14 @@
 
+** Holds the HTTP response.
 class ButterResponse {
 
+	** The HTTP status code 
 	Int statusCode
 
 	// TODO:
 //	const Str statusMsg
 
+	** The HTTP repsonse headers 
 	HttpResponseHeaders headers
 
 	private InStream 	in

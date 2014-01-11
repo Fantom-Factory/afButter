@@ -8,7 +8,7 @@ class FollowRedriectsMiddleware : ButterMiddleware {
 }
  
 
-mixin FollowRedriectsDish : ButterDish {
+mixin FollowRedirectsDish : ButterDish {
 
 	Bool followRedirects() {
 		followRedriectsMw.followRedirects

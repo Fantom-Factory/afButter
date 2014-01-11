@@ -1,18 +1,19 @@
 using inet 
 
+** Holds values to be used in making a HTTP request.
 class ButterRequest {
 
-	** HTTP 1.0
+	** A const value representing HTTP 1.0
 	static const Version http10 := Version("1.0")
-	
-	** HTTP 1.1
+
+	** A const value representing HTTP 1.1
 	static const Version http11 := Version("1.1")
-	
+
 	** Uri to use for request. 
 	Uri				uri
-	
+
 	** HTTP version to use for request.
-	** Defaults to Version("1.1")
+	** Defaults to HTTP 1.1
 	Version 		version	:= http11
 
 	** HTTP method to use for request.
