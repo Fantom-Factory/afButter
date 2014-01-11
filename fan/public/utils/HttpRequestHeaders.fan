@@ -1,5 +1,5 @@
 
-** A wrapper for HTTP request headers with accessors for some commonly used headings.
+** A wrapper for HTTP request headers with accessors for commonly used headings.
 ** Set a value to 'null' to remove it from the map.
 ** 
 ** @see `http://en.wikipedia.org/wiki/List_of_HTTP_header_fields`

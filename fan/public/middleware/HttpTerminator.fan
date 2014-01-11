@@ -1,12 +1,19 @@
 
+//FIXME: set Content-Length
+** A middleware terminator for making real HTTP requests. 
+** When used in a chain, no other middleware should come after this one. (For they will not be called.)
 class HttpTerminator : ButterMiddleware {
 	
+	** Makes a real HTTP request.
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		ButterResponse("".in)
 		
 //		if (!it.isAbs) throw ArgErr(ErrMsgs.reqUriHasNoScheme(it))
 
 	}
+	
+	// Continue 100
+//	http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.2.3
 	
   ** Write the request line and request headers.  Once this method
   ** completes the request body may be written via `reqOut`, or the

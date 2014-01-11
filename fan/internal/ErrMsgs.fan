@@ -17,5 +17,9 @@ internal const class ErrMsgs {
 	static Str responseAlreadyEmpitedBy(Str by) {
 		"Response has already been emptied by '${by}'"
 	}
+
+	static Str chainMiddlewareNotFound(Type mwType) {
+		"Could not find Middleware for type '${mwType.qname}'"
+	}
 	
 }
