@@ -10,24 +10,25 @@ mixin Butter {
 	static Butter churnOut(ButterMiddleware[] middleware) {
 		return ButterChain(middleware)
 	}
-}
 
 
 //TODO: expect / continue middleware
 
 //TODO: PostFormHelper / FormHelper / PostHelper / PostMan
-//  This postForm(Str:Str form)
-//  {
-//    if (reqHeaders["Expect"] != null) throw UnsupportedErr("'Expect' header")
-//    body := Uri.encodeQuery(form)
-//    reqMethod = "POST"
-//    reqHeaders["Content-Type"] = "application/x-www-form-urlencoded"
-//    reqHeaders["Content-Length"] = body.size.toStr // encoded form is ASCII
-//    writeReq
-//    reqOut.print(body).close
-//    readRes
-//    return this
-//  }
+	ButterResponse postForm(Uri uri, Str:Str form) {
+		req := ButterRequest() {
+			it.uri 		= uri
+			it.method	= "POST"
+		}
+		
+		body := Uri.encodeQuery(form)
+		req.headers.contentType 	= MimeType("application/x-www-form-urlencoded")
+		req.headers.contentLength	= body.size // encoded form is ASCII
+		req.out.print(body)
+
+		return sendRequest(req)
+	}
+}
 
 //  This postStr(Str content)
 //  {

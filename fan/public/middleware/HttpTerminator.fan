@@ -2,7 +2,7 @@
 class HttpTerminator : ButterMiddleware {
 	
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		ButterResponse()
+		ButterResponse("".in)
 		
 //		if (!it.isAbs) throw ArgErr(ErrMsgs.reqUriHasNoScheme(it))
 

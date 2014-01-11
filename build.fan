@@ -18,7 +18,7 @@ class Build : BuildPod {
 				]
 
 		depends = ["sys 1.0", "inet 1.0", "web 1.0"]
-		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/public/utils/`, `fan/public/middleware/`, `fan/internal/`, `fan/internal/utils/`]
 		resDirs = [`doc/`]
 
 		docApi = true

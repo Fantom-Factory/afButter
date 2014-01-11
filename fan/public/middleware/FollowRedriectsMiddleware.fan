@@ -8,9 +8,13 @@ class FollowRedriectsMiddleware : ButterMiddleware {
 }
  
 
-mixin FollowRedriectsMiddlewareHelper : ButterHelper {
-	
+mixin FollowRedriectsDish : ButterDish {
+
 	Bool followRedirects() {
-		(findMiddleware(FollowRedriectsMiddleware#) as FollowRedriectsMiddleware).followRedirects
+		followRedriectsMw.followRedirects
+	}	
+
+	private FollowRedriectsMiddleware followRedriectsMw() {
+		findMiddleware(FollowRedriectsMiddleware#)
 	}	
 }
