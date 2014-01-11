@@ -2,11 +2,13 @@ using inet
 
 class ButterRequest {
 
+	** HTTP 1.0
 	static const Version http10 := Version("1.0")
+	
+	** HTTP 1.1
 	static const Version http11 := Version("1.1")
 	
 	** Uri to use for request. 
-	** Must be absolute and contain a scheme such as `http://` 
 	Uri				uri
 	
 	** HTTP version to use for request.
@@ -17,18 +19,22 @@ class ButterRequest {
 	** Defaults to "GET".
 	Str 			method	:= "GET" { set { &method = it.upper } }
 
-	// TODO: Lazy create??
-	// TODO: Host
-	** The HTTP headers to use for the next request.  This map uses
-	** case insensitive keys.  The "Host" header is implicitly defined
-	** by 'reqUri' and must not be defined in this map.
-	Str:Str 		headers	:= Str:Str[:] { caseInsensitive = true }
+	// TODO: set Host header
+	** The HTTP headers to use for the next request.  
+	** This map uses case insensitive keys.  
+	** The "Host" header is implicitly defined by 'reqUri' and must not be defined in this map.
+	HttpRequestHeaders	headers	:= HttpRequestHeaders(Str:Str[:] { caseInsensitive = true })
 	
-	// TODO: move to Terminator?
-	** Socket options for the TCP socket used for requests.
-	SocketOptions?	options
+	OutStream out
+	
+	private Buf buf	:= Buf()
+	
+	InStream asInStream() {
+		buf.flip.in
+	}
 	
 	new make(|This|? f := null) {
+		out = buf.out
 		f?.call(this)
 	}
 }

@@ -1,6 +1,6 @@
 
 
-mixin ButterHelper : Butter {
+mixin ButterDish : Butter {
 	
 	abstract Butter butter
 	

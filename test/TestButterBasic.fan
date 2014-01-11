@@ -8,7 +8,7 @@ internal class TestButterBasic : ButterTest {
 			HttpTerminator()
 		])
 		
-		wrapper := MyButterWrapper(butter)
+		wrapper := MyButterDish(butter)
 		
 		echo(wrapper.followRedirects)
 		
@@ -46,9 +46,8 @@ internal class TestButterBasic : ButterTest {
 	
 }
 
-internal class MyButterWrapper : ButterHelper, FollowRedriectsMiddlewareHelper {
+internal class MyButterDish : FollowRedriectsDish {
 	override Butter butter
-	
 	new make(Butter butter) { this.butter = butter }
 }
 
@@ -76,6 +75,6 @@ internal class T_NullTerminator : ButterMiddleware {
 	}
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		return ButterResponse()
+		return ButterResponse("".in)
 	}
 }
