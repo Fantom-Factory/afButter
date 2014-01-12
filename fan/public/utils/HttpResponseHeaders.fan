@@ -1,13 +1,14 @@
 using web::WebUtil
 
 ** A wrapper for HTTP response headers with accessors for commonly used headings. 
+** Backed by a case insensitive map.
 ** 
 ** @see `https://en.wikipedia.org/wiki/List_of_HTTP_header_fields`
 class HttpResponseHeaders {
 	
-	private Str:Str headers
+	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
 
-	new make(Str:Str headers) { this.headers = headers }
+	new make(Str:Str headers) { this.headers.addAll(headers) }
 	
 	** Tells all caching mechanisms from server to client whether they may cache this object. It is 
 	** measured in seconds.
@@ -115,15 +116,11 @@ class HttpResponseHeaders {
 		headers[name]
 	}
 
-	@Operator
-	Void set(Str name, Str value) {
-		headers[name] = value
-	}
-	
 	Str? remove(Str name) {
 		headers.remove(name)
 	}
-	
+
+	** Returns the case insensitive map that backs the headers.
 	Str:Str map() {
 		headers
 	}

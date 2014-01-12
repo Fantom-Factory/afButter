@@ -11,6 +11,9 @@ class ButterResponse {
 	** The HTTP repsonse headers 
 	HttpResponseHeaders headers
 
+	** HTTP version of the response
+	Version version	:= Butter.http11
+	
 	private InStream 	in
 	private Str? 		emptiedBy
 	

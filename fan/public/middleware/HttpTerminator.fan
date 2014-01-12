@@ -55,8 +55,8 @@ class HttpTerminator : ButterMiddleware {
 		try {
 			resVer	:= (Version?) null
 			res 	= socket.in.readLine
-			if 		(res.startsWith("HTTP/1.0")) resVer = ButterRequest.http10
-			else if (res.startsWith("HTTP/1.1")) resVer = ButterRequest.http11
+			if 		(res.startsWith("HTTP/1.0")) resVer = Butter.http10
+			else if (res.startsWith("HTTP/1.1")) resVer = Butter.http11
 			else throw IOErr("Unknown HTTP version: ${res}")
 			resCode 	:= res[9..11].toInt
 			resPhrase 	:= res[13..-1]
@@ -65,7 +65,7 @@ class HttpTerminator : ButterMiddleware {
 
 			socket.close
 			
-			return ButterResponse(resCode, resPhrase, resHeaders, resInStream)
+			return ButterResponse(resCode, resPhrase, resHeaders, resInStream) { it.version = resVer }
 		}
 		catch (IOErr e) throw e 
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)

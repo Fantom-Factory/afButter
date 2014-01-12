@@ -1,13 +1,14 @@
 
 ** A wrapper for HTTP request headers with accessors for commonly used headings.
 ** Set a value to 'null' to remove it from the map.
+** Backed by a case insensitive map.
 ** 
 ** @see `http://en.wikipedia.org/wiki/List_of_HTTP_header_fields`
 class HttpRequestHeaders {
 	
-	private Str:Str headers
+	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
 
-	new make(Str:Str headers) { this.headers = headers }
+	new make(Str:Str headers) { this.headers.addAll(headers) }
 
 	** Content-Types that are acceptable for the response. 
 	** 
@@ -118,13 +119,16 @@ class HttpRequestHeaders {
 		set { addOrRemove("X-Forwarded-For", it?.join(", ")) }
 	}
 
-
-
 	@Operator
 	Str? get(Str name) {
 		headers[name]
 	}
 
+	@Operator
+	Void set(Str name, Str value) {
+		headers[name] = value
+	}
+	
 	Void each(|Str val, Str key| c) {
 		headers.each(c)
 	}
@@ -133,6 +137,7 @@ class HttpRequestHeaders {
 		map.containsKey(key)
 	}
 	
+	** Returns the case insensitive map that backs the headers.
 	Str:Str map() {
 		headers
 	}
