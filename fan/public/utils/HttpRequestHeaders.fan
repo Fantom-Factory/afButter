@@ -1,3 +1,5 @@
+using web::Cookie
+using web::WebUtil
 
 ** A wrapper for HTTP request headers with accessors for commonly used headings.
 ** Set a value to 'null' to remove it from the map.
@@ -46,12 +48,20 @@ class HttpRequestHeaders {
 		set { addOrRemove("Content-Length", it?.toStr) }
 	}
 
-	** The MIME type of the body of the request (used with POST and PUT requests)
+	** The MIME type of the body of the request (used with POST and PUT requests).
 	** 
 	** Example: 'Content-Type: application/x-www-form-urlencoded'
 	MimeType? contentType {
 		get { makeIfNotNull("Content-Type") { MimeType(it, true) }}
 		set { addOrRemove("Content-Type", it?.toStr) }
+	}
+
+	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
+	** 
+	** Example: 'Cookie: Version=1; Skin=new;'
+	Cookie[]? cookie {
+		get { makeIfNotNull("Cookie") { it.split(';'). map { Cookie.fromStr(it) }}}
+		set { addOrRemove("Cookie", it?.join("; ") { it.name + "=" + WebUtil.toQuotedStr(it.val) }) }
 	}
 
 	** The domain name of the server (for virtual hosting), and the TCP port number on which the 
@@ -146,7 +156,7 @@ class HttpRequestHeaders {
 		headers
 	}
 	
-	private Obj? makeIfNotNull(Str name, |Obj->Obj| func) {
+	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
 		val := headers[name]
 		return (val == null) ? null : func(val)
 	}

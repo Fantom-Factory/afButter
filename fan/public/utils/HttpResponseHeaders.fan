@@ -1,3 +1,4 @@
+using web::Cookie
 using web::WebUtil
 
 ** A wrapper for HTTP response headers with accessors for commonly used headings. 
@@ -97,6 +98,37 @@ class HttpResponseHeaders {
 		private set { }
 	}
 
+	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
+	** 
+	** Example: 'Set-Cookie: UserID=JohnDoe; Max-Age=3600'
+	Cookie[]? setCookie {
+		// FIXME: WebUtil.parseHeaders is borked for "Set-Cookie"
+		get { makeIfNotNull("Set-Cookie") |cookieValue->Cookie[]| {
+			Env.cur.err.printLine(cookieValue)
+			cName	:= (Str?) null 
+			cValue 	:= (Str?) null
+			nameValue := ""
+			values := [Str:Str?][:] { caseInsensitive = true }
+			cookieValue.split(';').each |value, i| {
+				pair := value.split('=')
+				if (i == 0) {
+					cName = pair[0]
+					cValue = pair.getSafe(1) ?: ""
+					if (cValue.startsWith("\""))
+						cValue = WebUtil.fromQuotedStr(cValue)
+				} else 
+					values[pair[0]] = pair.getSafe(1)
+			}
+			return [Cookie(cName, cValue) {
+				it.maxAge 	= values.containsKey("Max-Age") ? Duration.fromStr(values["Max-Age"] + "sec", true) : null  
+				it.domain 	= values["Domain"]  
+				it.path 	= values["Path"]  
+				it.secure 	= values.containsKey("Secure")
+			}]
+		}}
+		private set { }
+	}
+
 	** Clickjacking protection, set to:
 	**  - 'deny' - no rendering within a frame, 
 	**  - 'sameorigin' - no rendering if origin mismatch
@@ -129,8 +161,15 @@ class HttpResponseHeaders {
 		headers
 	}
 	
-	private Obj? makeIfNotNull(Str name, |Obj->Obj| func) {
+	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
 		val := headers[name]
 		return (val == null) ? null : func(val)
+	}
+	
+	static Void main(Str[] args) {
+		c:=Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
+		s:="$c\r\n$c\r\n\r\n"
+		map:=WebUtil.parseHeaders(Buf().print(s).flip.in)
+		Env.cur.err.printLine(map)
 	}
 }
