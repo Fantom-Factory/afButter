@@ -11,7 +11,7 @@ internal class ButterChain : Butter {
 	}
 
 	override ButterResponse get(Uri uri) {
-		sendRequest(ButterRequest() { it.uri = uri })
+		sendRequest(ButterRequest(uri))
 	}
 
 	override ButterResponse sendRequest(ButterRequest req)	{

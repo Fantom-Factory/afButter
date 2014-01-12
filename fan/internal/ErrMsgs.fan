@@ -1,11 +1,10 @@
 
 internal const class ErrMsgs {
 
-	// TODO: use me!
 	static Str reqUriHasNoScheme(Uri uri) {
-		"Request URI must have a scheme, such as `http://` : `$uri`"
+		"Request URI must have a scheme and a host, such as `http://example.com/` : `$uri`"
 	}
-	
+
 	static Str middlewareNotSupplied() {
 		"Middleware is empty"
 	}
@@ -21,5 +20,8 @@ internal const class ErrMsgs {
 	static Str chainMiddlewareNotFound(Type mwType) {
 		"Could not find Middleware for type '${mwType.qname}'"
 	}
-	
+
+	static Str serverError(Int statusCode, Str statusMsg) {
+		"HTTP response indicated a server error: ${statusCode} - ${statusMsg}"
+	}
 }

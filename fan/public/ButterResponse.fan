@@ -5,8 +5,8 @@ class ButterResponse {
 	** The HTTP status code 
 	Int statusCode
 
-	// TODO:
-//	const Str statusMsg
+	** The HTTP status message
+	Str statusMsg
 
 	** The HTTP repsonse headers 
 	HttpResponseHeaders headers
@@ -14,8 +14,11 @@ class ButterResponse {
 	private InStream 	in
 	private Str? 		emptiedBy
 	
-	new make(InStream in, |This|? f := null) {
-		this.in = in
+	new make(Int statusCode, Str statusMsg, Str:Str headers, InStream in, |This|? f := null) {
+		this.statusCode = statusCode
+		this.statusMsg 	= statusMsg
+		this.headers	= HttpResponseHeaders(headers)
+		this.in 		= in
 		f?.call(this)
 	}
 	

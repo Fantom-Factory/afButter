@@ -129,6 +129,10 @@ class HttpRequestHeaders {
 		headers.each(c)
 	}
 	
+	Bool containsKey(Str key) {
+		map.containsKey(key)
+	}
+	
 	Str:Str map() {
 		headers
 	}

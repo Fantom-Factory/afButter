@@ -18,12 +18,16 @@ mixin Butter {
 		return ButterChain(middleware)
 	}
 
-	** The default middleware stack.
+	** The default middleware stack. It currently returns new instances of (in order):
+	**  - `CookieMiddleware`
+	**  - `FollowRedriectsMiddleware`
+	**  - `ErrOn5xxMiddleware`
+	**  - `HttpTerminator`
 	static ButterMiddleware[] defaultStack() {
 		ButterMiddleware[
 			CookieMiddleware(),
 			FollowRedriectsMiddleware(),
-			ErrOn500Middleware(),
+			ErrOn5xxMiddleware(),
 			HttpTerminator()
 		]
 	}
@@ -31,8 +35,7 @@ mixin Butter {
 	** Make a post request to the URI with the given form data.
 	** The 'Content-Type' is set to 'application/x-www-form-urlencoded'.
 	virtual ButterResponse postForm(Uri uri, Str:Str form) {
-		req := ButterRequest() {
-			it.uri 		= uri
+		req := ButterRequest(uri) {
 			it.method	= "POST"
 		}
 		req.headers.contentType = MimeType("application/x-www-form-urlencoded")
@@ -43,8 +46,7 @@ mixin Butter {
 	** Make a post request to the URI with the given String.
 	** The 'Content-Type' is set to 'text/plain'.
 	virtual ButterResponse postStr(Uri uri, Str content, Charset charset := Charset.utf8) {
-		req := ButterRequest() {
-			it.uri 		= uri
+		req := ButterRequest(uri) {
 			it.method	= "POST"
 		}
 		req.headers.contentType = MimeType("text/plain")
@@ -55,8 +57,7 @@ mixin Butter {
 	** Make a post request to the URI with the given file.
 	** The 'Content-Type' is set from the file extension's MIME type, or 'application/octet-stream' if unknown.
 	virtual ButterResponse postFile(Uri uri, File file) {
-		req := ButterRequest() {
-			it.uri 		= uri
+		req := ButterRequest(uri) {
 			it.method	= "POST"
 		}
 		req.headers.contentType = file.mimeType ?: MimeType("application/octet-stream")
