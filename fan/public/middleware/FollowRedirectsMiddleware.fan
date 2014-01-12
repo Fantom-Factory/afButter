@@ -64,7 +64,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 	}
 }
 
-** A `ButterDish` for `FollowRedriectsMiddleware`.
+** A `ButterDish` for `FollowRedirectsMiddleware`.
 mixin FollowRedirectsDish : ButterDish {
 
 	** Returns 'true' if redirects are followed.
