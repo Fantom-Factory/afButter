@@ -1,5 +1,5 @@
 
-** As thrown by Butter.
+** As thrown by 'Butter'.
 const class ButterErr : Err {
 	const Str[]? availableValues
 

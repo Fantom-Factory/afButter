@@ -1,23 +1,15 @@
 
 internal class TestButterBasic : ButterTest {
 	
-	Void testButter() {
-		
-		butter := Butter.churnOut([
-			FollowRedriectsMiddleware(), 
-			HttpTerminator()
-		])
-		
-		wrapper := MyButterDish(butter)
-		
-		echo(wrapper.followRedirects)
-		
-		wrapper.get(`http://www.alienfactory.co.uk`)
-		
+	Void testButterBasic() {
+		butter := MyButterDish(Butter.churnOut())
+		res := butter.get(`http://www.alienfactory.co.uk`)
+		web := res.asStr
+		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
 	}
 
 	Void testNoMiddleware() {
-		verifyTypeErrMsg(ArgErr#, ErrMsgs.middlewareNotSupplied) {
+		verifyErrTypeAndMsg(ArgErr#, ErrMsgs.middlewareNotSupplied) {
 			but	:= Butter.churnOut([,])
 		}
 	}
@@ -75,6 +67,6 @@ internal class T_NullTerminator : ButterMiddleware {
 	}
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		return ButterResponse("".in)
+		return ButterResponse(200, "OK", [:], "".in)
 	}
 }

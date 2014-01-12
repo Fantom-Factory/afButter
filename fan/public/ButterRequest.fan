@@ -28,14 +28,15 @@ class ButterRequest {
 	
 	OutStream out
 	
-	private Buf buf	:= Buf()
+	internal Buf buf	:= Buf()
 	
 	InStream asInStream() {
 		buf.flip.in
 	}
 	
-	new make(|This|? f := null) {
-		out = buf.out
+	new make(Uri uri, |This|? f := null) {
+		this.uri = uri
+		this.out = buf.out
 		f?.call(this)
 	}
 }
