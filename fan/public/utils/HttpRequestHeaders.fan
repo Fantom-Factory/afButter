@@ -8,7 +8,11 @@ class HttpRequestHeaders {
 	
 	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
 
-	new make(Str:Str headers) { this.headers.addAll(headers) }
+	** Creates 'HttpRequestHeaders' copying over values in the given map. 
+	new make([Str:Str]? headers := null) {
+		if (headers != null)
+			this.headers.addAll(headers)
+	}
 
 	** Content-Types that are acceptable for the response. 
 	** 

@@ -1,6 +1,6 @@
 using inet 
 
-** Holds values to be used in making a HTTP request.
+** Create and use to make HTTP request.
 class ButterRequest {
 
 	** Uri to use for request. 
@@ -16,7 +16,7 @@ class ButterRequest {
 
 	** The HTTP headers to use for the next request.  
 	** This map uses case insensitive keys.  
-	HttpRequestHeaders	headers	:= HttpRequestHeaders(Str:Str[:] { caseInsensitive = true })
+	HttpRequestHeaders	headers	:= HttpRequestHeaders()
 	
 	OutStream out
 	
@@ -33,6 +33,6 @@ class ButterRequest {
 	}
 	
 	Void reset() {
-		
+		// FIXME:
 	}
 }

@@ -8,7 +8,11 @@ class HttpResponseHeaders {
 	
 	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
 
-	new make(Str:Str headers) { this.headers.addAll(headers) }
+	** Creates 'HttpResponseHeaders' copying over values in the given map. 
+	new make([Str:Str]? headers := null) {
+		if (headers != null)
+			this.headers.addAll(headers)
+	}
 	
 	** Tells all caching mechanisms from server to client whether they may cache this object. It is 
 	** measured in seconds.
