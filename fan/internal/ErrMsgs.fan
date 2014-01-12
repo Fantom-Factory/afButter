@@ -24,4 +24,8 @@ internal const class ErrMsgs {
 	static Str serverError(Int statusCode, Str statusMsg) {
 		"HTTP response indicated a server error: ${statusCode} - ${statusMsg}"
 	}
+
+	static Str tooManyRedirects(Int tooMany) {
+		"Too many redirects detected, ${tooMany} in total! See '${FollowRedirectsMiddleware#tooManyRedirects.qname}' to change the limit."
+	}
 }

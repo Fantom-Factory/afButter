@@ -1,11 +1,13 @@
 
-//TODO: expect / continue middleware
-
-** 
+** Use to ease
 mixin Butter {
 	
-	** Makes a simple HTTP get request to the given URI and returns the response.
-	abstract ButterResponse get(Uri uri)
+	** A const value representing HTTP 1.0
+	static const Version http10 := Version("1.0")
+
+	** A const value representing HTTP 1.1
+	static const Version http11 := Version("1.1")
+
 
 	** Makes a request and returns the response.
 	abstract ButterResponse sendRequest(ButterRequest req)	
@@ -13,7 +15,7 @@ mixin Butter {
 	** Returns an instance of the given middleware type as used by the 
 	abstract ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true)
 
-	** Builds a slab of butter from the given middleware.
+	** Builds a pack of butter from the given middleware stack.
 	static Butter churnOut(ButterMiddleware[] middleware := defaultStack) {
 		return ButterChain(middleware)
 	}
@@ -26,10 +28,15 @@ mixin Butter {
 	static ButterMiddleware[] defaultStack() {
 		ButterMiddleware[
 			CookieMiddleware(),
-			FollowRedriectsMiddleware(),
+			FollowRedirectsMiddleware(),
 			ErrOn5xxMiddleware(),
 			HttpTerminator()
 		]
+	}
+
+	** Makes a simple HTTP get request to the given URI and returns the response.
+	virtual ButterResponse get(Uri uri) {
+		sendRequest(ButterRequest(uri))
 	}
 
 	** Make a post request to the URI with the given form data.

@@ -10,10 +10,6 @@ internal class ButterChain : Butter {
 		this.middleware = middleware
 	}
 
-	override ButterResponse get(Uri uri) {
-		sendRequest(ButterRequest(uri))
-	}
-
 	override ButterResponse sendRequest(ButterRequest req)	{
 		depth = (depth == null) ? 0 : depth + 1
 		try {
