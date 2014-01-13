@@ -1,6 +1,10 @@
 
-** Holds the HTTP response.
+// TODO: convert to mixin
+** The HTTP response.
 class ButterResponse {
+
+	** A temporary store for request data, use to pass data between middleware.
+	Str:Obj data	:= [:]
 
 	** The HTTP status code 
 	Int statusCode
@@ -15,6 +19,7 @@ class ButterResponse {
 	Version version	:= Butter.http11
 	
 	private InStream 	in
+	// TODO: kill emptiedBy, read all in from buf
 	private Str? 		emptiedBy
 	
 	new make(Int statusCode, Str statusMsg, Str:Str headers, InStream in, |This|? f := null) {

@@ -13,7 +13,7 @@ class CookieMiddleware : ButterMiddleware {
 	Cookie[] cookies() {
 		cookieData.vals.map { it.cookie }
 	}
-	
+
 	** Sets the the cookie to be included in the next request 
 	Void setCookie(Cookie cookie) {
 		cookieData.remove(cookie.name)
