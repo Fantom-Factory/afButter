@@ -1,14 +1,11 @@
 Overview [#overview]
 ********************
-A library to ease HTTP requests.
+'Butter' is a library that helps ease the sending of HTTP requests.
 
-
-'Butter' is a replacement for `web::WebClient`
-
-Butter provides an extensible chain of middleware for making HTTP requests and processing the response.
-The adpotion of the Middleware pattern allows you to seemlessly enhance and modify the behaviour of 'Butter'.
-
-a library for making HTTP requests, lets you
+'Butter' is a replacement for `web::WebClient` and provides an extensible chain of middleware for making HTTP requests and
+processing the response.
+The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
+See `OAuthMiddleware` for an example.
 
 'Butter' was inspired by Ruby's [Faraday]`https://github.com/lostisland/faraday` library.
 
@@ -16,11 +13,9 @@ a library for making HTTP requests, lets you
 
 Install [#Install]
 ******************
-Install 'Butter' with the Fantom Respository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+Install 'Butter' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
 
   $ fanr install -r http://repo.status302.com/fanr/ afButter
-
-Or to install manually, download the pod from [Status302]`http://repo.status302.com/browse/afButter` and copy it to '%FAN_HOME%/lib/fan/'.
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
@@ -30,9 +25,92 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 Quick Start [#quickStart]
 *************************
+1). Create a text file called 'Example.fan':
 pre>
-  Example here
+using afButter
+
+class Example {
+    Void main() {
+        butter   := Butter.churnOut()
+        response := butter.get(`http://www.fantomfactory.org/`)
+        echo(response.asStr)
+    }
+}
 <pre
+
+2). Run Example.fan as a Fantom script from the command line:
+pre>
+C:\> fan Example.fan
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home :: Fantom-Factory</title>
+        ....
+        ....
+<pre
+
+
+
+Usage [#usage]
+**************
+Butter is based on the concept of Middleware, a
+
+An instance of `Butter` wraps a stack of [Middleware]`ButterMiddleware` classes. When a HTTP request is made through
+'Butter', each piece of middleware is called in turn. Middleware classes may either pass the request on to the next
+piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request
+and / or response objects.
+
+The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default
+terminator is the `HttpTerminator` which makes an actual HTTP request to the interweb. (When testing this could be
+substituted with a mock terminator that returns set / canned responses.)
+
+To create a 'Butter' instance, call the static [Butter.churnOut()]`Butter.churnOut` method, optionally passing in a custom
+list of middleware:
+
+pre>
+  middlewareStack := [
+    CookieMiddleware(),
+    FollowRedirectsMiddleware(),
+    ErrOn5xxMiddleware(),
+    HttpTerminator()
+  ]
+
+  butter := Butter.churnOut(middlewareStack)
+<pre
+
+
+
+Butter Dishes [#butterDish]
+***************************
+Because functionality is encapsulated in the middleware, you need to access these classes to configure them.
+Use the [Butter.findMiddleware()]`Butter.findMiddleware` method to do this:
+
+pre>
+  butter := Butter.churnOut()
+  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).setFollowRedirects(true)
+  ((ErrOn500Middleware) butter.findMiddleware(ErrOn500Middleware#)).setErrOn500(true)
+<pre
+
+As you can see, this code is quite verbose. To combat this, you are encouraged to create a 'ButterDish' class that holds
+your 'Butter' instance and implements middleware dishes. (Each middleware class should have an accompanying 'Dish' class.)
+
+'ButterDishes' provide helper methods that let you statically call the middleware.
+By comparison, example 'Dish' usage looks like:
+
+pre>
+  butter := MyButterDish(Butter.churnOut())
+  butter..setFollowRedirects(true)
+  butter..setErrOn500(true)
+
+  ...
+
+  class MyButterDish : ButterDish, FollowRedirectsDish, ErrOn500Dish {
+      override Butter butter
+      new make(Butter butter) { this.butter = butter }
+  }
+<pre
+
+There... that's much cleaner!
 
 
 

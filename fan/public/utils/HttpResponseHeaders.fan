@@ -104,7 +104,6 @@ class HttpResponseHeaders {
 	Cookie[]? setCookie {
 		// FIXME: WebUtil.parseHeaders is borked for "Set-Cookie"
 		get { makeIfNotNull("Set-Cookie") |cookieValue->Cookie[]| {
-			Env.cur.err.printLine(cookieValue)
 			cName	:= (Str?) null 
 			cValue 	:= (Str?) null
 			nameValue := ""
@@ -166,10 +165,11 @@ class HttpResponseHeaders {
 		return (val == null) ? null : func(val)
 	}
 	
-	static Void main(Str[] args) {
-		c:=Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
-		s:="$c\r\n$c\r\n\r\n"
-		map:=WebUtil.parseHeaders(Buf().print(s).flip.in)
-		Env.cur.err.printLine(map)
-	}
+//	TODO: Fantom headers parsing - testcase 
+//	static Void main(Str[] args) {
+//		c:=Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
+//		s:="$c\r\n$c\r\n\r\n"
+//		map:=WebUtil.parseHeaders(Buf().print(s).flip.in)
+//		Env.cur.err.printLine(map)
+//	}
 }

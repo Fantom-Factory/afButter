@@ -1,5 +1,4 @@
 
-** Use to ease
 mixin Butter {
 	
 	** A const value representing HTTP 1.0

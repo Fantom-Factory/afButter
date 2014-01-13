@@ -50,6 +50,9 @@ class HttpTerminator : ButterMiddleware {
 		req.headers.each |v, k| { out.print(k).print(": ").print(v).print("\r\n") }
 		out.print("\r\n")
 		out.flush
+
+		// FIXME: write out body!
+		// TODO: continue 100...?
 		
 		res := Str.defVal
 		try {
@@ -63,9 +66,10 @@ class HttpTerminator : ButterMiddleware {
 			resHeaders	:= WebUtil.parseHeaders(socket.in)
 			resInStream := WebUtil.makeContentInStream(resHeaders, socket.in)
 
+			content		:= resInStream.readAllBuf
 			socket.close
 			
-			return ButterResponse(resCode, resPhrase, resHeaders, resInStream) { it.version = resVer }
+			return ButterResponse(resCode, resPhrase, resHeaders, content.in) { it.version = resVer }
 		}
 		catch (IOErr e) throw e 
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)

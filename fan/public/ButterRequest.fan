@@ -1,8 +1,12 @@
 using inet 
 
-** Create and use to make HTTP request.
+// TODO: convert to mixin
+** The HTTP request.
 class ButterRequest {
 
+	** A temporary store for request data, use to pass data between middleware.
+	Str:Obj data	:= [:]
+	
 	** Uri to use for request. 
 	Uri		uri
 

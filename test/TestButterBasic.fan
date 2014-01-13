@@ -1,11 +1,21 @@
 
 internal class TestButterBasic : ButterTest {
-	
+
+	    Void main() {
+			echo("sdkjhfkjd")
+        butter   := Butter.churnOut()
+        response := butter.get(`http://www.fantomfactory.org/`)
+        echo("[${response.asStr}]")
+    }
+
 	Void testButterBasic() {
 		butter := MyButterDish(Butter.churnOut())
-		res := butter.get(`http://www.alienfactory.co.uk`)
+//		res := butter.get(`http://www.alienfactory.co.uk`)
+		res := butter.get(`http://localhost:8069/`)
 		web := res.asStr
-		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
+		Env.cur.err.printLine(web)
+		verify(web.contains("Factory"), "No Gundam on AF site: [$web]")
+//		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
 	}
 
 	Void testNoMiddleware() {
@@ -70,3 +80,4 @@ internal class T_NullTerminator : ButterMiddleware {
 		return ButterResponse(200, "OK", [:], "".in)
 	}
 }
+
