@@ -1,10 +1,9 @@
 using inet
 using web::WebUtil
 
-// TODO: Continue 100
-// http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.2.3
+// TODO: Continue 100 - http://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.2.3
 // TODO: use proxy
-// TODO: pipelining
+// TODO: pipelining - use middleware, have it set the 'socket' via req.data
 
 ** A middleware terminator for making real HTTP requests. 
 ** When used in a chain, no other middleware should come after this one. (For they will not be called.)
@@ -20,7 +19,6 @@ class HttpTerminator : ButterMiddleware {
 		isHttps := req.uri.scheme == "https"
 		defPort := isHttps ? 443 : 80
 
-		
 		// set the Host, if it's not been already
 		if (req.headers.host == null) {
 			host := req.uri.host
@@ -30,8 +28,8 @@ class HttpTerminator : ButterMiddleware {
 		}
 
 		// set the Content-Length, if it's not been already
-		if (req.headers.contentLength == null) {
-			req.headers.contentLength = req.buf.size
+		if (req.headers.contentLength == null && req.method != "GET") {
+			req.headers.contentLength = req.body.size
 		}
 
 		socket 	:= isHttps ? TcpSocket.makeSsl: TcpSocket.make
@@ -45,14 +43,12 @@ class HttpTerminator : ButterMiddleware {
 
 		// send request
 		out.print("${req.method} ${reqPath} HTTP/${req.version}\r\n")
-//		.print(" ").print(reqPath).print(" HTTP/").print(req.version).print("\r\n")
-		out.print(req.method).print(" ").print(reqPath).print(" HTTP/").print(req.version).print("\r\n")
-		req.headers.each |v, k| { out.print(k).print(": ").print(v).print("\r\n") }
+		req.headers.each |v, k| { out.print("${k}: ${v}\r\n") }
 		out.print("\r\n")
 		out.flush
 
-		// FIXME: write out body!
-		// TODO: continue 100...?
+		req.body.flip.in.pipe(out)
+		out.flush		
 		
 		res := Str.defVal
 		try {
@@ -69,7 +65,7 @@ class HttpTerminator : ButterMiddleware {
 			content		:= resInStream.readAllBuf
 			socket.close
 			
-			return ButterResponse(resCode, resPhrase, resHeaders, content.in) { it.version = resVer }
+			return ButterResponse(resCode, resPhrase, resHeaders, content) { it.version = resVer }
 		}
 		catch (IOErr e) throw e 
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)

@@ -6,8 +6,8 @@ internal class TestCookieMiddleware : ButterTest {
 		mw	:= CookieMiddleware()
 //		    &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
 
-		res1 := ButterResponse(200, "", [:], "".in)
-		res2 := ButterResponse(200, "", [:], "".in)
+		res1 := ButterResponse(200, "", [:], Buf())
+		res2 := ButterResponse(200, "", [:], Buf())
 		res1.headers.map["Set-Cookie"] = Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
 		end := MockTerminator([res1, res2, res2])
 

@@ -14,6 +14,9 @@ mixin Butter {
 	** Returns an instance of the given middleware type as used by the 
 	abstract ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true)
 
+	** Returns an read only list of middleware instances used by this 'Butter' 
+	abstract ButterMiddleware[] middleware()
+
 	** Builds a pack of butter from the given middleware stack.
 	static Butter churnOut(ButterMiddleware[] middleware := defaultStack) {
 		return ButterChain(middleware)
@@ -45,7 +48,7 @@ mixin Butter {
 			it.method	= "POST"
 		}
 		req.headers.contentType = MimeType("application/x-www-form-urlencoded")
-		req.out.print(Uri.encodeQuery(form))
+		req.body.print(Uri.encodeQuery(form))
 		return sendRequest(req)
 	}
 	
@@ -56,7 +59,7 @@ mixin Butter {
 			it.method	= "POST"
 		}
 		req.headers.contentType = MimeType("text/plain")
-		Buf() { it.charset = charset }.print(content).flip.in.pipe(req.out)
+		Buf() { it.charset = charset }.print(content).flip.in.pipe(req.body.out)
 		return sendRequest(req)
 	}
 
@@ -67,7 +70,7 @@ mixin Butter {
 			it.method	= "POST"
 		}
 		req.headers.contentType = file.mimeType ?: MimeType("application/octet-stream")
-		file.in.pipe(req.out, file.size, true)
+		file.in.pipe(req.body.out, file.size, true)
 		return sendRequest(req)
 	}	
 }

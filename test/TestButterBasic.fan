@@ -1,21 +1,22 @@
 
 internal class TestButterBasic : ButterTest {
 
-	    Void main() {
-			echo("sdkjhfkjd")
+	Void main() {
+		echo("sdkjhfkjd")
         butter   := Butter.churnOut()
         response := butter.get(`http://www.fantomfactory.org/`)
-        echo("[${response.asStr}]")
+        echo("[${response}]")
+		echo("[${response.asStr}]")
     }
 
 	Void testButterBasic() {
 		butter := MyButterDish(Butter.churnOut())
-//		res := butter.get(`http://www.alienfactory.co.uk`)
-		res := butter.get(`http://localhost:8069/`)
+		res := butter.get(`http://www.alienfactory.co.uk`)
+//		res := butter.get(`http://localhost:8069/`)
 		web := res.asStr
 		Env.cur.err.printLine(web)
-		verify(web.contains("Factory"), "No Gundam on AF site: [$web]")
-//		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
+//		verify(web.contains("Factory"), "No Gundam on AF site: [$web]")
+		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
 	}
 
 	Void testNoMiddleware() {
@@ -46,6 +47,13 @@ internal class TestButterBasic : ButterTest {
 		verifyEq(stack.toStr, "1232112321")
 	}
 	
+	Void testMiddlewareDynamicAccess() {
+		but	:= Butter.churnOut
+		verifyEq(but->httpTerminator->typeof, HttpTerminator#)
+
+		but	= MyButterDish(Butter.churnOut)
+		verifyEq(but->httpTerminator->typeof, HttpTerminator#)
+	}
 }
 
 internal class MyButterDish : FollowRedirectsDish {
@@ -77,7 +85,7 @@ internal class T_NullTerminator : ButterMiddleware {
 	}
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		return ButterResponse(200, "OK", [:], "".in)
+		return ButterResponse(200, "OK", [:], "")
 	}
 }
 

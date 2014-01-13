@@ -54,7 +54,6 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 					if (res.statusCode == 307)
 						req.uri = res.headers.location
 					
-					req.reset				
 					redirect = true
 				}
 			}

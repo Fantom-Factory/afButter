@@ -7,3 +7,4 @@ For 1.0.0
 For Future
 ==========
 
+Allow streaming.

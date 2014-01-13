@@ -1,13 +1,13 @@
 
 internal class ButterChain : Butter {
-	private ButterMiddleware[]	middleware
+	override ButterMiddleware[]	middleware
 	private Int?				depth
 	
 	new make(ButterMiddleware[] middleware) {
 		if (middleware.isEmpty)
 			throw ArgErr(ErrMsgs.middlewareNotSupplied)
 
-		this.middleware = middleware
+		this.middleware = middleware.ro
 	}
 
 	override ButterResponse sendRequest(ButterRequest req)	{
@@ -26,5 +26,9 @@ internal class ButterChain : Butter {
 	
 	override ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true) {
 		middleware.findType(middlewareType).first ?: (checked ? throw ButterErr(ErrMsgs.chainMiddlewareNotFound(middlewareType), middleware.map { it.typeof.qname }) : null) 
+	}
+	
+	override Obj? trap(Str name, Obj?[]? args := null) {
+		middleware.find { it.typeof.name.equalsIgnoreCase(name) }
 	}
 }

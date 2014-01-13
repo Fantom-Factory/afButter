@@ -8,7 +8,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	}
 	
 	Void testPassThroughOn200() {
-		res := ButterResponse(200, "", [:], "".in)
+		res := ButterResponse(200, "", [:], "")
 		end	:= MockTerminator([res])
 		mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -17,7 +17,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	}
 
 	Void testPassThroughWhenNoLocation() {
-		res := ButterResponse(301, "", [:], "".in)
+		res := ButterResponse(301, "", [:], "")
 		end	:= MockTerminator([res])
 		mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -28,8 +28,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	Void testPassThroughWhenTurnedOff() {
 		mw.followRedirects = false
 		end	:= MockTerminator([
-			ButterResponse(301, "", ["Location":"/301"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(301, "", ["Location":"/301"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -41,10 +41,10 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	Void testMultipleRedirects() {
 		mw.tooManyRedirects	= 3
 		end	:= MockTerminator([
-			ButterResponse(301, "", ["Location":"/301-1"], "".in), 
-			ButterResponse(301, "", ["Location":"/301-2"], "".in), 
-			ButterResponse(301, "", ["Location":"/301-3"], "".in), 
-			ButterResponse(200, "Groovy", [:], "".in)
+			ButterResponse(301, "", ["Location":"/301-1"], ""), 
+			ButterResponse(301, "", ["Location":"/301-2"], ""), 
+			ButterResponse(301, "", ["Location":"/301-3"], ""), 
+			ButterResponse(200, "Groovy", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.uri, `/301-3`)
@@ -55,11 +55,11 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	Void testErrOnTooManyRedirects() {
 		mw.tooManyRedirects	= 3
 		end	:= MockTerminator([
-			ButterResponse(301, "", ["Location":"/301-1"], "".in), 
-			ButterResponse(301, "", ["Location":"/301-2"], "".in), 
-			ButterResponse(301, "", ["Location":"/301-3"], "".in), 
-			ButterResponse(301, "", ["Location":"/301-4"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(301, "", ["Location":"/301-1"], ""), 
+			ButterResponse(301, "", ["Location":"/301-2"], ""), 
+			ButterResponse(301, "", ["Location":"/301-3"], ""), 
+			ButterResponse(301, "", ["Location":"/301-4"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		verifyErrTypeAndMsg(ButterErr#, ErrMsgs.tooManyRedirects(3)) {
 			res := mw.sendRequest(end, ButterRequest(`/`))
@@ -68,8 +68,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test301Get() {
 		end	:= MockTerminator([
-			ButterResponse(301, "", ["Location":"/301"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(301, "", ["Location":"/301"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -79,8 +79,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test301Post() {
 		end	:= MockTerminator([
-			ButterResponse(301, "", ["Location":"/301"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(301, "", ["Location":"/301"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
@@ -90,8 +90,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	
 	Void test302GetHttp10() {
 		end	:= MockTerminator([
-			ButterResponse(302, "", ["Location":"/302"], "".in) { it.version = Butter.http10 }, 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(302, "", ["Location":"/302"], "") { it.version = Butter.http10 }, 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -101,8 +101,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test302PostHttp10() {
 		end	:= MockTerminator([
-			ButterResponse(302, "", ["Location":"/302"], "".in) { it.version = Butter.http10 }, 
-			ButterResponse(200, "", [:], "".in) 
+			ButterResponse(302, "", ["Location":"/302"], "") { it.version = Butter.http10 }, 
+			ButterResponse(200, "", [:], "") 
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "GET")
@@ -112,8 +112,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test302GetHttp11() {
 		end	:= MockTerminator([
-			ButterResponse(302, "", ["Location":"/302"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(302, "", ["Location":"/302"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -123,8 +123,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test302PostHttp11() {
 		end	:= MockTerminator([
-			ButterResponse(302, "", ["Location":"/302"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(302, "", ["Location":"/302"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
@@ -134,8 +134,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	
 	Void test303Get() {
 		end	:= MockTerminator([
-			ButterResponse(303, "", ["Location":"/303"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(303, "", ["Location":"/303"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -145,8 +145,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test303Post() {
 		end	:= MockTerminator([
-			ButterResponse(303, "", ["Location":"/303"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(303, "", ["Location":"/303"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "GET")
@@ -156,8 +156,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test307Get() {
 		end	:= MockTerminator([
-			ButterResponse(307, "", ["Location":"/307"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(307, "", ["Location":"/307"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
@@ -167,8 +167,8 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 
 	Void test307Post() {
 		end	:= MockTerminator([
-			ButterResponse(307, "", ["Location":"/307"], "".in), 
-			ButterResponse(200, "", [:], "".in)
+			ButterResponse(307, "", ["Location":"/307"], ""), 
+			ButterResponse(200, "", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")

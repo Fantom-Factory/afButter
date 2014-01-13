@@ -8,4 +8,5 @@ internal class MockTerminator : Butter {
 	
 	override ButterResponse sendRequest(ButterRequest req) { this.req=req; return res[index++] }
 	override ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true) { null }
+	override ButterMiddleware[] middleware() { ButterMiddleware#.emptyList }
 }
