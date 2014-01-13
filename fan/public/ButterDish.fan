@@ -41,4 +41,12 @@ mixin ButterDish : Butter {
 	override ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true) {
 		butter.findMiddleware(middlewareType)
 	}
+
+	override ButterMiddleware[] middleware() {
+		butter.middleware
+	}
+	
+	override Obj? trap(Str name, Obj?[]? args := null) {
+		butter.trap(name, args)
+	}
 }

@@ -1,12 +1,8 @@
 using inet 
 
-// TODO: convert to mixin
 ** The HTTP request.
 class ButterRequest {
 
-	** A temporary store for request data, use to pass data between middleware.
-	Str:Obj data	:= [:]
-	
 	** Uri to use for request. 
 	Uri		uri
 
@@ -21,22 +17,19 @@ class ButterRequest {
 	** The HTTP headers to use for the next request.  
 	** This map uses case insensitive keys.  
 	HttpRequestHeaders	headers	:= HttpRequestHeaders()
+
+	** A temporary store for request data, use to pass data between middleware.
+	Str:Obj data	:= Str:Obj[:] { caseInsensitive = true }
 	
-	OutStream out
-	
-	internal Buf buf	:= Buf()
+	** The request body.
+	Buf 	body	:= Buf()
 	
 	new make(Uri uri, |This|? f := null) {
 		this.uri = uri
-		this.out = buf.out
 		f?.call(this)
 	}
-
-	InStream asInStream() {
-		buf.flip.in
-	}
 	
-	Void reset() {
-		// FIXME:
+	override Str toStr() {
+		"${method} ${uri} HTTP/${version}"
 	}
 }

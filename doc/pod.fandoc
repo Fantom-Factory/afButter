@@ -78,6 +78,12 @@ pre>
   butter := Butter.churnOut(middlewareStack)
 <pre
 
+Or to use the default stack of middleware bundled with 'Butter', just *churn and go*:
+
+pre>
+  html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
+<pre
+
 
 
 Butter Dishes [#butterDish]
@@ -87,14 +93,34 @@ Use the [Butter.findMiddleware()]`Butter.findMiddleware` method to do this:
 
 pre>
   butter := Butter.churnOut()
-  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).setFollowRedirects(true)
-  ((ErrOn500Middleware) butter.findMiddleware(ErrOn500Middleware#)).setErrOn500(true)
+  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).followRedirects = true
+  ((ErrOn500Middleware) butter.findMiddleware(ErrOn500Middleware#)).errOn500 = true
 <pre
 
-As you can see, this code is quite verbose. To combat this, you are encouraged to create a 'ButterDish' class that holds
+As you can see, this code is quite verbose. To combat this, there are two alternative means of getting hold of middleware:
+
+Dynamic [#dynamicDish]
+======================
+If you make dynamic invocation method calls on the 'Butter' class, you can retrieve instances of middleware.
+The dynamic methods have the same same simple name as the middleware type. Example:
+
+pre>
+  butter := Butter.churnOut()
+  butter->followRedriectsMiddleware->followRedirects = true
+  butter->errOn500Middleware->followRedirects = true
+<pre
+
+Should instances of the same middleware class be in the stack more than once (or should it contain 2 middleware classes
+with the same name from different pods) then the first one is returned.
+
+Obviously, dynamic invocation should be used with caution.
+
+Static Dish [#staticDish]
+=========================
+To call the middleware in a statically typed fashion, you are encouraged to create a 'ButterDish' class that holds
 your 'Butter' instance and implements middleware dishes. (Each middleware class should have an accompanying 'Dish' class.)
 
-'ButterDishes' provide helper methods that let you statically call the middleware.
+These 'Dish' classes provide helper methods that let you statically call the middleware.
 By comparison, example 'Dish' usage looks like:
 
 pre>

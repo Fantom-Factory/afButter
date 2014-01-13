@@ -12,10 +12,6 @@ internal const class ErrMsgs {
 	static Str terminatorNotFound(Type type) {
 		"Middleware $type.qname is not a terminator / did not process the request"
 	}
-	
-	static Str responseAlreadyEmpitedBy(Str by) {
-		"Response has already been emptied by '${by}'"
-	}
 
 	static Str chainMiddlewareNotFound(Type mwType) {
 		"Could not find Middleware for type '${mwType.qname}'"

@@ -165,7 +165,7 @@ class HttpResponseHeaders {
 		return (val == null) ? null : func(val)
 	}
 	
-//	TODO: Fantom headers parsing - testcase 
+//	FIXME: WebUtil.parseHeaders is borked for "Set-Cookie" - the testcase 
 //	static Void main(Str[] args) {
 //		c:=Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
 //		s:="$c\r\n$c\r\n\r\n"
