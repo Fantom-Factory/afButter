@@ -6,5 +6,6 @@ For 1.0.0
 
 For Future
 ==========
+Maybe make each middleware have an enabled flag?
 
 Allow streaming.

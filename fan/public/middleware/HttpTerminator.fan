@@ -47,7 +47,8 @@ class HttpTerminator : ButterMiddleware {
 		out.print("\r\n")
 		out.flush
 
-		req.body.flip.in.pipe(out)
+		// use seek(0) rather than flip, 'cos we may be redirected subsequent times and flip() has a habit of clearing the buffer! 
+		req.body.seek(0).in.pipe(out)
 		out.flush		
 		
 		res := Str.defVal
