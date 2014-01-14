@@ -18,18 +18,3 @@ class StickyHeadersMiddleware : ButterMiddleware {
 		return butter.sendRequest(req)
 	}
 }
-
-** A `ButterDish` for `StickyHeadersMiddleware`.
-mixin StickyHeadersDish : ButterDish {
-
-	** The header values set in every request 
-	** 
-	** @see `StickyHeadersMiddleware#stickyHeaders`
-	HttpRequestHeaders stickyHeaders() {
-		getStickHeadersMw.stickyHeaders
-	}	
-
-	private StickyHeadersMiddleware getStickHeadersMw() {
-		findMiddleware(StickyHeadersMiddleware#)
-	}	
-}

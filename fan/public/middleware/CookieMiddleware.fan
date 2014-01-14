@@ -4,10 +4,10 @@ using web::Cookie
 ** Middleware that stores cookies found in response objects, and automatically sets them in subsequent requests. 
 ** This effectively gives you a *session* when querying web applications.
 ** 
-** 'CookieMiddleware' inspects the 'Max-Age' attribute of the cookies and automatically expires them when required.
+** 'StickyCookiesMiddleware' inspects the 'Max-Age' attribute of the cookies and automatically expires them when required.
 ** 
-** 'CookieMiddleware' does not respect the Domain, Path and Secure attributes.
-class CookieMiddleware : ButterMiddleware {
+** 'StickyCookiesMiddleware' does not respect the Domain, Path and Secure attributes.
+class StickyCookiesMiddleware : ButterMiddleware {
 
 	** A read only list of cookies.
 	Cookie[] cookies() {
@@ -50,26 +50,4 @@ internal class CookieData {
 	DateTime	timeSet
 	Cookie		cookie
 	new make(|This|in) { in(this) }
-}
-
-** A `ButterDish` for `CookieMiddleware`.
-mixin CookieDish : ButterDish {
-
-	** A read only list of cookies.
-	** 
-	** @see `CookieMiddleware#cookies`
-	Cookie[] cookies() {
-		getCookieMw.cookies
-	}	
-
-	** Sets the the cookie to be included in the next request 
-	** 
-	** @see `CookieMiddleware#setCookie`
-	Void setCookie(Cookie cookie) {
-		getCookieMw.setCookie(cookie)
-	}
-
-	private CookieMiddleware getCookieMw() {
-		findMiddleware(CookieMiddleware#)
-	}	
 }

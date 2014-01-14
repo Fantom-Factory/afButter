@@ -1,6 +1,6 @@
 Overview [#overview]
 ********************
-'Butter' is a library that helps ease the sending of HTTP requests.
+'Butter' is a library that helps ease HTTP requests through a stack of middleware.
 
 'Butter' is a replacement for `web::WebClient` and provides an extensible chain of middleware for making HTTP requests and
 processing the response.
@@ -60,6 +60,8 @@ An instance of `Butter` wraps a stack of [Middleware]`ButterMiddleware` classes.
 piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request
 and / or response objects.
 
+The ordering of the middleware stack *is* important.
+
 The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default
 terminator is the `HttpTerminator` which makes an actual HTTP request to the interweb. (When testing this could be
 substituted with a mock terminator that returns set / canned responses.)
@@ -93,50 +95,42 @@ Use the [Butter.findMiddleware()]`Butter.findMiddleware` method to do this:
 
 pre>
   butter := Butter.churnOut()
-  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).followRedirects = true
-  ((ErrOn500Middleware) butter.findMiddleware(ErrOn500Middleware#)).errOn500 = true
+  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = false
+  ((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = false
 <pre
 
 As you can see, this code is quite verbose. To combat this, there are two alternative means of getting hold of middleware:
 
-Dynamic [#dynamicDish]
-======================
+Dynamic Stylie [#dynamic]
+=========================
 If you make dynamic invocation method calls on the 'Butter' class, you can retrieve instances of middleware.
-The dynamic methods have the same same simple name as the middleware type. Example:
+The dynamic methods have the same simple name as the middleware type. If the type name ends with 'Middleware', it may be
+omitted. Example:
 
 pre>
   butter := Butter.churnOut()
-  butter->followRedriectsMiddleware->followRedirects = true
-  butter->errOn500Middleware->followRedirects = true
+  butter->followRedriects->enabled = true
+  butter->errOn5xx->enabled = true
 <pre
 
 Should instances of the same middleware class be in the stack more than once (or should it contain 2 middleware classes
-with the same name from different pods) then the first one is returned.
+with the same name from different pods) then the just first one is returned.
 
 Obviously, dynamic invocation should be used with caution.
 
-Static Dish [#staticDish]
-=========================
-To call the middleware in a statically typed fashion, you are encouraged to create a 'ButterDish' class that holds
-your 'Butter' instance and implements middleware dishes. (Each middleware class should have an accompanying 'Dish' class.)
-
-These 'Dish' classes provide helper methods that let you statically call the middleware.
-By comparison, example 'Dish' usage looks like:
+Static Stylie [#static]
+=======================
+To call the middleware in a statically typed fashion, use a 'ButterDish' class that holds your 'Butter' instance and
+contains helper methods.
+There is a default `ButterDish` class with methods to access middleware in the default stack. Example:
 
 pre>
-  butter := MyButterDish(Butter.churnOut())
-  butter..setFollowRedirects(true)
-  butter..setErrOn500(true)
-
-  ...
-
-  class MyButterDish : ButterDish, FollowRedirectsDish, ErrOn500Dish {
-      override Butter butter
-      new make(Butter butter) { this.butter = butter }
-  }
+  butter := ButterDish(Butter.churnOut())
+  butter.followRedirects.enabled = true
+  butter.errOn5xx.enabled = true
 <pre
 
-There... that's much cleaner!
+When using other middleware, you are encouraged to create your own 'ButterDish' that extends the default one.
 
 
 

@@ -18,18 +18,21 @@ mixin Butter {
 	abstract ButterMiddleware[] middleware()
 
 	** Builds a pack of butter from the given middleware stack.
+	** The ordering of the stack *is* important.
 	static Butter churnOut(ButterMiddleware[] middleware := defaultStack) {
 		return ButterChain(middleware)
 	}
 
 	** The default middleware stack. It currently returns new instances of (in order):
-	**  - `CookieMiddleware`
+	**  - `StickyCookiesMiddleware`
+	**  - `StickyHeadersMiddleware`
 	**  - `FollowRedriectsMiddleware`
 	**  - `ErrOn5xxMiddleware`
 	**  - `HttpTerminator`
 	static ButterMiddleware[] defaultStack() {
 		ButterMiddleware[
-			CookieMiddleware(),
+			StickyCookiesMiddleware(),
+			StickyHeadersMiddleware(),
 			FollowRedirectsMiddleware(),
 			ErrOn5xxMiddleware(),
 			HttpTerminator()
@@ -73,5 +76,16 @@ mixin Butter {
 		file.in.pipe(req.body.out, file.size, true)
 		return sendRequest(req)
 	}	
+
+	override Obj? trap(Str name, Obj?[]? args := null) {
+		middleware.find |mw->Bool| {
+			if (mw.typeof.name.equalsIgnoreCase(name))
+				return true
+			if (mw.typeof.name.lower.endsWith("middleware"))
+				if (mw.typeof.name[0..<-"middleware".size].equalsIgnoreCase(name))
+					return true
+			return false
+		} ?: throw ButterErr(ErrMsgs.chainMiddlewareNotFound(name), middleware.map { it.typeof.name })
+	}
 }
 

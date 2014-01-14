@@ -7,7 +7,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 	** Set to 'true' to follow redirects.
 	** 
 	** Defaults to 'true'.
-	Bool followRedirects	:= true
+	Bool enabled	:= true
 	
 	** How many redirects are too many? This number answers the question. 
 	** An Err is raised should the number of redirects reach this number for a single request. 
@@ -19,7 +19,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		ButterResponse? res := null
 
-		if (!followRedirects)
+		if (!enabled)
 			return butter.sendRequest(req)
 		
 		// +1 for the original req uri
@@ -61,26 +61,4 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 		
 		return res
 	}
-}
-
-** A `ButterDish` for `FollowRedirectsMiddleware`.
-mixin FollowRedirectsDish : ButterDish {
-
-	** Returns 'true' if redirects are followed.
-	** 
-	** @see `FollowRedriectsMiddleware#followRedirects`
-	Bool followRedirects() {
-		getFollowRedriectsMw.followRedirects
-	}	
-
-	** Set to 'true' to follow redirects.
-	** 
-	** @see `FollowRedriectsMiddleware#followRedirects`
-	Void setFollowRedirects(Bool followRedirects) {
-		getFollowRedriectsMw.followRedirects = followRedirects
-	}	
-
-	private FollowRedirectsMiddleware getFollowRedriectsMw() {
-		findMiddleware(FollowRedirectsMiddleware#)
-	}	
 }

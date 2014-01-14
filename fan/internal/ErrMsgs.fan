@@ -13,8 +13,8 @@ internal const class ErrMsgs {
 		"Middleware $type.qname is not a terminator / did not process the request"
 	}
 
-	static Str chainMiddlewareNotFound(Type mwType) {
-		"Could not find Middleware for type '${mwType.qname}'"
+	static Str chainMiddlewareNotFound(Str mwType) {
+		"Could not find Middleware for type '${mwType}'"
 	}
 
 	static Str serverError(Int statusCode, Str statusMsg) {
