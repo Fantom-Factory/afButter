@@ -10,7 +10,7 @@ internal class TestButterBasic : ButterTest {
     }
 
 	Void testButterBasic() {
-		butter := MyButterDish(Butter.churnOut())
+		butter := ButterDish(Butter.churnOut())
 		res := butter.get(`http://www.alienfactory.co.uk`)
 //		res := butter.get(`http://localhost:8069/`)
 		web := res.asStr
@@ -50,15 +50,11 @@ internal class TestButterBasic : ButterTest {
 	Void testMiddlewareDynamicAccess() {
 		but	:= Butter.churnOut
 		verifyEq(but->httpTerminator->typeof, HttpTerminator#)
+		but->followRedirects->enabled = true
 
-		but	= MyButterDish(Butter.churnOut)
+		but	= ButterDish(Butter.churnOut)
 		verifyEq(but->httpTerminator->typeof, HttpTerminator#)
 	}
-}
-
-internal class MyButterDish : FollowRedirectsDish {
-	override Butter butter
-	new make(Butter butter) { this.butter = butter }
 }
 
 internal class T_PassThroughMiddleware : ButterMiddleware {

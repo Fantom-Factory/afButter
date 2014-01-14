@@ -26,7 +26,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 	}
 	
 	Void testPassThroughWhenTurnedOff() {
-		mw.followRedirects = false
+		mw.enabled = false
 		end	:= MockTerminator([
 			ButterResponse(301, "", ["Location":"/301"], ""), 
 			ButterResponse(200, "", [:], "")

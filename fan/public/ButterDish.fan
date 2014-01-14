@@ -8,32 +8,25 @@
 ** 
 ** pre>
 **   butter := Butter.churnOut()
-**   ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).setFollowRedirects(true)
-**   ((ErrOn500Middleware) butter.findMiddleware(ErrOn500Middleware#)).setErrOn500(true)
+**   ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = true
+**   ((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = true
 ** <pre
 ** 
 ** Compare *with* using a 'ButterDish':
 ** 
 ** pre>
-**   butter := MyButterDish(Butter.churnOut())
-**   butter..setFollowRedirects(true)
-**   butter..setErrOn500(true)
-** 
-**   ...
-** 
-**   class MyButterDish : ButterDish, FollowRedirectsDish, ErrOn500Dish {
-**       override Butter butter
-**       new make(Butter butter) { this.butter = butter }
-**   }
+**   butter := ButterDish(Butter.churnOut())
+**   butter.followRedirects.enabled = true
+**   butter.errOn5xx.enabled = true
 ** <pre
-mixin ButterDish : Butter {
+class ButterDish : Butter {
 	
-	abstract Butter butter
+	protected Butter butter
 	
-	override ButterResponse get(Uri uri) {
-		butter.get(uri)
+	new make(Butter butter) {
+		this.butter = butter
 	}
-
+	
 	override ButterResponse sendRequest(ButterRequest req) {
 		butter.sendRequest(req)
 	}
@@ -48,5 +41,23 @@ mixin ButterDish : Butter {
 	
 	override Obj? trap(Str name, Obj?[]? args := null) {
 		butter.trap(name, args)
+	}
+	
+	// ---- Default Stack Middleware -----------------------------------------------------------------------------------
+	
+	ErrOn5xxMiddleware errOn5xx() {
+		findMiddleware(ErrOn5xxMiddleware#)
+	}
+
+	FollowRedirectsMiddleware followRedirects() {
+		findMiddleware(FollowRedirectsMiddleware#)
+	}
+
+	StickyCookiesMiddleware stickyCookies() {
+		findMiddleware(StickyCookiesMiddleware#)
+	}
+
+	StickyHeadersMiddleware stickyHeaders() {
+		findMiddleware(StickyHeadersMiddleware#)
 	}
 }

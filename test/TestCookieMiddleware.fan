@@ -3,7 +3,7 @@ using web::Cookie
 internal class TestCookieMiddleware : ButterTest {
 	
 	Void testCookie() {
-		mw	:= CookieMiddleware()
+		mw	:= StickyCookiesMiddleware()
 //		    &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
 
 		res1 := ButterResponse(200, "", [:], Buf())

@@ -9,7 +9,7 @@ internal class TestErrOn5xxMiddleware : ButterTest {
 
 	Void testPassThroughOn500() {
 		mw	:= ErrOn5xxMiddleware()
-		mw.errOn5xx = false
+		mw.enabled = false
 		res := ButterResponse(500, "Argh!", [:], Buf())
 		mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))
 	}

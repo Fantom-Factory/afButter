@@ -1,6 +1,6 @@
 # Butter
 
-`Butter` is a [Fantom](http://fantom.org/) library that helps ease the sending of HTTP requests.
+`Butter` is a [Fantom](http://fantom.org/) library that helps ease HTTP requests through a stack of middleware.
 
 `Butter` is a replacement for `WebClient` and provides an extensible chain of middleware for making HTTP requests and processing the response.
 The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
