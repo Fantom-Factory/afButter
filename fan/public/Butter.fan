@@ -1,4 +1,5 @@
 
+** 'Butter' instances route HTTP requests through a stack of middleware.    
 mixin Butter {
 	
 	** A const value representing HTTP 1.0

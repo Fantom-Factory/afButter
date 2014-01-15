@@ -71,7 +71,9 @@ list of middleware:
 
 pre>
   middlewareStack := [
-    CookieMiddleware(),
+    StickyCookiesMiddleware(),
+    StickyHeadersMiddleware(),
+    OpenAuthMiddleware(),
     FollowRedirectsMiddleware(),
     ErrOn5xxMiddleware(),
     HttpTerminator()

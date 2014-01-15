@@ -156,6 +156,10 @@ class HttpRequestHeaders {
 		headers
 	}
 	
+	override Str toStr() {
+		headers.toStr
+	}
+	
 	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
 		val := headers[name]
 		return (val == null) ? null : func(val)

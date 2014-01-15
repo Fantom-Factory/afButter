@@ -4,7 +4,6 @@ internal class TestCookieMiddleware : ButterTest {
 	
 	Void testCookie() {
 		mw	:= StickyCookiesMiddleware()
-//		    &cookies.each |Cookie c| { sout.print("Set-Cookie: ").print(c).print("\r\n") }
 
 		res1 := ButterResponse(200, "", [:], Buf())
 		res2 := ButterResponse(200, "", [:], Buf())
@@ -32,7 +31,34 @@ internal class TestCookieMiddleware : ButterTest {
 		mw.sendRequest(end, ButterRequest(`/`))
 
 		verifyEq(end.req.headers.cookie, null)
+	}
+
+	** If you can't be arsed to set credentials on your test cookies, assume wild cards
+	Void testCookieNullMaxAge() {
+		mw	:= StickyCookiesMiddleware()
+
+		res1 := ButterResponse(200, "", [:], Buf())
+		res2 := ButterResponse(200, "", [:], Buf())
+		res1.headers.map["Set-Cookie"] = Cookie("judge", "Dredd").toStr
+		end := MockTerminator([res1, res2, res2])
+
+		// test it picked up the Set-Cookie header
+		mw.sendRequest(end, ButterRequest(`/`))
 		
+		verifyEq(mw.cookies[0].name, "judge")
+		verifyEq(mw.cookies[0].val, "Dredd")
+
+		// test cookies are sent
+		mw.sendRequest(end, ButterRequest(`/`))
+
+		verifyEq(end.req.headers.cookie[0].name, "judge")
+		verifyEq(end.req.headers.cookie[0].val, "Dredd")
+		
+		// test cookie did not time out
+		mw.cookieData["judge"].timeSet = mw.cookieData["judge"].timeSet - 1min
+		mw.sendRequest(end, ButterRequest(`/`))
+
+		verifyEq(end.req.headers.cookie[0].name, "judge")
 	}
 
 }
