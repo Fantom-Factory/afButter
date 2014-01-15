@@ -15,7 +15,7 @@ class HttpTerminator : ButterMiddleware {
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		if (!req.uri.isAbs || req.uri.host == null)
 			throw ButterErr(ErrMsgs.reqUriHasNoScheme(req.uri))
-		
+
 		isHttps := req.uri.scheme == "https"
 		defPort := isHttps ? 443 : 80
 

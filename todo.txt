@@ -2,10 +2,15 @@
 For 1.0.0
 =========
 
-
+Add gzip middleware that adds Accept gzip, and auto unzips the response
 
 For Future
 ==========
-Maybe make each middleware have an enabled flag?
+
+use proxy
+support for continue 100
+(have res take a stream and read it all on asStr, asBuf, etc...)
 
 Allow streaming.
+
+http-keep-alive - keep socket open / pass socket in data map to HTTP Term
