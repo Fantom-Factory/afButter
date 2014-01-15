@@ -40,7 +40,7 @@ class OpenAuthMiddleware : ButterMiddleware {
 
 		seconds	:= timestampGen.generate
 		nonce	:= nonceGen.generate(seconds)
-		
+
 		oauthParams["oauth_version"]			= "1.0"
 		oauthParams["oauth_timestamp"]			= seconds.toStr
 		oauthParams["oauth_nonce"]				= nonce

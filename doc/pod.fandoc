@@ -5,7 +5,7 @@ Overview [#overview]
 'Butter' is a replacement for `web::WebClient` and provides an extensible chain of middleware for making HTTP requests and
 processing the response.
 The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
-See `OAuthMiddleware` for an example.
+See `OpenAuthMiddleware` for an example.
 
 'Butter' was inspired by Ruby's [Faraday]`https://github.com/lostisland/faraday` library.
 
@@ -53,8 +53,6 @@ C:\> fan Example.fan
 
 Usage [#usage]
 **************
-Butter is based on the concept of Middleware, a
-
 An instance of `Butter` wraps a stack of [Middleware]`ButterMiddleware` classes. When a HTTP request is made through
 'Butter', each piece of middleware is called in turn. Middleware classes may either pass the request on to the next
 piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request
