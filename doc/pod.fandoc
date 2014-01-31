@@ -137,6 +137,10 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 Release Notes [#releaseNotes]
 *****************************
 
+v0.0.4 [#v0.0.4]
+----------------
+ - Bug: Could not post case-insensitive forms - see [Uri.encodeQuery throws UnsupportedOperationException]`http://fantom.org/sidewalk/topic/2236`
+
 v0.0.2 [#v0.0.2]
 ----------------
  - New: Preview Release

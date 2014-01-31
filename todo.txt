@@ -4,6 +4,8 @@ For 1.0.0
 
 Add gzip middleware that adds Accept gzip, and auto unzips the response
 
+validate 'host' header only contains the host and not the scheme or '/' path
+
 For Future
 ==========
 

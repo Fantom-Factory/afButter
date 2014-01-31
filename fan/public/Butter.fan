@@ -52,7 +52,16 @@ mixin Butter {
 			it.method	= "POST"
 		}
 		req.headers.contentType = MimeType("application/x-www-form-urlencoded")
-		req.body.print(Uri.encodeQuery(form))
+		
+		//sys::UnsupportedErr: java.lang.UnsupportedOperationException
+		//  fan.sys.Map$CIHashMap.keySet (Map.java:650)
+		//  fan.sys.Map.keysIterator (Map.java:629)
+		//  fan.sys.Uri.encodeQuery (Uri.java:87)
+		// see http://fantom.org/sidewalk/topic/2236
+		caseSensitive := Str:Str[:].addAll(form)
+		
+		enc := Uri.encodeQuery(caseSensitive)
+		req.body.print(enc)
 		return sendRequest(req)
 	}
 	
@@ -87,6 +96,6 @@ mixin Butter {
 					return true
 			return false
 		} ?: throw ButterErr(ErrMsgs.chainMiddlewareNotFound(name), middleware.map { it.typeof.name })
-	}
+	}	
 }
 
