@@ -8,7 +8,7 @@ using web::WebUtil
 ** A middleware terminator for making real HTTP requests. 
 ** When used in a chain, no other middleware should come after this one. (For they will not be called.)
 class HttpTerminator : ButterMiddleware {
-	
+
 	SocketOptions? options
 	
 	** Makes a real HTTP request.
@@ -51,25 +51,11 @@ class HttpTerminator : ButterMiddleware {
 		req.body.seek(0).in.pipe(out)
 		out.flush		
 		
-		res := Str.defVal
 		try {
-			resVer	:= (Version?) null
-			res 	= socket.in.readLine
-			if 		(res.startsWith("HTTP/1.0")) resVer = Butter.http10
-			else if (res.startsWith("HTTP/1.1")) resVer = Butter.http11
-			else throw IOErr("Unknown HTTP version: ${res}")
-			resCode 	:= res[9..11].toInt
-			resPhrase 	:= res[13..-1]
-			resHeaders	:= WebUtil.parseHeaders(socket.in)
-			resInStream := WebUtil.makeContentInStream(resHeaders, socket.in)
-
-			content		:= resInStream.readAllBuf
+			return ButterResponse(socket.in)
+		} finally {
 			socket.close
-			
-			return ButterResponse(resCode, resPhrase, resHeaders, content) { it.version = resVer }
 		}
-		catch (IOErr e) throw e 
-		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
-	}
+	}	
 }
 

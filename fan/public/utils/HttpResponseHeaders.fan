@@ -2,25 +2,33 @@ using web::Cookie
 using web::WebUtil
 
 ** A wrapper for HTTP response headers with accessors for commonly used headings. 
-** Backed by a case insensitive map.
 ** 
 ** @see `https://en.wikipedia.org/wiki/List_of_HTTP_header_fields`
 class HttpResponseHeaders {
-	
-	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
+	private static const Int CR  := '\r'
+	private static const Int LF  := '\n'
+	private static const Int maxTokenSize := 4096
+
+	private const KeyVal[]	keyVals	
 
 	** Creates 'HttpResponseHeaders' copying over values in the given map. 
 	new make([Str:Str]? headers := null) {
-		if (headers != null)
-			this.headers.addAll(headers)
+		keyVals := KeyVal[,]
+		headers?.each |val, key| { keyVals.add(KeyVal(key, val)) }
+		this.keyVals = keyVals
 	}
-	
+
+	** Parses headers from the given InStream. 
+	new makeFromInStream(InStream in) {
+		this.keyVals = parseHeaders(in)
+	}
+
 	** Tells all caching mechanisms from server to client whether they may cache this object. It is 
 	** measured in seconds.
 	** 
 	** Example: 'Cache-Control: max-age=3600'
 	Str? cacheControl {
-		get { headers["Cache-Control"] }
+		get { getFirst("Cache-Control") }
 		private set { }
 	}
 
@@ -28,7 +36,7 @@ class HttpResponseHeaders {
 	** 
 	** Example: 'Content-Encoding: gzip'
 	Str? contentEncoding {
-		get { headers["Content-Encoding"] }
+		get { getFirst("Content-Encoding") }
 		private set { }
 	}
 
@@ -38,7 +46,7 @@ class HttpResponseHeaders {
 	** 
 	** @see `http://tools.ietf.org/html/rfc6266`
 	Str? contentDisposition {
-		get { headers["Content-Disposition"] }
+		get { getFirst("Content-Disposition") }
 		private set { }
 	}
 
@@ -94,7 +102,7 @@ class HttpResponseHeaders {
 	** 
 	** Example: 'Pragma: no-cache'
 	Str? pragma {
-		get { headers["Pragma"] }
+		get { getFirst("Pragma") }
 		private set { }
 	}
 
@@ -102,29 +110,31 @@ class HttpResponseHeaders {
 	** 
 	** Example: 'Set-Cookie: UserID=JohnDoe; Max-Age=3600'
 	Cookie[]? setCookie {
-		// FIXME: WebUtil.parseHeaders is borked for "Set-Cookie"
-		get { makeIfNotNull("Set-Cookie") |cookieValue->Cookie[]| {
-			cName	:= (Str?) null 
-			cValue 	:= (Str?) null
-			nameValue := ""
-			values := [Str:Str?][:] { caseInsensitive = true }
-			cookieValue.split(';').each |value, i| {
-				pair := value.split('=')
-				if (i == 0) {
-					cName = pair[0]
-					cValue = pair.getSafe(1) ?: ""
-					if (cValue.startsWith("\""))
-						cValue = WebUtil.fromQuotedStr(cValue)
-				} else 
-					values[pair[0]] = pair.getSafe(1)
+		get { 
+			cookies := getAll("Set-Cookie").map |cookieValue->Cookie| {
+				cName	:= (Str?) null 
+				cValue 	:= (Str?) null
+				nameValue := ""
+				values := [Str:Str?][:] { caseInsensitive = true }
+				cookieValue.split(';').each |value, i| {
+					pair := value.split('=')
+					if (i == 0) {
+						cName = pair[0]
+						cValue = pair.getSafe(1) ?: ""
+						if (cValue.startsWith("\""))
+							cValue = WebUtil.fromQuotedStr(cValue)
+					} else 
+						values[pair[0]] = pair.getSafe(1)
+				}
+				return Cookie(cName, cValue) {
+					it.maxAge 	= values.containsKey("Max-Age") ? Duration.fromStr(values["Max-Age"] + "sec", true) : null  
+					it.domain 	= values["Domain"]  
+					it.path 	= values["Path"]  
+					it.secure 	= values.containsKey("Secure")
+				}
 			}
-			return [Cookie(cName, cValue) {
-				it.maxAge 	= values.containsKey("Max-Age") ? Duration.fromStr(values["Max-Age"] + "sec", true) : null  
-				it.domain 	= values["Domain"]  
-				it.path 	= values["Path"]  
-				it.secure 	= values.containsKey("Secure")
-			}]
-		}}
+			return cookies.isEmpty ? null : cookies
+		}
 		private set { }
 	}
 
@@ -134,7 +144,7 @@ class HttpResponseHeaders {
 	** 
 	** Example: 'X-Frame-Options: deny'
 	Str? xFrameOptions {
-		get { headers["X-Frame-Options"] }
+		get { getFirst("X-Frame-Options") }
 		private set { }
 	}
 
@@ -142,38 +152,92 @@ class HttpResponseHeaders {
 	** 
 	** Example: 'X-XSS-Protection: 1; mode=block'
 	Str? xXssProtection {
-		get { headers["X-XSS-Protection"] }
+		get { getFirst("X-XSS-Protection") }
 		private set { }
 	}
 
+	** Returns the first header with the given name. (case-insensitive)
 	@Operator
-	Str? get(Str name) {
-		headers[name]
+	Str? getFirst(Str name) {
+		keyVals.find { it.key.equalsIgnoreCase(name) }?.val
 	}
 
-	Str? remove(Str name) {
-		headers.remove(name)
+	** Returns all header with the given name. (case-insensitive)
+	@Operator
+	Str[] getAll(Str name) {
+		keyVals.findAll { it.key.equalsIgnoreCase(name) }.map |kv->Str| { kv.val }
 	}
 
-	** Returns the case insensitive map that backs the headers.
+	** Returns a read-only case insensitive map of the headers.
 	Str:Str map() {
-		headers
+		(keyVals.reduce(Str:Str[:] { it.caseInsensitive = true}) |Str:Str map, kv -> Str:Str| {
+			map[kv.key] = map.containsKey(kv.key) ?  map[kv.key] + "," + kv.val : kv.val
+		} as Str:Str).ro
 	}
 	
 	override Str toStr() {
-		headers.toStr
+		map.toStr
 	}
 	
 	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
-		val := headers[name]
+		val := getFirst(name)
 		return (val == null) ? null : func(val)
 	}
+
+	private static KeyVal[] parseHeaders(InStream in) {
+		keyVals := KeyVal[,]
+		while (true) {
+			peek := in.peek
+		
+			// CRLF is end of headers
+			if (peek == CR) break
+			
+			// if line starts with space it's a continuation of the last header field
+			if (peek.isSpace && !keyVals.isEmpty) {
+				last := keyVals.removeAt(-1)
+				keyVals.add(KeyVal(last.key, last.val + " " + in.readLine.trim))
+				continue
+			}
+		
+			// key/value pair
+			key := token(in, ':').trim
+			val := token(in, CR).trim
+			if (in.read != LF)
+				throw ParseErr("Invalid CRLF line ending")
+		
+			keyVals.add(KeyVal(key, val))
+		}
+		
+		// consume final CRLF
+		if (in.read != CR || in.read != LF)
+			throw ParseErr("Invalid CRLF headers ending")
+		
+		return keyVals
+	}
+
+	** Read the next token from the stream up to the specified separator. 
+	** We place a limit of 4096 bytes on a single token.
+	** Consume the separate char too.
+	private static Str token(InStream in, Int sep) {
+		// read up to separator
+		tok := in.readStrToken(maxTokenSize) |Int ch->Bool| { return ch == sep }
+		
+		// sanity checking
+		if (tok == null) throw IOErr("Unexpected end of stream")
+		if (tok.size >= maxTokenSize) throw ParseErr("Token too big")
+		
+		// read separator
+		in.read
+		
+		return tok
+	}	
+}
 	
-//	FIXME: WebUtil.parseHeaders is borked for "Set-Cookie" - the testcase 
-//	static Void main(Str[] args) {
-//		c:=Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
-//		s:="$c\r\n$c\r\n\r\n"
-//		map:=WebUtil.parseHeaders(Buf().print(s).flip.in)
-//		Env.cur.err.printLine(map)
-//	}
+internal const class KeyVal {
+	const Str key
+	const Str val
+	new make(Str key, Str val) {
+		this.key = key
+		this.val = val
+	}
 }

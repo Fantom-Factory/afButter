@@ -1,3 +1,4 @@
+using web::WebUtil
 
 ** The HTTP response.
 class ButterResponse {
@@ -20,13 +21,23 @@ class ButterResponse {
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj data	:= [:]
 
-	new makeFromBuf(Int statusCode, Str statusMsg, Str:Str headers, Buf body, |This|? f := null) {
-		this.statusCode = statusCode
-		this.statusMsg 	= statusMsg
-		this.headers	= HttpResponseHeaders(headers)
-		this.body 		= body
-		this.body.seek(0)
-		f?.call(this)
+	** Create a response from an 'InStream'.
+	new makeFromInStream(InStream in) {
+		res := Str.defVal
+		try {
+			resVer	:= (Version?) null
+			res 	= in.readLine
+			if 		(res.startsWith("HTTP/1.0")) resVer = Butter.http10
+			else if (res.startsWith("HTTP/1.1")) resVer = Butter.http11
+			else throw IOErr("Unknown HTTP version: ${res}")
+
+			statusCode 	= res[9..11].toInt
+			statusMsg 	= res[13..-1]
+			headers		= HttpResponseHeaders(WebUtil.parseHeaders(in))
+			body 		= WebUtil.makeContentInStream(headers.map, in).readAllBuf
+		}
+		catch (IOErr e) throw e 
+		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
 	}
 
 	new makeFromStr(Int statusCode, Str statusMsg, Str:Str headers, Str body, |This|? f := null) {
