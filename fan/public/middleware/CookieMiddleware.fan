@@ -39,7 +39,7 @@ class StickyCookiesMiddleware : ButterMiddleware {
 		res := butter.sendRequest(req)
 		
 		// keep any response returned cookies
-		res.headers.setCookie?.each { setCookie(it) }
+		res.headers.setCookies?.each { setCookie(it) }
 		
 		return res
 	}

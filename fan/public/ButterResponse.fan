@@ -20,6 +20,11 @@ class ButterResponse {
 	
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj data	:= [:]
+	
+	** it-block ctor.
+	new make(|This| in) {
+		in(this)
+	}
 
 	** Create a response from an 'InStream'.
 	new makeFromInStream(InStream in) {

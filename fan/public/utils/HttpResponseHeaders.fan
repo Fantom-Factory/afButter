@@ -9,13 +9,17 @@ class HttpResponseHeaders {
 	private static const Int LF  := '\n'
 	private static const Int maxTokenSize := 4096
 
-	private const KeyVal[]	keyVals	
+	@NoDoc
+	const KeyVal[]	keyVals	
 
+	** it-block ctor.
+	new make(|This| in) {
+		in(this)
+	}
+	
 	** Creates 'HttpResponseHeaders' copying over values in the given map. 
-	new make([Str:Str]? headers := null) {
-		keyVals := KeyVal[,]
-		headers?.each |val, key| { keyVals.add(KeyVal(key, val)) }
-		this.keyVals = keyVals
+	new makeFromMap([Str:Str]? headers := null) {
+		this.keyVals = convertMap(headers)
 	}
 
 	** Parses headers from the given InStream. 
@@ -109,7 +113,7 @@ class HttpResponseHeaders {
 	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
 	** 
 	** Example: 'Set-Cookie: UserID=JohnDoe; Max-Age=3600'
-	Cookie[]? setCookie {
+	Cookie[]? setCookies {
 		get { 
 			cookies := getAll("Set-Cookie").map |cookieValue->Cookie| {
 				cName	:= (Str?) null 
@@ -174,7 +178,14 @@ class HttpResponseHeaders {
 			map[kv.key] = map.containsKey(kv.key) ?  map[kv.key] + "," + kv.val : kv.val
 		} as Str:Str).ro
 	}
-	
+
+	@NoDoc
+	KeyVal[] convertMap([Str:Str]? headers) {
+		keyVals := KeyVal[,]
+		headers?.each |val, key| { keyVals.add(KeyVal(key, val)) }
+		return keyVals
+	}
+
 	override Str toStr() {
 		map.toStr
 	}
@@ -232,8 +243,9 @@ class HttpResponseHeaders {
 		return tok
 	}	
 }
-	
-internal const class KeyVal {
+
+@NoDoc
+const class KeyVal {
 	const Str key
 	const Str val
 	new make(Str key, Str val) {
