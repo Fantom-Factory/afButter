@@ -1,8 +1,25 @@
 
-** Middleware that throws a `ServerErr` when a HTTP response returns a 5xx status code, indicating a server error.
+
+** Middleware that throws a `BadStatusErr` when a HTTP response returns a 4xx status code, indicating a bad request.
+class ErrOn4xxMiddleware : ButterMiddleware {
+	
+	** If set to 'true', this middleware throws a `BadStatusErr` on a 4xx status code. 
+	** Defaults to 'true'.
+	Bool enabled	:= true
+
+	** Do dat ting.
+	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
+		res := butter.sendRequest(req)
+		if (enabled && (400..<500).contains(res.statusCode))
+			throw BadStatusErr(res.statusCode, res.statusMsg, ErrMsgs.badRequest(res.statusCode, res.statusMsg, req.uri))
+		return res
+	}
+}
+
+** Middleware that throws a `BadStatusErr` when a HTTP response returns a 5xx status code, indicating a server error.
 class ErrOn5xxMiddleware : ButterMiddleware {
 	
-	** If set to 'true', this middleware throws a `ServerErr` on a 5xx status code. 
+	** If set to 'true', this middleware throws a `BadStatusErr` on a 5xx status code. 
 	** Defaults to 'true'.
 	Bool enabled	:= true
 
@@ -10,13 +27,13 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		res := butter.sendRequest(req)
 		if (enabled && (500..<600).contains(res.statusCode))
-			throw ServerErr(res.statusCode, res.statusMsg, ErrMsgs.serverError(res.statusCode, res.statusMsg))
+			throw BadStatusErr(res.statusCode, res.statusMsg, ErrMsgs.serverError(res.statusCode, res.statusMsg))
 		return res
 	}
 }
 
-** Throw by `ErrOn5xxMiddleware` when a HTTP response returns a 5xx status code.
-const class ServerErr : Err {
+** Throw by `ErrOnXxxMiddleware` when a HTTP response returns a bad status code.
+const class BadStatusErr : Err {
 	** The failing HTTP response status code
 	const Int statusCode
 	

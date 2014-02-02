@@ -45,6 +45,10 @@ class ButterDish : Butter {
 	
 	// ---- Default Stack Middleware -----------------------------------------------------------------------------------
 	
+	ErrOn4xxMiddleware errOn4xx() {
+		findMiddleware(ErrOn4xxMiddleware#)
+	}
+
 	ErrOn5xxMiddleware errOn5xx() {
 		findMiddleware(ErrOn5xxMiddleware#)
 	}

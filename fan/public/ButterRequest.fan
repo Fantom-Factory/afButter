@@ -18,9 +18,8 @@ class ButterRequest {
 	** This map uses case insensitive keys.  
 	HttpRequestHeaders	headers	:= HttpRequestHeaders()
 
-	// TODO: rename to stash
 	** A temporary store for request data, use to pass data between middleware.
-	Str:Obj data	:= Str:Obj[:] { caseInsensitive = true }
+	Str:Obj stash	:= Str:Obj[:] { caseInsensitive = true }
 	
 	** The request body.
 	Buf 	body	:= Buf()
