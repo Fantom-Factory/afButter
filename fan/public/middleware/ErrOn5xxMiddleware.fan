@@ -32,7 +32,7 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 	}
 }
 
-** Throw by `ErrOnXxxMiddleware` when a HTTP response returns a bad status code.
+** Throw by 'ErrOnXxxMiddleware' when a HTTP response returns a bad status code.
 const class BadStatusErr : Err {
 	** The failing HTTP response status code
 	const Int statusCode

@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afButter"
 		summary = "A library that helps ease HTTP requests through a stack of middleware"
-		version = Version("0.0.4")
+		version = Version("0.0.5")
 
 		meta	= [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,7 @@ class Build : BuildPod {
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afButter",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afbutter",
 			"license.name"	: "BSD 2-Clause License",	
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		depends = [

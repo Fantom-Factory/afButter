@@ -73,6 +73,7 @@ pre>
     StickyHeadersMiddleware(),
     OpenAuthMiddleware(),
     FollowRedirectsMiddleware(),
+    ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
     HttpTerminator()
   ]
