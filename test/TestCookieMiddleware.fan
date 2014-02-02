@@ -3,11 +3,10 @@ using web::Cookie
 internal class TestCookieMiddleware : ButterTest {
 	
 	Void testCookie() {
+		cookie := Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
 		mw	:= StickyCookiesMiddleware()
-
-		res1 := ButterResponse(200, "", [:], Buf())
-		res2 := ButterResponse(200, "", [:], Buf())
-		res1.headers.map["Set-Cookie"] = Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr
+		res1 := ButterResponse(200, "", ["Set-Cookie":cookie], "")
+		res2 := ButterResponse(200, "", [:], "")
 		end := MockTerminator([res1, res2, res2])
 
 		// test it picked up the Set-Cookie header
@@ -36,10 +35,8 @@ internal class TestCookieMiddleware : ButterTest {
 	** If you can't be arsed to set credentials on your test cookies, assume wild cards
 	Void testCookieNullMaxAge() {
 		mw	:= StickyCookiesMiddleware()
-
-		res1 := ButterResponse(200, "", [:], Buf())
-		res2 := ButterResponse(200, "", [:], Buf())
-		res1.headers.map["Set-Cookie"] = Cookie("judge", "Dredd").toStr
+		res1 := ButterResponse(200, "", ["set-cookie":Cookie("judge", "Dredd").toStr], "")
+		res2 := ButterResponse(200, "", [:], "")
 		end := MockTerminator([res1, res2, res2])
 
 		// test it picked up the Set-Cookie header
