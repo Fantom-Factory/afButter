@@ -17,7 +17,7 @@ internal class TestErrOn5xxMiddleware : ButterTest {
 	Void testThrowsServerErr() {
 		mw	:= ErrOn5xxMiddleware()
 		res := ButterResponse(500, "Argh!", [:], Buf())
-		verifyErrTypeAndMsg(ServerErr#, ErrMsgs.serverError(500, "Argh!")) {
+		verifyErrTypeAndMsg(BadStatusErr#, ErrMsgs.serverError(500, "Argh!")) {
 			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))			
 		}
 	}

@@ -17,6 +17,10 @@ internal const class ErrMsgs {
 		"Could not find Middleware for type '${mwType}'"
 	}
 
+	static Str badRequest(Int statusCode, Str statusMsg, Uri reqUri) {
+		"Bad Request: ${statusCode} - ${statusMsg} at `${reqUri}`"
+	}
+
 	static Str serverError(Int statusCode, Str statusMsg) {
 		"HTTP response indicated a server error: ${statusCode} - ${statusMsg}"
 	}

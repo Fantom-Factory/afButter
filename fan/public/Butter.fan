@@ -28,6 +28,7 @@ mixin Butter {
 	**  - `StickyCookiesMiddleware`
 	**  - `StickyHeadersMiddleware`
 	**  - `FollowRedriectsMiddleware`
+	**  - `ErrOn4xxMiddleware`
 	**  - `ErrOn5xxMiddleware`
 	**  - `HttpTerminator`
 	static ButterMiddleware[] defaultStack() {
@@ -35,6 +36,7 @@ mixin Butter {
 			StickyCookiesMiddleware(),
 			StickyHeadersMiddleware(),
 			FollowRedirectsMiddleware(),
+			ErrOn4xxMiddleware(),
 			ErrOn5xxMiddleware(),
 			HttpTerminator()
 		]
