@@ -140,6 +140,7 @@ Release Notes [#releaseNotes]
 v0.0.4 [#v0.0.4]
 ----------------
  - New: Added 'ErrOn4xxMiddleware' to cacth those annoying 404s!
+ - Chg: Support for HTTP resposne headers that may appear multiple times, e.g. 'Set-Cookie'
  - Chg: Renamed 'ButterRequest.data()' -> 'stash()'.
  - Bug: Could not post case-insensitive forms - see [Uri.encodeQuery throws UnsupportedOperationException]`http://fantom.org/sidewalk/topic/2236`
 
