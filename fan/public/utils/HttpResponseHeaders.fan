@@ -167,7 +167,6 @@ class HttpResponseHeaders {
 	}
 
 	** Returns all header with the given name. (case-insensitive)
-	@Operator
 	Str[] getAll(Str name) {
 		keyVals.findAll { it.key.equalsIgnoreCase(name) }.map |kv->Str| { kv.val }
 	}
