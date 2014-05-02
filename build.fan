@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afButter"
 		summary = "A library that helps ease HTTP requests through a stack of middleware"
-		version = Version("0.0.5")
+		version = Version("0.0.6")
 
 		meta	= [
 			"org.name"		: "Alien-Factory",
@@ -13,8 +13,8 @@ class Build : BuildPod {
 			"proj.name"		: "Butter",
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afButter",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afbutter",
-			"license.name"	: "BSD 2-Clause License",	
-			"repo.private"	: "true"
+			"license.name"	: "The MIT Licence",
+			"repo.private"	: "false"
 		]
 
 		depends = [
@@ -25,7 +25,7 @@ class Build : BuildPod {
 		]
 		
 		srcDirs = [`test/`, `test/oauth/`, `fan/`, `fan/public/`, `fan/public/utils/`, `fan/public/oauth/`, `fan/public/middleware/`, `fan/internal/`, `fan/internal/utils/`]
-		resDirs = [`doc/`]
+		resDirs = [`licence.txt`, `doc/`]
 
 		docApi = true
 		docSrc = true
@@ -33,10 +33,7 @@ class Build : BuildPod {
 	
 	@Target { help = "Compile to pod file and associated natives" }
 	override Void compile() {
-		// exclude test code when building the pod
-		srcDirs = srcDirs.exclude { it.toStr.startsWith("test/") }
-		resDirs = resDirs.exclude { it.toStr.startsWith("res/test/") }
-		
+		// see "stripTest" in `/etc/build/config.props` to exclude test src & res dirs
 		super.compile
 		
 		// copy src to %FAN_HOME% for F4 debugging

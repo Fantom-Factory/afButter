@@ -15,7 +15,7 @@ Install [#Install]
 ******************
 Install 'Butter' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
 
-  $ fanr install -r http://repo.status302.com/fanr/ afButter
+  C:\> fanr install -r http://repo.status302.com/fanr/ afButter
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
@@ -137,6 +137,9 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v0.0.6 [#v0.0.6]
+----------------
+ - Chg: Added support for HTTP 1.1 308 Redirects.
 
 v0.0.4 [#v0.0.4]
 ----------------

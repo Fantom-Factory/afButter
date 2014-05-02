@@ -8,6 +8,7 @@ The adoption of the Middleware pattern allows you to seamlessly enhance and modi
 `Butter` was inspired by Ruby's [Faraday](https://github.com/lostisland/faraday) library.
 
 
+
 ## Install
 
 Install `Butter` with the Fantom Respository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
