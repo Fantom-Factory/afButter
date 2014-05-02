@@ -66,7 +66,29 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		}
 	}
 
-	Void test301Get() {
+	Void test301GetHttp10() {
+		end	:= MockTerminator([
+			ButterResponse(301, "", ["Location":"/301"], "") { it.version = Butter.http10 },  
+			ButterResponse(200, "", [:], "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`/`))
+		verifyEq(end.req.method, "GET")
+		verifyEq(end.req.uri, `/301`)
+		verifyEq(res.statusCode, 200)
+	}
+
+	Void test301PostHttp10() {
+		end	:= MockTerminator([
+			ButterResponse(301, "", ["Location":"/301"], "") { it.version = Butter.http10 }, 
+			ButterResponse(200, "", [:], "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
+		verifyEq(end.req.method, "GET")
+		verifyEq(end.req.uri, `/301`)
+		verifyEq(res.statusCode, 200)
+	}
+	
+	Void test301GetHttp11() {
 		end	:= MockTerminator([
 			ButterResponse(301, "", ["Location":"/301"], ""), 
 			ButterResponse(200, "", [:], "")
@@ -77,7 +99,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		verifyEq(res.statusCode, 200)
 	}
 
-	Void test301Post() {
+	Void test301PostHttp11() {
 		end	:= MockTerminator([
 			ButterResponse(301, "", ["Location":"/301"], ""), 
 			ButterResponse(200, "", [:], "")
@@ -173,6 +195,28 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
 		verifyEq(end.req.uri, `/307`)
+		verifyEq(res.statusCode, 200)
+	}
+
+	Void test308Get() {
+		end	:= MockTerminator([
+			ButterResponse(308, "", ["Location":"/308"], ""), 
+			ButterResponse(200, "", [:], "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`/`))
+		verifyEq(end.req.method, "GET")
+		verifyEq(end.req.uri, `/308`)
+		verifyEq(res.statusCode, 200)
+	}
+
+	Void test308Post() {
+		end	:= MockTerminator([
+			ButterResponse(308, "", ["Location":"/308"], ""), 
+			ButterResponse(200, "", [:], "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
+		verifyEq(end.req.method, "POST")
+		verifyEq(end.req.uri, `/308`)
 		verifyEq(res.statusCode, 200)
 	}
 	
