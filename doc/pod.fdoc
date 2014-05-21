@@ -13,13 +13,19 @@ See `OpenAuthMiddleware` for an example.
 
 Install [#Install]
 ******************
-Install 'Butter' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
 
-  C:\> fanr install -r http://repo.status302.com/fanr/ afButter
+  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "afButter 0+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+
+
+
+Documentation [#documentation]
+******************************
+Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/`.
 
 
 
@@ -27,6 +33,8 @@ Quick Start [#quickStart]
 *************************
 1). Create a text file called 'Example.fan':
 pre>
+syntax: fantom
+
 using afButter
 
 class Example {
@@ -40,6 +48,8 @@ class Example {
 
 2). Run Example.fan as a Fantom script from the command line:
 pre>
+syntax: html
+
 C:\> fan Example.fan
 <!DOCTYPE html>
 <html>
@@ -64,11 +74,13 @@ The last piece of middleware *MUST* return a response. These middleware classes 
 terminator is the `HttpTerminator` which makes an actual HTTP request to the interweb. (When testing this could be
 substituted with a mock terminator that returns set / canned responses.)
 
-To create a 'Butter' instance, call the static [Butter.churnOut()]`Butter.churnOut` method, optionally passing in a custom
+To create a 'Butter' instance, call the static [Butter.churnOut()]`Butter#churnOut` method, optionally passing in a custom
 list of middleware:
 
 pre>
-  middlewareStack := [
+syntax: fantom
+
+middlewareStack := [
     StickyCookiesMiddleware(),
     StickyHeadersMiddleware(),
     OpenAuthMiddleware(),
@@ -76,15 +88,17 @@ pre>
     ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
     HttpTerminator()
-  ]
+]
 
-  butter := Butter.churnOut(middlewareStack)
+butter := Butter.churnOut(middlewareStack)
 <pre
 
 Or to use the default stack of middleware bundled with 'Butter', just *churn and go*:
 
 pre>
-  html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
+syntax: fantom
+
+html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
 <pre
 
 
@@ -92,15 +106,19 @@ pre>
 Butter Dishes [#butterDish]
 ***************************
 Because functionality is encapsulated in the middleware, you need to access these classes to configure them.
-Use the [Butter.findMiddleware()]`Butter.findMiddleware` method to do this:
+Use the [Butter.findMiddleware()]`Butter#findMiddleware` method to do this:
 
 pre>
-  butter := Butter.churnOut()
-  ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = false
-  ((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = false
+syntax: fantom
+
+butter := Butter.churnOut()
+((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = false
+((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = false
 <pre
 
 As you can see, this code is quite verbose. To combat this, there are two alternative means of getting hold of middleware:
+
+
 
 Dynamic Stylie [#dynamic]
 =========================
@@ -109,15 +127,19 @@ The dynamic methods have the same simple name as the middleware type. If the typ
 omitted. Example:
 
 pre>
-  butter := Butter.churnOut()
-  butter->followRedriects->enabled = true
-  butter->errOn5xx->enabled = true
+syntax: fantom
+
+butter := Butter.churnOut()
+butter->followRedriects->enabled = true
+butter->errOn5xx->enabled = true
 <pre
 
 Should instances of the same middleware class be in the stack more than once (or should it contain 2 middleware classes
 with the same name from different pods) then the just first one is returned.
 
 Obviously, dynamic invocation should be used with caution.
+
+
 
 Static Stylie [#static]
 =======================
@@ -126,9 +148,11 @@ contains helper methods.
 There is a default `ButterDish` class with methods to access middleware in the default stack. Example:
 
 pre>
-  butter := ButterDish(Butter.churnOut())
-  butter.followRedirects.enabled = true
-  butter.errOn5xx.enabled = true
+syntax: fantom
+
+butter := ButterDish(Butter.churnOut())
+butter.followRedirects.enabled = true
+butter.errOn5xx.enabled = true
 <pre
 
 When using other middleware, you are encouraged to create your own 'ButterDish' that extends the default one.
@@ -137,6 +161,10 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v0.0.8 [#v0.0.8]
+----------------
+ - New: 'ErrOn5xxMiddleware' detects and re-throws any Errs processed by [BedSheet]`pod:afBedSheet`.
+
 v0.0.6 [#v0.0.6]
 ----------------
  - Chg: Added support for HTTP 1.1 308 Redirects.

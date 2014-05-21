@@ -22,7 +22,7 @@ internal const class ErrMsgs {
 	}
 
 	static Str serverError(Int statusCode, Str statusMsg) {
-		"HTTP response indicated a server error: ${statusCode} - ${statusMsg}"
+		"${statusCode} - ${statusMsg}"
 	}
 
 	static Str tooManyRedirects(Int tooMany) {
