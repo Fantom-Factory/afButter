@@ -26,8 +26,14 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 	** Do dat ting.
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		res := butter.sendRequest(req)
-		if (enabled && (500..<600).contains(res.statusCode))
+		if (enabled && (500..<600).contains(res.statusCode)) {
+			errMsg 	 := res.headers["X-BedSheet-errMsg"]
+			errType	 := res.headers["X-BedSheet-errType"]
+			errStack := res.headers["X-BedSheet-errStackTrace"]
+			if (errMsg != null && errType != null && errStack != null)
+				throw BadStatusErr(res.statusCode, errMsg, "${errType} - ${errMsg}\n${errStack}")
 			throw BadStatusErr(res.statusCode, res.statusMsg, ErrMsgs.serverError(res.statusCode, res.statusMsg))
+		}
 		return res
 	}
 }
