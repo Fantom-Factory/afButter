@@ -1,53 +1,118 @@
-# Butter
+## Overview 
 
-`Butter` is a [Fantom](http://fantom.org/) library that helps ease HTTP requests through a stack of middleware.
+`Butter` is a library that helps ease HTTP requests through a stack of middleware.
 
-`Butter` is a replacement for `WebClient` and provides an extensible chain of middleware for making HTTP requests and processing the response.
-The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
+`Butter` is a replacement for [web::WebClient](http://fantom.org/doc/web/WebClient.html) and provides an extensible chain of middleware for making HTTP requests and processing the response. The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests. See [OpenAuthMiddleware](http://repo.status302.com/doc/afButter/OpenAuthMiddleware.html) for an example.
 
 `Butter` was inspired by Ruby's [Faraday](https://github.com/lostisland/faraday) library.
 
+## Install 
 
+Install `Butter` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-## Install
-
-Install `Butter` with the Fantom Respository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
-
-    $ fanr install -r http://repo.status302.com/fanr/ afButter
+    C:\> fanr install -r http://repo.status302.com/fanr/ afButter
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afButter 0+"]
+    depends = ["sys 1.0", ..., "afButter 0.0+"]
 
+## Documentation 
 
+Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afButter/).
 
-## Documentation
-
-Full API & fandocs are available on the [status302 repository](http://repo.status302.com/doc/afButter/#overview).
-
-
-
-## Quick Start
+## Quick Start 
 
 1). Create a text file called `Example.fan`:
 
-    using afButter
+```
+using afButter
 
-    class Example {
-        Void main() {
-            butter   := Butter.churnOut()
-            response := butter.get(`http://www.fantomfactory.org/`)
-            echo(response.asStr)
-        }
+class Example {
+    Void main() {
+        butter   := Butter.churnOut()
+        response := butter.get(`http://www.fantomfactory.org/`)
+        echo(response.asStr)
     }
+}
+```
 
-2). Run `Example.fan` as a Fantom script from the command line:
+2). Run Example.fan as a Fantom script from the command line:
 
-    C:\> fan Example.fan
-    <!DOCTYPE html>
-    <html>
-        <head>
-            <title>Home :: Fantom-Factory</title>
-            ....
-            ....
+```
+C:\> fan Example.fan
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home :: Fantom-Factory</title>
+        ....
+        ....
+```
+
+## Usage 
+
+An instance of [Butter](http://repo.status302.com/doc/afButter/Butter.html) wraps a stack of [Middleware](http://repo.status302.com/doc/afButter/ButterMiddleware.html) classes. When a HTTP request is made through `Butter`, each piece of middleware is called in turn. Middleware classes may either pass the request on to the next piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request and / or response objects.
+
+The ordering of the middleware stack *is* important.
+
+The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default terminator is the [HttpTerminator](http://repo.status302.com/doc/afButter/HttpTerminator.html) which makes an actual HTTP request to the interweb. (When testing this could be substituted with a mock terminator that returns set / canned responses.)
+
+To create a `Butter` instance, call the static [Butter.churnOut()](http://repo.status302.com/doc/afButter/Butter#churnOut.html) method, optionally passing in a custom list of middleware:
+
+```
+middlewareStack := [
+    StickyCookiesMiddleware(),
+    StickyHeadersMiddleware(),
+    OpenAuthMiddleware(),
+    FollowRedirectsMiddleware(),
+    ErrOn4xxMiddleware(),
+    ErrOn5xxMiddleware(),
+    HttpTerminator()
+]
+
+butter := Butter.churnOut(middlewareStack)
+```
+
+Or to use the default stack of middleware bundled with `Butter`, just *churn and go*:
+
+```
+html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
+```
+
+## Butter Dishes 
+
+Because functionality is encapsulated in the middleware, you need to access these classes to configure them. Use the [Butter.findMiddleware()](http://repo.status302.com/doc/afButter/Butter#findMiddleware.html) method to do this:
+
+```
+butter := Butter.churnOut()
+((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = false
+((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = false
+```
+
+As you can see, this code is quite verbose. To combat this, there are two alternative means of getting hold of middleware:
+
+### Dynamic Stylie 
+
+If you make dynamic invocation method calls on the `Butter` class, you can retrieve instances of middleware. The dynamic methods have the same simple name as the middleware type. If the type name ends with `Middleware`, it may be omitted. Example:
+
+```
+butter := Butter.churnOut()
+butter->followRedriects->enabled = true
+butter->errOn5xx->enabled = true
+```
+
+Should instances of the same middleware class be in the stack more than once (or should it contain 2 middleware classes with the same name from different pods) then the just first one is returned.
+
+Obviously, dynamic invocation should be used with caution.
+
+### Static Stylie 
+
+To call the middleware in a statically typed fashion, use a `ButterDish` class that holds your `Butter` instance and contains helper methods. There is a default [ButterDish](http://repo.status302.com/doc/afButter/ButterDish.html) class with methods to access middleware in the default stack. Example:
+
+```
+butter := ButterDish(Butter.churnOut())
+butter.followRedirects.enabled = true
+butter.errOn5xx.enabled = true
+```
+
+When using other middleware, you are encouraged to create your own `ButterDish` that extends the default one.
 
