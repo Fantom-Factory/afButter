@@ -81,10 +81,9 @@ pre>
 syntax: fantom
 
 middlewareStack := [
-    StickyCookiesMiddleware(),
     StickyHeadersMiddleware(),
-    OpenAuthMiddleware(),
     FollowRedirectsMiddleware(),
+    StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
     HttpTerminator()
@@ -164,6 +163,7 @@ Release Notes [#releaseNotes]
 v0.0.8 [#v0.0.8]
 ----------------
  - New: 'ErrOn5xxMiddleware' detects and re-throws any Errs processed by [BedSheet]`pod:afBedSheet`.
+ - Chg: Rejigged the default middleware stack so Cookies can be captured in re-direct responses.
 
 v0.0.6 [#v0.0.6]
 ----------------
