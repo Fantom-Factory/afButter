@@ -3,9 +3,12 @@ using inet
 ** The HTTP request.
 class ButterRequest {
 
-	** Uri to use for request. 
-	Uri		uri
+	** Url to use for request. 
+	Uri		url
 
+	@NoDoc @Deprecated { msg="Use url instead" }
+	Uri		uri
+	
 	** HTTP version to use for request.
 	** Defaults to HTTP 1.1
 	Version version	:= Butter.http11
@@ -24,12 +27,13 @@ class ButterRequest {
 	** The request body.
 	Buf 	body	:= Buf()
 	
-	new make(Uri uri, |This|? f := null) {
-		this.uri = uri
+	new make(Uri url, |This|? f := null) {
+		this.url = url
+		this.uri = url
 		f?.call(this)
 	}
 	
 	override Str toStr() {
-		"${method} ${uri} HTTP/${version}"
+		"${method} ${url} HTTP/${version}"
 	}
 }

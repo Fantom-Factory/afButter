@@ -47,11 +47,11 @@ class OpenAuthMiddleware : ButterMiddleware {
 		oauthParams["oauth_consumer_key"]		= consumerKey
 		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// TODO: OAuth have PLAINTEXT option
 		
-		req.uri.query.each |val, key| { 
+		req.url.query.each |val, key| { 
 			oauthParams[key] = val
 		}
 
-		normalizedUri		:= normalizeUri(req.uri)
+		normalizedUri		:= normalizeUri(req.url)
 		normalizedParams	:= oauthParams.queryStr
 		signatureBaseStr	:= OpenAuthParams.percentEscape(req.method) + "&" + 
 							   OpenAuthParams.percentEscape(normalizedUri) + "&" + 

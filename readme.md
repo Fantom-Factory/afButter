@@ -60,10 +60,9 @@ To create a `Butter` instance, call the static [Butter.churnOut()](http://repo.s
 
 ```
 middlewareStack := [
-    StickyCookiesMiddleware(),
     StickyHeadersMiddleware(),
-    OpenAuthMiddleware(),
     FollowRedirectsMiddleware(),
+    StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
     HttpTerminator()

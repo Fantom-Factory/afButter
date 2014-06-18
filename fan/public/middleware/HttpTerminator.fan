@@ -13,17 +13,17 @@ class HttpTerminator : ButterMiddleware {
 	
 	** Makes a real HTTP request.
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		if (!req.uri.isAbs || req.uri.host == null)
-			throw ButterErr(ErrMsgs.reqUriHasNoScheme(req.uri))
+		if (!req.url.isAbs || req.url.host == null)
+			throw ButterErr(ErrMsgs.reqUriHasNoScheme(req.url))
 
-		isHttps := req.uri.scheme == "https"
+		isHttps := req.url.scheme == "https"
 		defPort := isHttps ? 443 : 80
 
 		// set the Host, if it's not been already
 		if (req.headers.host == null) {
-			host := req.uri.host
-			if (req.uri.port != null && req.uri.port != defPort)
-				host += ":${req.uri.port}"
+			host := req.url.host
+			if (req.url.port != null && req.url.port != defPort)
+				host += ":${req.url.port}"
 			req.headers.host = host.toUri
 		}
 
@@ -36,8 +36,8 @@ class HttpTerminator : ButterMiddleware {
 		if (options != null) socket.options.copyFrom(this.options)
 		// request uri is absolute if proxy, relative otherwise
 //		reqPath := (usingProxy ? reqUri : reqUri.relToAuth).encode
-		reqPath := (req.uri.relToAuth).encode
-		socket.connect(IpAddr(req.uri.host), req.uri.port ?: defPort)
+		reqPath := (req.url.relToAuth).encode
+		socket.connect(IpAddr(req.url.host), req.url.port ?: defPort)
 		out 	:= socket.out
 		reqOutStream := WebUtil.makeContentOutStream(req.headers.map, out)
 

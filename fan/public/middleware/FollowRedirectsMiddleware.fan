@@ -30,7 +30,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 			if (redirectCount++ > tooManyRedirects)
 				throw ButterErr(ErrMsgs.tooManyRedirects(tooManyRedirects), locations)
 			
-			locations.add(req.uri)
+			locations.add(req.url)
 			res = butter.sendRequest(req)
 			redirect = false
 
@@ -38,7 +38,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 				if (res.headers.location == null)
 					log.warn(LogMsgs.redirectGivenWithNoLocation(res.statusCode))
 				else {
-					req.uri = res.headers.location
+					req.url = res.headers.location
 					redirect = true
 					
 					if (303 == res.statusCode)
