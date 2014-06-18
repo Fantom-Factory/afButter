@@ -12,7 +12,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		end	:= MockTerminator([res])
 		mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/`)
+		verifyEq(end.req.url, `/`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -21,7 +21,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		end	:= MockTerminator([res])
 		mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/`)
+		verifyEq(end.req.url, `/`)
 		verifyEq(res.statusCode, 301)
 	}
 	
@@ -33,7 +33,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/`)
+		verifyEq(end.req.url, `/`)
 		verifyEq(res.statusCode, 301)
 		verifyEq(res.headers.location, `/301`)
 	}
@@ -47,7 +47,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 			ButterResponse(200, "Groovy", [:], "")
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
-		verifyEq(end.req.uri, `/301-3`)
+		verifyEq(end.req.url, `/301-3`)
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.statusMsg, "Groovy")
 	}
@@ -73,7 +73,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/301`)
+		verifyEq(end.req.url, `/301`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -84,7 +84,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/301`)
+		verifyEq(end.req.url, `/301`)
 		verifyEq(res.statusCode, 200)
 	}
 	
@@ -95,7 +95,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/301`)
+		verifyEq(end.req.url, `/301`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -106,7 +106,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
-		verifyEq(end.req.uri, `/301`)
+		verifyEq(end.req.url, `/301`)
 		verifyEq(res.statusCode, 200)
 	}
 	
@@ -117,7 +117,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/302`)
+		verifyEq(end.req.url, `/302`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -128,7 +128,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/302`)
+		verifyEq(end.req.url, `/302`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -139,7 +139,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/302`)
+		verifyEq(end.req.url, `/302`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -150,7 +150,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
-		verifyEq(end.req.uri, `/302`)
+		verifyEq(end.req.url, `/302`)
 		verifyEq(res.statusCode, 200)
 	}
 	
@@ -161,7 +161,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/303`)
+		verifyEq(end.req.url, `/303`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -172,7 +172,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/303`)
+		verifyEq(end.req.url, `/303`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -183,7 +183,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/307`)
+		verifyEq(end.req.url, `/307`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -194,7 +194,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
-		verifyEq(end.req.uri, `/307`)
+		verifyEq(end.req.url, `/307`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -205,7 +205,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.method, "GET")
-		verifyEq(end.req.uri, `/308`)
+		verifyEq(end.req.url, `/308`)
 		verifyEq(res.statusCode, 200)
 	}
 
@@ -216,7 +216,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		])
 		res := mw.sendRequest(end, ButterRequest(`/`) { it.method = "post" })
 		verifyEq(end.req.method, "POST")
-		verifyEq(end.req.uri, `/308`)
+		verifyEq(end.req.url, `/308`)
 		verifyEq(res.statusCode, 200)
 	}
 	

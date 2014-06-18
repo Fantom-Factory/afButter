@@ -11,7 +11,7 @@ class ErrOn4xxMiddleware : ButterMiddleware {
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		res := butter.sendRequest(req)
 		if (enabled && (400..<500).contains(res.statusCode))
-			throw BadStatusErr(res.statusCode, res.statusMsg, ErrMsgs.badRequest(res.statusCode, res.statusMsg, req.uri))
+			throw BadStatusErr(res.statusCode, res.statusMsg, ErrMsgs.badRequest(res.statusCode, res.statusMsg, req.url))
 		return res
 	}
 }
