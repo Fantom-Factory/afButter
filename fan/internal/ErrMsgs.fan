@@ -28,4 +28,8 @@ internal const class ErrMsgs {
 	static Str tooManyRedirects(Int tooMany) {
 		"Too many redirects detected, ${tooMany} in total! See '${FollowRedirectsMiddleware#tooManyRedirects.qname}' to change the limit."
 	}
+
+	static Str hostNotDefined(Uri host) {
+		"Host URI does not contain a host part: ${host}"
+	}
 }

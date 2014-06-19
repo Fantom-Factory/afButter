@@ -16,21 +16,17 @@ class HttpTerminator : ButterMiddleware {
 		if (!req.url.isAbs || req.url.host == null)
 			throw ButterErr(ErrMsgs.reqUriHasNoScheme(req.url))
 
-		isHttps := req.url.scheme == "https"
-		defPort := isHttps ? 443 : 80
-
 		// set the Host, if it's not been already
-		if (req.headers.host == null) {
-			host := req.url.host
-			if (req.url.port != null && req.url.port != defPort)
-				host += ":${req.url.port}"
-			req.headers.host = host.toUri
-		}
+		// Host is mandatory for HTTP/1.1, and does no harm in HTTP/1.0
+		if (req.headers.host == null)
+			req.headers.host = req.url	// let the headers normalise the host part out of the entire req url
 
 		// set the Content-Length, if it's not been already
-		if (req.headers.contentLength == null && req.method != "GET") {
+		if (req.headers.contentLength == null && req.method != "GET")
 			req.headers.contentLength = req.body.size
-		}
+
+		isHttps := req.url.scheme == "https"
+		defPort := isHttps ? 443 : 80
 
 		socket 	:= isHttps ? TcpSocket.makeSsl: TcpSocket.make
 		if (options != null) socket.options.copyFrom(this.options)

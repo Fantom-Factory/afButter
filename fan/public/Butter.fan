@@ -89,6 +89,7 @@ mixin Butter {
 		return sendRequest(req)
 	}	
 
+	@NoDoc
 	override Obj? trap(Str name, Obj?[]? args := null) {
 		middleware.find |mw->Bool| {
 			if (mw.typeof.name.equalsIgnoreCase(name))

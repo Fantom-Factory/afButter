@@ -61,7 +61,7 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 			ButterResponse(301, "", ["Location":"/301-4"], ""), 
 			ButterResponse(200, "", [:], "")
 		])
-		verifyErrTypeAndMsg(ButterErr#, ErrMsgs.tooManyRedirects(3)) {
+		verifyErrMsg(ButterErr#, ErrMsgs.tooManyRedirects(3)) {
 			res := mw.sendRequest(end, ButterRequest(`/`))
 		}
 	}
