@@ -1,14 +1,11 @@
 
-For 1.0.0
+For 1.0.2
 =========
 
-Add gzip middleware that adds Accept gzip, and auto unzips the response
 
-validate 'host' header only contains the host and not the scheme or '/' path
 
 For Future
 ==========
-
 use proxy
 support for continue 100
 (have res take a stream and read it all on asStr, asBuf, etc...)

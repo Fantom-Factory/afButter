@@ -26,7 +26,8 @@ class ButterResponse {
 		in(this)
 	}
 
-	** Create a response from an 'InStream'.
+	** Creates a response reading real HTTP values from an 'InStream'.
+	** The whole response body is read in. 
 	new makeFromInStream(InStream in) {
 		res := Str.defVal
 		try {
@@ -45,6 +46,7 @@ class ButterResponse {
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
 	}
 
+	** Create a response from a 'Str' body.
 	new makeFromStr(Int statusCode, Str statusMsg, Str:Str headers, Str body, |This|? f := null) {
 		this.statusCode = statusCode
 		this.statusMsg 	= statusMsg
@@ -69,11 +71,12 @@ class ButterResponse {
 		body.seek(0)
 	}
 
-	** Returns the response stream.
+	** Returns the body as an 'InStream'.
 	InStream asInStream() {
 		body.seek(0).in
 	}
 	
+	@NoDoc
 	override Str toStr() {
 		"$statusCode - $statusMsg"
 	}

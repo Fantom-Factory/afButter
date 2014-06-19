@@ -6,7 +6,7 @@
 **
 ** @see `http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3`
 class QualityValues {
-	private Str:Float	qvalues	:= Utils.makeMap(Str#, Float#)
+	private Str:Float	qvalues
 	
 	private new make(Str:Float qvalues) {
 		this.qvalues = qvalues
@@ -14,7 +14,7 @@ class QualityValues {
 	
 	** Parses a HTTP header value into a 'name:qvalue' map.
 	** Throws 'ParseErr' if the header Str is invalid.
-	static new fromStr(Str? header, Bool checked := true) {
+	static new fromStr(Str? header := null, Bool checked := true) {
 		qvalues	:= Utils.makeMap(Str#, Float#)
 		
 		if (header == null)
@@ -57,10 +57,23 @@ class QualityValues {
 		qvalues.keys.sortr |q1, q2| { qvalues[q1] <=> qvalues[q2] }.join(", ") |q| { qvalues[q] == 1.0f ? "$q" : "$q;q=" + qvalues[q].toLocale("0.###") }
 	}
 
-	** Returns the qvalue associated with 'name'. Defaults to '0' if 'name' was not supplied.
+	** Returns the qvalue associated with 'name'. Defaults to '0' if 'name' is not mapped.
+	** 
+	** 'name' is case-insensitive.
 	@Operator
 	Float get(Str name) {
 		qvalues.get(name, 0f)
+	}
+	
+	** Sets the given quality value. 
+	**  
+	** 'name' is case-insensitive.
+	@Operator
+	This set(Str name, Float qval) {
+		if (qval < 0.0f || qval > 1.0f)
+			throw ArgErr("'$qval' should be 0.0 >= q <= 1.0")
+		qvalues[name] = qval
+		return this
 	}
 
 	** Returns 'true' if 'name' was supplied in the header

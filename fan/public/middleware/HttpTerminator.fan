@@ -5,7 +5,7 @@ using web::WebUtil
 // TODO: use proxy
 // TODO: pipelining - use middleware, have it set the 'socket' via req.data
 
-** A middleware terminator for making real HTTP requests. 
+** (Terminator) - A 'Butter' Terminator for making real HTTP requests. 
 ** When used in a chain, no other middleware should come after this one. (For they will not be called.)
 class HttpTerminator : ButterMiddleware {
 

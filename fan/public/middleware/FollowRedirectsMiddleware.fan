@@ -1,5 +1,5 @@
 
-** Middleware that automatically resubmits requests on redirect responses.
+** (Middleware) - Automatically resubmits requests on redirect responses.
 class FollowRedirectsMiddleware : ButterMiddleware {
 	private static const Log 	log				:= Utils.getLog(FollowRedirectsMiddleware#)
 	private static const Int[]	redirectCodes	:= [301, 302, 303, 307, 308]
@@ -15,7 +15,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 	** Defaults to '20', as does [Firefox and Chrome]`http://stackoverflow.com/questions/9384474/in-chrome-how-many-redirects-are-too-many#answer-9384762`.
 	Int tooManyRedirects	:= 20
 	
-	** Do dat ting.
+	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		ButterResponse? res := null
 
