@@ -64,4 +64,8 @@ class ButterDish : Butter {
 	StickyHeadersMiddleware stickyHeaders() {
 		findMiddleware(StickyHeadersMiddleware#)
 	}
+
+	GzipMiddleware gzip() {
+		findMiddleware(GzipMiddleware#)
+	}
 }

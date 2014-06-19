@@ -1,13 +1,14 @@
 
 
-** Middleware that throws a `BadStatusErr` when a HTTP response returns a 4xx status code, indicating a bad request.
+** (Middleware) - Throws `BadStatusErr` when a HTTP response returns a 4xx status code. 
+** This indicates a bad request.
 class ErrOn4xxMiddleware : ButterMiddleware {
 	
 	** If set to 'true', this middleware throws a `BadStatusErr` on a 4xx status code. 
 	** Defaults to 'true'.
 	Bool enabled	:= true
 
-	** Do dat ting.
+	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		res := butter.sendRequest(req)
 		if (enabled && (400..<500).contains(res.statusCode))
@@ -16,14 +17,15 @@ class ErrOn4xxMiddleware : ButterMiddleware {
 	}
 }
 
-** Middleware that throws a `BadStatusErr` when a HTTP response returns a 5xx status code, indicating a server error.
+** (Middleware) - Throws `BadStatusErr` when a HTTP response returns a 5xx status code.
+** This indicates a server error.
 class ErrOn5xxMiddleware : ButterMiddleware {
 	
 	** If set to 'true', this middleware throws a `BadStatusErr` on a 5xx status code. 
 	** Defaults to 'true'.
 	Bool enabled	:= true
 
-	** Do dat ting.
+	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		res := butter.sendRequest(req)
 		if (enabled && (500..<600).contains(res.statusCode)) {

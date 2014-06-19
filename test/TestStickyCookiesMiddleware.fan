@@ -1,6 +1,6 @@
 using web::Cookie
 
-internal class TestCookieMiddleware : ButterTest {
+internal class TestStickyCookiesMiddleware : ButterTest {
 	
 	Void testCookie() {
 		cookie := Cookie("judge", "Dredd") { it.secure=true; it.domain="alienfactory.co.uk" ; it.path="/awesome"; it.maxAge=1sec }.toStr

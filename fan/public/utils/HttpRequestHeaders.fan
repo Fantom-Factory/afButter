@@ -112,7 +112,7 @@ class HttpRequestHeaders {
 	Uri? referrer {
 		// yeah, I know I've mispelt referrer!
 		// see `https://en.wikipedia.org/wiki/HTTP_referrer`
-		get { headers["Referer"]?.toUri }
+		get { headers["Referer"] == null ? null : Uri.decode(headers["Referer"]) }
 		set { addOrRemove("Referer", it?.encode) }
 	}
 
