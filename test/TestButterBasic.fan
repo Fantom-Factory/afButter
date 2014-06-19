@@ -18,7 +18,7 @@ internal class TestButterBasic : ButterTest {
 	}
 
 	Void testNoMiddleware() {
-		verifyErrTypeAndMsg(ArgErr#, ErrMsgs.middlewareNotSupplied) {
+		verifyErrMsg(ArgErr#, ErrMsgs.middlewareNotSupplied) {
 			but	:= Butter.churnOut([,])
 		}
 	}

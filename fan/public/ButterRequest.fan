@@ -7,7 +7,10 @@ class ButterRequest {
 	Uri		url
 
 	@NoDoc @Deprecated { msg="Use url instead" }
-	Uri		uri
+	Uri		uri {
+		get { url }
+		set { url = it }
+	}
 	
 	** HTTP version to use for request.
 	** Defaults to HTTP 1.1
@@ -29,7 +32,6 @@ class ButterRequest {
 	
 	new make(Uri url, |This|? f := null) {
 		this.url = url
-		this.uri = url
 		f?.call(this)
 	}
 	

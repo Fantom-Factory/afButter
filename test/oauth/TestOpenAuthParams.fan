@@ -6,7 +6,7 @@ internal class TestOpenAuthParams : ButterTest {
 		params := OpenAuthParams()
 		params["judge"] = "dredd"
 		
-		verifyErrTypeAndMsg(ArgErr#, OpenAuthMsgs.duplicateParamsNotSuppored("judge", "dredd", "anderson")) {
+		verifyErrMsg(ArgErr#, OpenAuthMsgs.duplicateParamsNotSuppored("judge", "dredd", "anderson")) {
 			params["judge"] = "anderson"			
 		}
 	}
