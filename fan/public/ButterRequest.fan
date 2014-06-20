@@ -6,12 +6,6 @@ class ButterRequest {
 	** Url to use for request. 
 	Uri		url
 
-	@NoDoc @Deprecated { msg="Use url instead" }
-	Uri		uri {
-		get { url }
-		set { url = it }
-	}
-	
 	** HTTP version to use for request.
 	** Defaults to HTTP 1.1
 	Version version	:= Butter.http11
