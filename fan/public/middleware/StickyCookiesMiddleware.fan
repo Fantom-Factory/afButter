@@ -48,7 +48,7 @@ class StickyCookiesMiddleware : ButterMiddleware {
 		cookieData = cookieData.exclude { it.cookie.maxAge != null && (it.timeSet + it.cookie.maxAge) < DateTime.now }
 		
 		// set request cookies - being careful not to override any user set cookies
-		cookies := Str:Cookie[:].addList(req.headers.cookie) { it.name }
+		cookies := (req.headers.cookie == null) ? [:] : Str:Cookie[:].addList(req.headers.cookie) { it.name }
 		cookieData.each { 
 			if (!cookies.containsKey(it.name))
 				cookies[it.name] = it.cookie
