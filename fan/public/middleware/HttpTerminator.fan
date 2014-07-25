@@ -19,7 +19,7 @@ class HttpTerminator : ButterMiddleware {
 		// set the Host, if it's not been already
 		// Host is mandatory for HTTP/1.1, and does no harm in HTTP/1.0
 		if (req.headers.host == null)
-			req.headers.host = req.url	// let the headers normalise the host part out of the entire req url
+			req.headers.host = normaliseHost(req.url)
 
 		// set the Content-Length, if it's not been already
 		if (req.headers.contentLength == null && req.method != "GET")
@@ -52,6 +52,19 @@ class HttpTerminator : ButterMiddleware {
 		} finally {
 			socket.close
 		}
-	}	
+	}
+	
+	// Returns a normalised host string from a URL.
+	static Str normaliseHost(Uri url) {
+		uri  := (url.host == null) ? `//$url` : url
+		host := uri.host 
+		if (host == null || host.isEmpty)
+			throw ArgErr(ErrMsgs.hostNotDefined(url))
+		isHttps := url.scheme == "https"
+		defPort := isHttps ? 443 : 80
+		if (uri.port != null && uri.port != defPort)
+			host += ":${uri.port}"
+		return host
+	}
 }
 

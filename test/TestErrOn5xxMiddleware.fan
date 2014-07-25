@@ -24,7 +24,7 @@ internal class TestErrOn5xxMiddleware : ButterTest {
 
 	Void testThrowsBedSheetErr() {
 		mw	:= ErrOn5xxMiddleware()
-		res := ButterResponse(500, "Argh!", ["X-BedSheet-errMsg":"Msg", "X-BedSheet-errType":"Type", "X-BedSheet-errStackTrace":"StackTrace"], "")
+		res := ButterResponse(500, "Argh!", ["X-afBedSheet-errMsg":"Msg", "X-afBedSheet-errType":"Type", "X-afBedSheet-errStackTrace":"StackTrace"], "")
 		verifyErrMsg(BadStatusErr#, "Type - Msg\nStackTrace") {
 			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))			
 		}
