@@ -161,6 +161,11 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.2 [#v1.0.2]
+----------------
+ - New: Added 'getCookie()' and 'removeCookie()' to 'StickyCookiesMiddleware'.
+ - Chg: 'HttpRequestHeaders.host' is now a 'Str'.
+
 v1.0.0 [#v1.0.0]
 ----------------
  - New: Added 'GzipMiddleware'.

@@ -69,16 +69,9 @@ class HttpRequestHeaders {
 	** the service requested.
 	** 
 	** Example: 'Host: www.alienfactory.co.uk:8069'
-	Uri? host {
-		get { headers["Host"]?.toUri }
-		set { // normalise the host
-			uri  := (it.host != null) ? it : `//$it`
-			host := uri.host 
-			if (host?.isEmpty ?: true) throw ArgErr(ErrMsgs.hostNotDefined(it))
-			if (uri.port != null && uri.port != 80 && uri.port != 443)
-				host += ":${uri.port}"
-			addOrRemove("Host", host) 
-		}
+	Str? host {
+		get { headers["Host"] }
+		set { addOrRemove("Host", it) }
 	}
 
 	** Allows a 304 Not Modified to be returned if content is unchanged.
