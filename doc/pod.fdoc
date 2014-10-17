@@ -5,7 +5,6 @@ Overview [#overview]
 'Butter' is a replacement for `web::WebClient` providing an extensible chain of middleware for making repeated HTTP requests and
 processing the responses.
 The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
-See `OpenAuthMiddleware` for an example.
 
 'Butter' was inspired by Ruby's [Faraday]`https://github.com/lostisland/faraday` library.
 
@@ -163,6 +162,7 @@ Release Notes [#releaseNotes]
 *****************************
 v1.0.4 [#v1.0.4]
 ----------------
+ - Chg: Removed OAuth classes pending a more robust implementation.
  - Bug: A patch for Fantom's ChunkInStream bug. See `http://fantom.org/sidewalk/topic/2365`.
 
 v1.0.2 [#v1.0.2]
