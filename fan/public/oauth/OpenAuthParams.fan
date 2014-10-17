@@ -3,7 +3,7 @@ using web::WebUtil
 
 ** TODO: OAuth: Allow multiple values per key
 ** TODO: OAuth: Allow null / empty key values
-** @see http://hueniverse.com/oauth/guide/authentication/
+** @see http://nouncer.com/oauth/authentication.html
 internal class OpenAuthParams {
 	private Str:Str	params	:= Str:Str[:] 
 
