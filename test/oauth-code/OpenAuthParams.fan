@@ -60,6 +60,34 @@ internal class OpenAuthParams {
 		return query				
 	}
 	
+//  static void percentEncodeChar(StringBuilder buf, int c)
+//  {
+//    if (c <= 0x007F)
+//    {
+//      percentEncodeByte(buf, c);
+//    }
+//    else if (c > 0x07FF)
+//    {
+//      percentEncodeByte(buf, 0xE0 | ((c >> 12) & 0x0F));
+//      percentEncodeByte(buf, 0x80 | ((c >>  6) & 0x3F));
+//      percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
+//    }
+//    else
+//    {
+//      percentEncodeByte(buf, 0xC0 | ((c >>  6) & 0x1F));
+//      percentEncodeByte(buf, 0x80 | ((c >>  0) & 0x3F));
+//    }
+//  }
+//
+//  static void percentEncodeByte(StringBuilder buf, int c)
+//  {
+//    buf.append('%');
+//    int hi = (c >> 4) & 0xf;
+//    int lo = c & 0xf;
+//    buf.append((char)(hi < 10 ? '0'+hi : 'A'+(hi-10)));
+//    buf.append((char)(lo < 10 ? '0'+lo : 'A'+(lo-10)));
+//  }
+	
 	static Void main(Str[] args) {
 		// test string - 
 		echo(percentEscape("!~*'()@:\$,;/?:` âÕ÷ÚÊ+"))

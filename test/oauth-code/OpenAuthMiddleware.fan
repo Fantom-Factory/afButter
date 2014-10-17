@@ -46,13 +46,17 @@ class OpenAuthMiddleware : ButterMiddleware {
 	}
 	
 	// TODO: if works, move to a service!
-	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str secretToken, Str nonce, Int timestamp, Str signatureMethod) {
+	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str consumerSecret, Str nonce, Int timestamp, Str signatureMethod) {
 		oauthParams	:= OpenAuthParams()
 		oauthParams["oauth_version"]			= "1.0"
 		oauthParams["oauth_timestamp"]			= timestamp.toStr
 		oauthParams["oauth_nonce"]				= nonce
 		oauthParams["oauth_consumer_key"]		= consumerKey
 		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// TODO: OAuth have PLAINTEXT option
+		
+		tokenKey    := "nnch734d00sl2jdk"
+		tokenSecret := "pfkkdhi9sl3r4s00"
+		oauthParams["oauth_token"]= tokenKey	
 		
 		reqUrl.query.each |val, key| { 
 			oauthParams[key] = val
@@ -63,7 +67,7 @@ class OpenAuthMiddleware : ButterMiddleware {
 		signatureBaseStr	:= OpenAuthParams.percentEscape(reqMethod) + "&" + 
 							   OpenAuthParams.percentEscape(normalizedUri) + "&" + 
 							   OpenAuthParams.percentEscape(normalizedParams)
-		secretKey			:= secretToken + "&"	// + tokenSecret
+		secretKey			:= consumerSecret + "&"	+ tokenSecret
 		signature			:= signatureBaseStr.toBuf.hmac("SHA-1", secretKey.toBuf).toBase64
 
 		oauthParams["oauth_signature"] 	= signature		
