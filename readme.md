@@ -2,7 +2,7 @@
 
 `Butter` is a library that helps ease HTTP requests through a stack of middleware.
 
-`Butter` is a replacement for [web::WebClient](http://fantom.org/doc/web/WebClient.html) providing an extensible chain of middleware for making repeated HTTP requests and processing the responses. The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests. See [OpenAuthMiddleware](http://repo.status302.com/doc/afButter/OpenAuthMiddleware.html) for an example.
+`Butter` is a replacement for [web::WebClient](http://fantom.org/doc/web/WebClient.html) providing an extensible chain of middleware for making repeated HTTP requests and processing the responses. The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
 
 `Butter` was inspired by Ruby's [Faraday](https://github.com/lostisland/faraday) library.
 
@@ -14,7 +14,7 @@ Install `Butter` with the Fantom Repository Manager ( [fanr](http://fantom.org/d
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afButter 1.0+"]
+    depends = ["sys 1.0", ..., "afButter 1.0"]
 
 ## Documentation 
 
