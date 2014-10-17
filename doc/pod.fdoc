@@ -19,7 +19,7 @@ Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::T
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
 
 
 
@@ -161,6 +161,10 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.4 [#v1.0.4]
+----------------
+ - Bug: A patch for Fantom's ChunkInStream bug. See `http://fantom.org/sidewalk/topic/2365`.
+
 v1.0.2 [#v1.0.2]
 ----------------
  - New: Added 'getCookie()' and 'removeCookie()' to 'StickyCookiesMiddleware'.

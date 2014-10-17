@@ -40,7 +40,14 @@ class ButterResponse {
 			statusCode 	= res[9..11].toInt
 			statusMsg 	= res[13..-1]
 			headers		= HttpResponseHeaders(WebUtil.parseHeaders(in))
-			body 		= WebUtil.makeContentInStream(headers.map, in).readAllBuf
+
+			// ChunkInStream throws NullErr if the response has no body, e.g. HEAD requests
+			// see http://fantom.org/sidewalk/topic/2365
+			// I could check the Content-Length header, but why should I trust it!?
+			instream	:= WebUtil.makeContentInStream(headers.map, in)
+			try 	body = instream.readAllBuf
+			catch	body = Buf()
+			instream.close
 		}
 		catch (IOErr e) throw e 
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)

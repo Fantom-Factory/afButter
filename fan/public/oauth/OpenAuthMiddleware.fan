@@ -36,36 +36,41 @@ class OpenAuthMiddleware : ButterMiddleware {
 	}
 	
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-		oauthParams	:= OpenAuthParams()
 
 		seconds	:= timestampGen.generate
 		nonce	:= nonceGen.generate(seconds)
 
-		oauthParams["oauth_version"]			= "1.0"
-		oauthParams["oauth_timestamp"]			= seconds.toStr
-		oauthParams["oauth_nonce"]				= nonce
-		oauthParams["oauth_consumer_key"]		= consumerKey
-		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// TODO: OAuth have PLAINTEXT option
-		
-		req.url.query.each |val, key| { 
-			oauthParams[key] = val
-		}
-
-		normalizedUri		:= normalizeUri(req.url)
-		normalizedParams	:= oauthParams.queryStr
-		signatureBaseStr	:= OpenAuthParams.percentEscape(req.method) + "&" + 
-							   OpenAuthParams.percentEscape(normalizedUri) + "&" + 
-							   OpenAuthParams.percentEscape(normalizedParams)
-		secretKey			:= consumerSecret + "&"	// + tokenSecret
-		signature			:= signatureBaseStr.toBuf.hmac("SHA-1", secretKey.toBuf).toBase64
-
-		oauthParams["oauth_signature"] 	= signature
-		req.headers["Authorization"] 	= oauthParams.headerStr
+		req.headers["Authorization"] = generateAuthorizationHeader(req.url, req.method, consumerKey, consumerSecret, nonce, seconds, "HMAC-SHA1")
 		
 		return butter.sendRequest(req)
 	}
 	
-	private Str normalizeUri(Uri uri) {
+	// TODO: if works, move to a service!
+	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str secretToken, Str nonce, Int timestamp, Str signatureMethod) {
+		oauthParams	:= OpenAuthParams()
+		oauthParams["oauth_version"]			= "1.0"
+		oauthParams["oauth_timestamp"]			= timestamp.toStr
+		oauthParams["oauth_nonce"]				= nonce
+		oauthParams["oauth_consumer_key"]		= consumerKey
+		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// TODO: OAuth have PLAINTEXT option
+		
+		reqUrl.query.each |val, key| { 
+			oauthParams[key] = val
+		}
+
+		normalizedUri		:= normalizeUri(reqUrl)
+		normalizedParams	:= oauthParams.queryStr
+		signatureBaseStr	:= OpenAuthParams.percentEscape(reqMethod) + "&" + 
+							   OpenAuthParams.percentEscape(normalizedUri) + "&" + 
+							   OpenAuthParams.percentEscape(normalizedParams)
+		secretKey			:= secretToken + "&"	// + tokenSecret
+		signature			:= signatureBaseStr.toBuf.hmac("SHA-1", secretKey.toBuf).toBase64
+
+		oauthParams["oauth_signature"] 	= signature		
+		return oauthParams.headerStr
+	}
+	
+	private static Str normalizeUri(Uri uri) {
 		scheme 		:= uri.scheme
 		authority	:= uri.auth.lower
 		path 		:= uri.pathStr
