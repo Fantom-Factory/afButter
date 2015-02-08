@@ -37,7 +37,7 @@ class ButterRequest {
 		return this
 	}
 	
-	** Sets the body to the given string.
+	** Sets the body to the given JSON object.
 	** 
 	** Convenience for 'butterRequest.body = JsonOutStream.writeJsonToStr(jsonObj).toBuf' 
 	This setBodyFromJson(Obj jsonObj) {

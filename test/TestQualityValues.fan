@@ -88,7 +88,6 @@ class TestQualityValues : Test {
 	
 	Void testToStr() {
 		qvs	:= QualityValues("*;q=0, identity; q=0.5, deflate; q=0.256, gzip;q=1.0")
-		verifyEq(qvs.toStr, "gzip, identity;q=0.5, deflate;q=0.256, *;q=0.0")
+		verifyEq(qvs.toStr, "gzip, identity;q=0.5, deflate;q=0.256, *;q=0")
 	}
-	
 }

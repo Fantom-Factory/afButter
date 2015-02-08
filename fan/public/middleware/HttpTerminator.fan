@@ -39,6 +39,7 @@ class HttpTerminator : ButterMiddleware {
 		socket.connect(IpAddr(req.url.host), req.url.port ?: defPort)
 		out 	:= socket.out
 		reqOutStream := WebUtil.makeContentOutStream(req.headers.map, out)
+		
 
 		// send request
 		out.print("${req.method} ${reqPath} HTTP/${req.version}\r\n")
