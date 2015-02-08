@@ -15,7 +15,7 @@ internal class TestOpenAuthMiddleware : ButterTest {
 		verifyEq(req.headers.map.size, 1)
 		verifyEq(req.headers["Authorization"], Str<|OAuth oauth_consumer_key="key", oauth_nonce="dMEVdXmIzpdK", oauth_signature="3mwCzCORDFl3AYgKnetTYir1fbM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368988686", oauth_version="1.0"|>)
 	}
-	
+
 	** @see http://term.ie/oauth/example/index.php
 //	Void testAgainstRealServer() {
 //		consumerKey		:= "key"

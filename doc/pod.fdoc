@@ -165,6 +165,7 @@ v1.0.6 [#v1.0.6]
  - Chg: Added 'ButterRequest.setBodyFromStr()' and 'ButterRequest.setBodyFromJson()'.
  - Chg: Added 'ButterResponse.asJson()' and 'ButterResponse.asJsonMap()'.
  - Bug: HttpTerminator sets 'Content-Length' header for GET requests with a non-empty body.
+ - Bug: 'GzipMiddleware' updated to work with Fantom-1.0.67.
 
 v1.0.4 [#v1.0.4]
 ================
