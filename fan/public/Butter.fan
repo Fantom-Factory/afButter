@@ -27,7 +27,7 @@ mixin Butter {
 	** The default middleware stack. It currently returns new instances of (in order):
 	**  - `StickyHeadersMiddleware`
 	**  - `GzipMiddleware`
-	**  - `FollowRedriectsMiddleware`
+	**  - `FollowRedirectsMiddleware`
 	**  - `StickyCookiesMiddleware`
 	**  - `ErrOn4xxMiddleware`
 	**  - `ErrOn5xxMiddleware`

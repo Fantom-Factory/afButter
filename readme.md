@@ -1,4 +1,10 @@
-## Overview 
+#Butter v1.0.4
+---
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
+[![pod: v1.0.4](http://img.shields.io/badge/pod-v1.0.4-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
+![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+## Overview
 
 `Butter` is a library that helps ease HTTP requests through a stack of middleware.
 
@@ -6,7 +12,7 @@
 
 `Butter` was inspired by Ruby's [Faraday](https://github.com/lostisland/faraday) library.
 
-## Install 
+## Install
 
 Install `Butter` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
@@ -16,11 +22,11 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 
     depends = ["sys 1.0", ..., "afButter 1.0"]
 
-## Documentation 
+## Documentation
 
 Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afButter/).
 
-## Quick Start 
+## Quick Start
 
 1). Create a text file called `Example.fan`:
 
@@ -48,7 +54,7 @@ C:\> fan Example.fan
         ....
 ```
 
-## Usage 
+## Usage
 
 An instance of [Butter](http://repo.status302.com/doc/afButter/Butter.html) wraps a stack of [Middleware](http://repo.status302.com/doc/afButter/ButterMiddleware.html) classes. When a HTTP request is made through `Butter`, each piece of middleware is called in turn. Middleware classes may either pass the request on to the next piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request and / or response objects.
 
@@ -78,7 +84,7 @@ Or to use the default stack of middleware bundled with `Butter`, just *churn and
 html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
 ```
 
-## Butter Dishes 
+## Butter Dishes
 
 Because functionality is encapsulated in the middleware, you need to access these classes to configure them. Use the [Butter.findMiddleware()](http://repo.status302.com/doc/afButter/Butter#findMiddleware.html) method to do this:
 
@@ -90,7 +96,7 @@ butter := Butter.churnOut()
 
 As you can see, this code is quite verbose. To combat this, there are two alternative means of getting hold of middleware:
 
-### Dynamic Stylie 
+### Dynamic Stylie
 
 If you make dynamic invocation method calls on the `Butter` class, you can retrieve instances of middleware. The dynamic methods have the same simple name as the middleware type. If the type name ends with `Middleware`, it may be omitted. Example:
 
@@ -104,7 +110,7 @@ Should instances of the same middleware class be in the stack more than once (or
 
 Obviously, dynamic invocation should be used with caution.
 
-### Static Stylie 
+### Static Stylie
 
 To call the middleware in a statically typed fashion, use a `ButterDish` class that holds your `Butter` instance and contains helper methods. There is a default [ButterDish](http://repo.status302.com/doc/afButter/ButterDish.html) class with methods to access middleware in the default stack. Example:
 

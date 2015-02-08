@@ -160,38 +160,44 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.6 [#v1.0.6]
+================
+ - Chg: Added 'ButterRequest.setBodyFromStr()' and 'ButterRequest.setBodyFromJson()'.
+ - Chg: Added 'ButterResponse.asJson()' and 'ButterResponse.asJsonMap()'.
+ - Bug: HttpTerminator sets 'Content-Length' header for GET requests with a non-empty body.
+
 v1.0.4 [#v1.0.4]
-----------------
+================
  - Chg: Removed OAuth classes pending a more robust implementation.
  - Bug: A patch for Fantom's ChunkInStream bug. See `http://fantom.org/sidewalk/topic/2365`.
 
 v1.0.2 [#v1.0.2]
-----------------
+================
  - New: Added 'getCookie()' and 'removeCookie()' to 'StickyCookiesMiddleware'.
  - Chg: 'HttpRequestHeaders.host' is now a 'Str'.
 
 v1.0.0 [#v1.0.0]
-----------------
+================
  - New: Added 'GzipMiddleware'.
  - Chg: Renamed 'ButterRequest.uri' -> 'ButterRequest.url'.
  - Chg: Request header 'Host' is normalised.
 
 v0.0.8 [#v0.0.8]
-----------------
+================
  - New: 'ErrOn5xxMiddleware' detects and re-throws any Errs processed by [BedSheet]`pod:afBedSheet`.
  - Chg: Rejigged the default middleware stack so Cookies can be captured in re-direct responses.
 
 v0.0.6 [#v0.0.6]
-----------------
+================
  - Chg: Added support for HTTP 1.1 308 Redirects.
 
 v0.0.4 [#v0.0.4]
-----------------
+================
  - New: Added 'ErrOn4xxMiddleware' to cacth those annoying 404s!
  - Chg: Support for HTTP resposne headers that may appear multiple times, e.g. 'Set-Cookie'
  - Chg: Renamed 'ButterRequest.data()' -> 'stash()'.
  - Bug: Could not post case-insensitive forms - see [Uri.encodeQuery throws UnsupportedOperationException]`http://fantom.org/sidewalk/topic/2236`
 
 v0.0.2 [#v0.0.2]
-----------------
+================
  - New: Preview Release

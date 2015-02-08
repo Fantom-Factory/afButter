@@ -1,4 +1,4 @@
-using inet 
+using util::JsonOutStream
 
 ** The HTTP request.
 class ButterRequest {
@@ -29,6 +29,23 @@ class ButterRequest {
 		f?.call(this)
 	}
 	
+	** Sets the body to the given string.
+	** 
+	** Convenience for 'butterRequest.body = str.toBuf' 
+	This setBodyFromStr(Str str) {
+		body = str.toBuf
+		return this
+	}
+	
+	** Sets the body to the given string.
+	** 
+	** Convenience for 'butterRequest.body = JsonOutStream.writeJsonToStr(jsonObj).toBuf' 
+	This setBodyFromJson(Obj jsonObj) {
+		body = JsonOutStream.writeJsonToStr(jsonObj).toBuf
+		return this
+	}
+	
+	@NoDoc
 	override Str toStr() {
 		"${method} ${url} HTTP/${version}"
 	}
