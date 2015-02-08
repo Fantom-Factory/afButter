@@ -1,4 +1,5 @@
 using web::WebUtil
+using util::JsonInStream
 
 ** The HTTP response.
 class ButterResponse {
@@ -72,7 +73,6 @@ class ButterResponse {
 
 	** Return the response stream as a 'Buf'.
 	** 
-	** Convenience for `in.readAllBuf`.  
 	** This method closes the response stream. 
 	Buf asBuf() {
 		body.seek(0)
@@ -81,6 +81,19 @@ class ButterResponse {
 	** Returns the body as an 'InStream'.
 	InStream asInStream() {
 		body.seek(0).in
+	}
+
+	** Returns the response stream as a JSON object. 
+	** The response stream is read as a string and converted to Fantom using `util::JsonInStream`.
+	Obj asJson() {
+		JsonInStream(asInStream).readJson
+	}
+	
+	** Returns the response stream as a JSON map. Exactly the same as 'asJson()' but casts the result to a map.  
+	** 
+	** Convenience for '(Str:Obj) butterResponse.asJson()' 
+	Str:Obj asJsonMap() {
+		asJson
 	}
 	
 	@NoDoc

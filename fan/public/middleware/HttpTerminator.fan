@@ -22,8 +22,11 @@ class HttpTerminator : ButterMiddleware {
 			req.headers.host = normaliseHost(req.url)
 
 		// set the Content-Length, if it's not been already
-		if (req.headers.contentLength == null && req.method != "GET")
-			req.headers.contentLength = req.body.size
+		if (req.headers.contentLength == null)
+			if (req.method == "GET" && req.body.size == 0)
+				null?.toStr // don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
+			else
+				req.headers.contentLength = req.body.size
 
 		isHttps := req.url.scheme == "https"
 		defPort := isHttps ? 443 : 80
@@ -45,7 +48,7 @@ class HttpTerminator : ButterMiddleware {
 
 		// use seek(0) rather than flip, 'cos we may be redirected subsequent times and flip() has a habit of clearing the buffer! 
 		req.body.seek(0).in.pipe(out)
-		out.flush		
+		out.flush
 		
 		try {
 			return ButterResponse(socket.in)
