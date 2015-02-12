@@ -17,14 +17,6 @@ internal const class ErrMsgs {
 		"Could not find Middleware for type '${mwType}'"
 	}
 
-	static Str badRequest(Int statusCode, Str statusMsg, Uri reqUri) {
-		"Bad Request: ${statusCode} - ${statusMsg} at `${reqUri}`"
-	}
-
-	static Str serverError(Int statusCode, Str statusMsg) {
-		"${statusCode} - ${statusMsg}"
-	}
-
 	static Str tooManyRedirects(Int tooMany) {
 		"Too many redirects detected, ${tooMany} in total! See '${FollowRedirectsMiddleware#tooManyRedirects.qname}' to change the limit."
 	}

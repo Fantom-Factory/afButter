@@ -17,7 +17,7 @@ internal class TestErrOn5xxMiddleware : ButterTest {
 	Void testThrowsServerErr() {
 		mw	:= ErrOn5xxMiddleware()
 		res := ButterResponse(500, "Argh!", [:], "")
-		verifyErrMsg(BadStatusErr#, ErrMsgs.serverError(500, "Argh!")) {
+		verifyErrMsg(BadStatusErr#, "500 - Argh! at GET `/`") {
 			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))			
 		}
 	}
@@ -25,8 +25,8 @@ internal class TestErrOn5xxMiddleware : ButterTest {
 	Void testThrowsBedSheetErr() {
 		mw	:= ErrOn5xxMiddleware()
 		res := ButterResponse(500, "Argh!", ["X-afBedSheet-errMsg":"Msg", "X-afBedSheet-errType":"Type", "X-afBedSheet-errStackTrace":"StackTrace"], "")
-		verifyErrMsg(BadStatusErr#, "Type - Msg\nStackTrace") {
-			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))			
+		verifyErrMsg(BadStatusErr#, "500 - Msg at GET `/`") {
+			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))
 		}
 	}
 }

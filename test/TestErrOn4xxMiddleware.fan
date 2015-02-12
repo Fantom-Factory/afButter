@@ -17,7 +17,7 @@ internal class TestErrOn4xxMiddleware : ButterTest {
 	Void testThrowsServerErr() {
 		mw	:= ErrOn4xxMiddleware()
 		res := ButterResponse(404, "Argh!", [:], "")
-		verifyErrMsg(BadStatusErr#, ErrMsgs.badRequest(404, "Argh!", `/`)) {
+		verifyErrMsg(BadStatusErr#, "404 - Argh! at GET `/`") {
 			mw.sendRequest(MockTerminator([res]), ButterRequest(`/`))			
 		}
 	}
