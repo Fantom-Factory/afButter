@@ -160,6 +160,10 @@ When using other middleware, you are encouraged to create your own 'ButterDish' 
 
 Release Notes [#releaseNotes]
 *****************************
+v1.0.8 [#v1.0.8]
+================
+ - Chg: 'BadStatusErr' displays more request / response details.
+
 v1.0.6 [#v1.0.6]
 ================
  - Chg: Added 'ButterRequest.setBodyFromStr()' and 'ButterRequest.setBodyFromJson()'.

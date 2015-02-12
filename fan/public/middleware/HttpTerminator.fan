@@ -38,22 +38,23 @@ class HttpTerminator : ButterMiddleware {
 		reqPath := (req.url.relToAuth).encode
 		socket.connect(IpAddr(req.url.host), req.url.port ?: defPort)
 		out 	:= socket.out
-		reqOutStream := WebUtil.makeContentOutStream(req.headers.map, out)
-		
-
-		// send request
-		out.print("${req.method} ${reqPath} HTTP/${req.version}\r\n")
-		req.headers.each |v, k| { out.print("${k}: ${v}\r\n") }
-		out.print("\r\n")
-		out.flush
-
-		// use seek(0) rather than flip, 'cos we may be redirected subsequent times and flip() has a habit of clearing the buffer! 
-		req.body.seek(0).in.pipe(out)
-		out.flush
 		
 		try {
+			reqOutStream := WebUtil.makeContentOutStream(req.headers.map, out)
+	
+			// send request
+			out.print("${req.method} ${reqPath} HTTP/${req.version}\r\n")
+			req.headers.each |v, k| { out.print("${k}: ${v}\r\n") }
+			out.print("\r\n")
+			out.flush
+	
+			// use seek(0) rather than flip, 'cos we may be redirected subsequent times and flip() has a habit of clearing the buffer! 
+			req.body.seek(0).in.pipe(out)
+			out.flush
+		
 			return ButterResponse(socket.in)
 		} finally {
+			out.close
 			socket.close
 		}
 	}

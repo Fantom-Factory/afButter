@@ -19,5 +19,4 @@ const class ButterErr : Err {
 		buf.add("\nStack Trace:")
 		return buf.toStr
 	}
-
 }
