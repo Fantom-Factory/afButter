@@ -71,7 +71,7 @@ The ordering of the middleware stack *is* important.
 
 The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default
 terminator is the `HttpTerminator` which makes an actual HTTP request to the interweb. (When testing this could be
-substituted with a mock terminator that returns set / canned responses.)
+substituted with a mock terminator that returns mocked / canned responses.)
 
 To create a 'Butter' instance, call the static [Butter.churnOut()]`Butter#churnOut` method, optionally passing in a custom
 list of middleware:
