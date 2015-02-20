@@ -16,33 +16,17 @@ class ButterRequest {
 
 	** The HTTP headers to use for the next request.  
 	** This map uses case insensitive keys.  
-	HttpRequestHeaders	headers	:= HttpRequestHeaders()
+	HttpRequestHeaders	headers	:= HttpRequestHeaders() { private set }	// 'cos it's required by body
 
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj stash	:= Str:Obj[:] { caseInsensitive = true }
 	
 	** The request body.
-	Buf 	body	:= Buf()
+	Body	body	:= Body(headers)
 	
 	new make(Uri url, |This|? f := null) {
 		this.url = url
 		f?.call(this)
-	}
-	
-	** Sets the body to the given string.
-	** 
-	** Convenience for 'butterRequest.body = str.toBuf' 
-	This setBodyFromStr(Str str) {
-		body = str.toBuf
-		return this
-	}
-	
-	** Sets the body to the given JSON object.
-	** 
-	** Convenience for 'butterRequest.body = JsonOutStream.writeJsonToStr(jsonObj).toBuf' 
-	This setBodyFromJson(Obj jsonObj) {
-		body = JsonOutStream.writeJsonToStr(jsonObj).toBuf
-		return this
 	}
 	
 	@NoDoc

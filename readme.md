@@ -60,7 +60,7 @@ An instance of [Butter](http://repo.status302.com/doc/afButter/Butter.html) wrap
 
 The ordering of the middleware stack *is* important.
 
-The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default terminator is the [HttpTerminator](http://repo.status302.com/doc/afButter/HttpTerminator.html) which makes an actual HTTP request to the interweb. (When testing this could be substituted with a mock terminator that returns set / canned responses.)
+The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default terminator is the [HttpTerminator](http://repo.status302.com/doc/afButter/HttpTerminator.html) which makes an actual HTTP request to the interweb. (When testing this could be substituted with a mock terminator that returns mocked / canned responses.)
 
 To create a `Butter` instance, call the static [Butter.churnOut()](http://repo.status302.com/doc/afButter/Butter#churnOut.html) method, optionally passing in a custom list of middleware:
 

@@ -20,7 +20,7 @@ class GzipMiddleware : ButterMiddleware {
 		res := butter.sendRequest(req)
 
 		if (res.headers.contentEncoding?.equalsIgnoreCase("gzip") ?: false)
-			res.body = Zip.gzipInStream(res.asInStream).readAllBuf
+			res.body.buf = Zip.gzipInStream(res.asInStream).readAllBuf
 		
 		return res
 	}

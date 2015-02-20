@@ -65,7 +65,7 @@ mixin Butter {
 		caseSensitive := Str:Str[:].addAll(form)
 		
 		enc := Uri.encodeQuery(caseSensitive)
-		req.body.print(enc)
+		req.body.buf.print(enc)
 		return sendRequest(req)
 	}
 	
@@ -75,8 +75,8 @@ mixin Butter {
 		req := ButterRequest(uri) {
 			it.method	= "POST"
 		}
-		req.headers.contentType = MimeType("text/plain")
-		Buf() { it.charset = charset }.print(content).flip.in.pipe(req.body.out)
+		req.headers.contentType = MimeType("text/plain; charset=${charset.name}")
+		req.body.str = content
 		return sendRequest(req)
 	}
 
@@ -87,7 +87,7 @@ mixin Butter {
 			it.method	= "POST"
 		}
 		req.headers.contentType = file.mimeType ?: MimeType("application/octet-stream")
-		file.in.pipe(req.body.out, file.size, true)
+		req.body.buf = file.readAllBuf  
 		return sendRequest(req)
 	}	
 
