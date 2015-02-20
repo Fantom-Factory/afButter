@@ -48,7 +48,7 @@ class HttpRequestHeaders {
 		set { addOrRemove("Content-Length", it?.toStr) }
 	}
 
-	** The MIME type of the body of the request (used with POST and PUT requests).
+	** The MIME type of the body of the request (mainly used with POST and PUT requests).
 	** 
 	** Example: 'Content-Type: application/x-www-form-urlencoded'
 	MimeType? contentType {
@@ -133,20 +133,24 @@ class HttpRequestHeaders {
 		set { addOrRemove("X-Forwarded-For", it?.join(", ")) }
 	}
 
+	** Simple setter for setting raw Str values.
 	@Operator
 	Str? get(Str name) {
 		headers[name]
 	}
 
+	** Simple getter for getting raw Str values.
 	@Operator
 	Void set(Str name, Str value) {
 		headers[name] = value
 	}
 	
+	** Iterates over the headers.
 	Void each(|Str val, Str key| c) {
 		headers.each(c)
 	}
 	
+	** Returns 'true' if the given header has been set
 	Bool containsKey(Str key) {
 		map.containsKey(key)
 	}

@@ -11,13 +11,13 @@ class ButterResponse {
 	Str statusMsg
 
 	** The HTTP repsonse headers.
-	HttpResponseHeaders headers
+	HttpResponseHeaders headers { private set }
 
 	** HTTP version of the response.
 	Version version	:= Butter.http11
 
 	** The request body. 
-	Buf body
+	Body	body { private set }
 	
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj data	:= [:]
@@ -53,9 +53,7 @@ class ButterResponse {
 					 ?  doMethod.call(headers.map, in)
 					 :  WebUtil.makeContentInStream(headers.map, in))
 			
-			try 	body = instream.readAllBuf
-			catch	body = Buf()
-			instream.close
+			body = Body(headers, instream)
 		}
 		catch (IOErr e) throw e 
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
@@ -66,41 +64,33 @@ class ButterResponse {
 		this.statusCode = statusCode
 		this.statusMsg 	= statusMsg
 		this.headers	= HttpResponseHeaders(headers)
-		this.body 		= Buf() { charset = this.headers.contentType?.charset ?: Charset.utf8 }.writeChars(body).flip
+		this.body 		= Body(this.headers, body)
 		f?.call(this)		
 	}
 
-	** Reads the response stream and converts it to a 'Str' using the charset defined in the 'Content-Type' header.
-	** 
-	** This method closes the response stream. 
-	Str asStr() {
-		body.seek(0).charset = headers.contentType?.charset ?: Charset.utf8
-		return body.readAllStr
+	@NoDoc @Deprecated { msg="Use 'body.buf' instead" } 
+	Str? asStr() {
+		body.str
 	}
 
-	** Return the response stream as a 'Buf'.
-	** 
-	** This method closes the response stream. 
+	@NoDoc @Deprecated { msg="Use 'body.buf' instead" } 
 	Buf asBuf() {
-		body.seek(0)
+		body.buf
 	}
 
-	** Returns the body as an 'InStream'.
+	@NoDoc @Deprecated { msg="Use 'body.buf?.seek(0)?.in' instead" } 
 	InStream asInStream() {
-		body.seek(0).in
+		body.buf.seek(0).in
 	}
 
-	** Returns the response stream as a JSON object. 
-	** The response stream is read as a string and converted to Fantom using `util::JsonInStream`.
-	Obj asJson() {
-		JsonInStream(asInStream).readJson
+	@NoDoc @Deprecated { msg="Use 'body.jsonObj' instead" } 
+	Obj? asJson() {
+		body.jsonObj
 	}
 	
-	** Returns the response stream as a JSON map. Exactly the same as 'asJson()' but casts the result to a map.  
-	** 
-	** Convenience for '(Str:Obj) butterResponse.asJson()' 
-	Str:Obj asJsonMap() {
-		asJson
+	@NoDoc @Deprecated { msg="Use 'body.jsonMap' instead" } 
+	[Str:Obj?]? asJsonMap() {
+		body.jsonMap
 	}
 	
 	@NoDoc

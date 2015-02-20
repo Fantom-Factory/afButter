@@ -13,7 +13,7 @@ class ErrOn4xxMiddleware : ButterMiddleware {
 		res := butter.sendRequest(req)
 		if (enabled && (400..<500).contains(res.statusCode)) {
 			body := (Str?) null
-			try body = res.asStr; catch { /* wotever */ }
+			try body = res.body.str; catch { /* wotever */ }
 			throw BadStatusErr(req.method, req.url, res.statusCode, res.statusMsg, body)
 		}
 		return res
@@ -37,7 +37,7 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 			errStack := res.headers["X-afBedSheet-errStackTrace"]
 			
 			body := (Str?) null
-			try body = res.asStr; catch { /* wotever */ }
+			try body = res.body.str; catch { /* wotever */ }
 			
 			if (errMsg != null && errType != null && errStack != null)
 				throw BadStatusErr(req.method, req.url, res.statusCode, errMsg, "${errType} - ${errMsg}\n${errStack}")

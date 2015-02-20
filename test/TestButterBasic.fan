@@ -5,14 +5,14 @@ internal class TestButterBasic : ButterTest {
         butter   := Butter.churnOut()
         response := butter.get(`http://www.fantomfactory.org/`)
         echo("[${response}]")
-		echo("[${response.asStr}]")
+		echo("[${response.body.str}]")
     }
 
 	Void testButterBasic() {
 		butter := ButterDish(Butter.churnOut())
 		res := butter.get(`http://www.alienfactory.co.uk`)
 //		res := butter.get(`http://localhost:8069/`)
-		web := res.asStr
+		web := res.body.str
 //		verify(web.contains("Factory"), "No Gundam on AF site: [$web]")
 		verify(web.contains("Gundam"), "No Gundam on AF site: [$web]")
 	}
