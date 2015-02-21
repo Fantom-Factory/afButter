@@ -122,3 +122,31 @@ butter.errOn5xx.enabled = true
 
 When using other middleware, you are encouraged to create your own `ButterDish` that extends the default one.
 
+## Handling 404 and other Status Codes
+
+If a 404, or a 4xx, status code is returned from a request then, by default, a [BadStatusErr](http://repo.status302.com/doc/afButter/BadStatusErr.html) is thrown. The same goes for 500 and 5xx status codes. In general this is what you want, a fail fast approach to erroneous status codes. But during testing it is often desirable to disable the errors and check / verify the status codes yourself. To do so, just disable the required middleware:
+
+```
+using afButter
+
+class TestStatusCodes {
+    Void test404() {
+        butter := ButterDish(Butter.churnOut())
+        butter.errOn4xx.enabled = false
+        res := butter.get(`http://www.google.com/404`)
+        verifyEq(res.statusCode, 404)
+    }
+
+    Void test500() {
+        butter := ButterDish(Butter.churnOut())
+        butter.errOn5xx.enabled = false
+        res := butter.get(`http://www.example.com/500`)  // insert failing URL here
+        verifyEq(res.statusCode, 500)
+    }
+}
+```
+
+## Calling RESTful Services
+
+Butter can be used to REST services.
+

@@ -8,6 +8,8 @@ class GzipMiddleware : ButterMiddleware {
 	** Set to 'false' to disable this middleware instance. 
 	Bool enabled	:= true
 
+	private const Version webVer := Pod.find("web").version
+
 	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		if (!enabled)
@@ -19,9 +21,11 @@ class GzipMiddleware : ButterMiddleware {
 		
 		res := butter.sendRequest(req)
 
-		if (res.headers.contentEncoding?.equalsIgnoreCase("gzip") ?: false)
-			res.body.buf = Zip.gzipInStream(res.asInStream).readAllBuf
-		
+		// because v1.0.67 auto de-gzips the response, we don't have to
+		if (webVer < Version("1.0.67"))
+			if (res.headers.contentEncoding?.equalsIgnoreCase("gzip") ?: false)
+				res.body.buf = Zip.gzipInStream(res.body.buf.in).readAllBuf
+
 		return res
 	}
 }

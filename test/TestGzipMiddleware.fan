@@ -26,19 +26,20 @@ internal class TestGzipMiddleware : ButterTest {
 		verifyEq(res.body.str, "Piddles")
 	}
 
-	Void testDecodesTheResponse() {
-		req := ButterRequest(`/`)
-		res := ButterResponse(200, "OK", ["Content-Encoding":"gzip"], "") {
-			Zip.gzipOutStream(it.body.buf.out).print("Moar Coffee!!!").flush.close
-			it.body.buf.flip
-		}
-		end := MockTerminator([res])
-		mw	:= GzipMiddleware()
-
-		res = mw.sendRequest(end, req)		
-		
-		verifyEq(res.body.str, "Moar Coffee!!!")
-	}
+	// from web v1.0.67 this happens automatically
+//	Void testDecodesTheResponse() {
+//		req := ButterRequest(`/`)
+//		res := ButterResponse(200, "OK", ["Content-Encoding":"gzip"], "") {
+//			Zip.gzipOutStream(it.body.buf.out).print("Moar Coffee!!!").flush.close
+//			it.body.buf.flip
+//		}
+//		end := MockTerminator([res])
+//		mw	:= GzipMiddleware()
+//
+//		res = mw.sendRequest(end, req)		
+//		
+//		verifyEq(res.body.str, "Moar Coffee!!!")
+//	}
 	
 	Void testDoesNothingWhenDisabled() {
 		res := ButterResponse(200, "", ["Content-Encoding":"gzip"], "not encoded")
