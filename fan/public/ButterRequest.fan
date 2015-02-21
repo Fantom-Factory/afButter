@@ -29,6 +29,18 @@ class ButterRequest {
 		f?.call(this)
 	}
 	
+	@NoDoc @Deprecated { msg="Use 'body.set' instead" }  
+	This setBodyFromStr(Str str) {
+		body.str = str
+		return this
+	}
+	
+	@NoDoc @Deprecated { msg="Use 'body.set' instead" }  
+	This setBodyFromJson(Obj jsonObj) {
+		body.jsonObj = jsonObj
+		return this
+	}
+	
 	@NoDoc
 	override Str toStr() {
 		"${method} ${url} HTTP/${version}"

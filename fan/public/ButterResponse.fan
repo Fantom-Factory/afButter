@@ -45,13 +45,7 @@ class ButterResponse {
 			// ChunkInStream throws NullErr if the response has no body, e.g. HEAD requests
 			// see http://fantom.org/sidewalk/topic/2365
 			// I could check the Content-Length header, but why should I trust it!?
-			
-			// try to get the underlying non-gzipped instream
-			// by default Fantom 1.0.67 un-gzips all instreams 
-			doMethod := WebUtil#.method("doMakeContentInStream", false)
-			instream := (InStream) (doMethod != null 
-					 ?  doMethod.call(headers.map, in)
-					 :  WebUtil.makeContentInStream(headers.map, in))
+			instream := WebUtil.makeContentInStream(headers.map, in)
 			
 			body = Body(headers, instream)
 		}
@@ -68,7 +62,7 @@ class ButterResponse {
 		f?.call(this)		
 	}
 
-	@NoDoc @Deprecated { msg="Use 'body.buf' instead" } 
+	@NoDoc @Deprecated { msg="Use 'body.str' instead" } 
 	Str? asStr() {
 		body.str
 	}
@@ -78,7 +72,7 @@ class ButterResponse {
 		body.buf
 	}
 
-	@NoDoc @Deprecated { msg="Use 'body.buf?.seek(0)?.in' instead" } 
+	@NoDoc @Deprecated { msg="Use 'body.buf.seek(0).in' instead" } 
 	InStream asInStream() {
 		body.buf.seek(0).in
 	}
