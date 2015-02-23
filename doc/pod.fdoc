@@ -255,6 +255,8 @@ Release Notes [#releaseNotes]
 *****************************
 v1.1.0 [#v1.1.0]
 ================
+ - New: 'ProxyMiddleware' re-uses the proxy mechanism used by 'web::WebClient'.
+ - New: Added more REST methods to 'Butter'.
  - Chg: 'ButterRequest' and 'ButterResponse' now share a common 'Body' object. (Breaking change)
  - Chg: 'BadStatusErr' displays more request / response details.
 
