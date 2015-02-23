@@ -31,6 +31,7 @@ mixin Butter {
 	**  - `StickyCookiesMiddleware`
 	**  - `ErrOn4xxMiddleware`
 	**  - `ErrOn5xxMiddleware`
+	**  - `ProxyMiddleware`
 	**  - `HttpTerminator`
 	static ButterMiddleware[] defaultStack() {
 		ButterMiddleware[
@@ -40,56 +41,86 @@ mixin Butter {
 			StickyCookiesMiddleware(),		// as cookies can come with a re-direct command, Cookie middleware needs to come *before* Redirect middleware
 			ErrOn4xxMiddleware(),
 			ErrOn5xxMiddleware(),
+			ProxyMiddleware(),
 			HttpTerminator()
 		]
 	}
 
-	** Makes a simple HTTP get request to the given URI and returns the response.
-	virtual ButterResponse get(Uri uri) {
-		sendRequest(ButterRequest(uri))
+	** Makes a simple HTTP get request to the given URL and returns the response.
+	virtual ButterResponse get(Uri url) {
+		sendRequest(ButterRequest(url))
 	}
 
-	** Make a post request to the URI with the given form data.
+	** Makes a HTTP POST request to the URL with the given form data.
 	** The 'Content-Type' is set to 'application/x-www-form-urlencoded'.
-	virtual ButterResponse postForm(Uri uri, Str:Str form) {
-		req := ButterRequest(uri) {
+	virtual ButterResponse postForm(Uri url, Str:Str form) {
+		sendRequest(ButterRequest(url) {
 			it.method	= "POST"
-		}
-		req.headers.contentType = MimeType("application/x-www-form-urlencoded")
-		
-		//sys::UnsupportedErr: java.lang.UnsupportedOperationException
-		//  fan.sys.Map$CIHashMap.keySet (Map.java:650)
-		//  fan.sys.Map.keysIterator (Map.java:629)
-		//  fan.sys.Uri.encodeQuery (Uri.java:87)
-		// see http://fantom.org/sidewalk/topic/2236
-		caseSensitive := Str:Str[:].addAll(form)
-		
-		enc := Uri.encodeQuery(caseSensitive)
-		req.body.buf.print(enc)
-		return sendRequest(req)
+			it.headers.contentType = MimeType("application/x-www-form-urlencoded")
+
+			//sys::UnsupportedErr: java.lang.UnsupportedOperationException
+			//  fan.sys.Map$CIHashMap.keySet (Map.java:650)
+			//  fan.sys.Map.keysIterator (Map.java:629)
+			//  fan.sys.Uri.encodeQuery (Uri.java:87)
+			// see http://fantom.org/sidewalk/topic/2236
+			caseSensitive := Str:Str[:].addAll(form)
+			enc := Uri.encodeQuery(caseSensitive)
+			it.body.buf.writeChars(enc)
+		})
 	}
 	
-	** Make a post request to the URI with the given String.
+	** Makes a HTTP POST request to the URL with the given String.
 	** The 'Content-Type' is set to 'text/plain'.
-	virtual ButterResponse postStr(Uri uri, Str content, Charset charset := Charset.utf8) {
-		req := ButterRequest(uri) {
+	virtual ButterResponse postStr(Uri url, Str content, Charset charset := Charset.utf8) {
+		sendRequest(ButterRequest(url) {
 			it.method	= "POST"
-		}
-		req.headers.contentType = MimeType("text/plain; charset=${charset.name}")
-		req.body.str = content
-		return sendRequest(req)
+			it.body.str = content
+		})
 	}
 
-	** Make a post request to the URI with the given file.
+	** Makes a HTTP POST request to the URL with the given JSON Obj.
+	** The 'Content-Type' is set to 'application/json'.
+	virtual ButterResponse postJsonObj(Uri url, Obj? jsonObj) {
+		sendRequest(ButterRequest(url) {
+			it.method = "POST"
+			it.body.jsonObj = jsonObj
+		})
+	}
+
+	** Makes a HTTP POST request to the URL with the given file.
 	** The 'Content-Type' is set from the file extension's MIME type, or 'application/octet-stream' if unknown.
-	virtual ButterResponse postFile(Uri uri, File file) {
-		req := ButterRequest(uri) {
-			it.method	= "POST"
-		}
-		req.headers.contentType = file.mimeType ?: MimeType("application/octet-stream")
-		req.body.buf = file.readAllBuf  
-		return sendRequest(req)
+	virtual ButterResponse postFile(Uri url, File file) {
+		sendRequest(ButterRequest(url) {
+			it.method = "POST"
+			it.headers.contentType = file.mimeType ?: MimeType("application/octet-stream")
+			it.body.buf = file.readAllBuf  
+		})
 	}	
+
+	** Makes a HTTP PUT request to the URL with the given String.
+	** The 'Content-Type' is set to 'text/plain'.
+	virtual ButterResponse putStr(Uri url, Str content, Charset charset := Charset.utf8) {
+		sendRequest(ButterRequest(url) {
+			it.method	= "PUT"
+			it.body.str = content
+		})
+	}
+
+	** Makes a HTTP PUT request to the URL with the given JSON Obj.
+	** The 'Content-Type' is set to 'application/json'.
+	virtual ButterResponse putJsonObj(Uri url, Obj? jsonObj) {
+		sendRequest(ButterRequest(url) {
+			it.method = "PUT"
+			it.body.jsonObj = jsonObj
+		})
+	}
+
+	** Makes a simple HTTP DELETE request to the given URL and returns the response.
+	virtual ButterResponse delete(Uri url) {
+		sendRequest(ButterRequest(url) {
+			it.method = "DELETE"
+		})
+	}
 
 	@NoDoc
 	override Obj? trap(Str name, Obj?[]? args := null) {

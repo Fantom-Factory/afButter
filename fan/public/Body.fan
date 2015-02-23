@@ -22,18 +22,32 @@ class Body {
 	**  - any charset set via the 'charset' field
 	**  - the charset defined in a 'Content-Type' HTTP header
 	**  - UTF-8
+	** 
+	** When set, the 'Content-Type' is set to 'text/plain' (if it's not been set already).  
 	Str? str {
 		get { buf.seek(0).readAllStr }
-		set { buffer = buf.seek(0).writeChars(it).flip }
+		set {
+			if (reqHeaders.contentType != null)
+				reqHeaders.contentType = MimeType("text/plain; charset=${_strCharset}")
+			buffer = buf.seek(0).writeChars(it).flip
+		}
 	}
 
 	** Gets and sets the body content as a JSON object. 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
+	** 
+	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	Obj? jsonObj {
 		get { JsonInStream(buf.seek(0).in).readJson }
-		set { str = JsonOutStream.writeJsonToStr(it) }
+		set {
+			if (reqHeaders.contentType != null)
+				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
+			str = JsonOutStream.writeJsonToStr(it)
+		}
 	}
 
 	** Gets and set the body content as a JSON map. Convenience for '([Str:Obj?]?) body.jsonObj'.
+	** 
+	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	[Str:Obj?]? jsonMap {
 		get { jsonObj }
 		set { jsonObj = it }

@@ -1,7 +1,7 @@
 using web::Cookie
 
 // TODO: respect domain, path, and secure attributes.
-** (Middleware) - Stores cookies found in response objects, and automatically sets them in subsequent requests. 
+** (Middleware) - Stores cookies found in response objects and sets them in subsequent requests. 
 ** This effectively gives you a *session* when querying web applications.
 ** 
 ** 'StickyCookiesMiddleware' inspects the 'Max-Age' attribute of the cookies and automatically expires them when required.

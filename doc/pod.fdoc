@@ -40,7 +40,7 @@ class Example {
     Void main() {
         butter   := Butter.churnOut()
         response := butter.get(`http://www.fantomfactory.org/`)
-        echo(response.asStr)
+        echo(response.body.str)
     }
 }
 <pre
@@ -86,6 +86,7 @@ middlewareStack := [
     StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
+    ProxyMiddleware(),
     HttpTerminator()
 ]
 
@@ -97,7 +98,7 @@ Or to use the default stack of middleware bundled with 'Butter', just *churn and
 pre>
 syntax: fantom
 
-html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
+html := Butter.churnOut.get(`http://www.fantomfactory.org/`).body.str
 <pre
 
 
@@ -186,7 +187,68 @@ class TestStatusCodes {
 
 Calling RESTful Services [#rest]
 ********************************
-Butter can be used to REST services.
+'Butter' has some conienience methods for calling RESTful services.
+
+GET [#get]
+==========
+For a simple GET request:
+
+pre>
+butter   := ButterDish(Butter.churnOut())
+response := butter.get(`http://example.org/`)
+<pre
+
+
+
+POST [#post]
+============
+To send a POST request:
+
+pre>
+butter   := ButterDish(Butter.churnOut())
+jsonObj  := ["wot" : "ever"]
+response := butter.postJsonObj(`http://example.org/`, jsonObj)
+<pre
+
+
+
+PUT [#put]
+==========
+To send a PUT request:
+
+pre>
+butter   := ButterDish(Butter.churnOut())
+jsonObj  := ["wot" : "ever"]
+response := butter.putJsonObj(`http://example.org/`, jsonObj)
+<pre
+
+
+
+DELETE [#delete]
+================
+To send a DELETE request:
+
+pre>
+butter   := ButterDish(Butter.churnOut())
+response := butter.delete(`http://example.org/`)
+<pre
+
+
+
+Misc [#misc]
+============
+For complete control over the HTTP requests, create a `ButteRequest` and set the headers and body yourself:
+
+pre>
+butter   := ButterDish(Butter.churnOut())
+request  := ButterRequest(`http://example.org/`) {
+    it.method = "POST"
+    it.headers.contentType = MimeType("application/json")
+    it.body.str = """ {"wot" : "ever"} """
+}
+response := butter.sendRequest(req)
+<pre
+
 
 
 Release Notes [#releaseNotes]
