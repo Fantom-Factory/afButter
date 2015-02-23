@@ -19,7 +19,7 @@ class ButterRequest {
 	HttpRequestHeaders	headers	:= HttpRequestHeaders() { private set }	// 'cos it's required by body
 
 	** A temporary store for request data, use to pass data between middleware.
-	Str:Obj stash	:= Str:Obj[:] { caseInsensitive = true }
+	Str:Obj? stash	:= Str:Obj?[:] { caseInsensitive = true }
 	
 	** The request body.
 	Body	body	:= Body(headers)

@@ -9,7 +9,6 @@ internal class TestOpenAuthMiddleware : ButterTest {
 		res := ButterResponse(200, "", [:], "")
 		end := MockTerminator([res])		
 		req	:= ButterRequest(`http://yboss.yahooapis.com/ysearch/web?q=yahoo&format=xml`)
-		
 		mw.sendRequest(end, req)
 	
 		verifyEq(req.headers.map.size, 1)
