@@ -37,7 +37,7 @@ class Example {
     Void main() {
         butter   := Butter.churnOut()
         response := butter.get(`http://www.fantomfactory.org/`)
-        echo(response.asStr)
+        echo(response.body.str)
     }
 }
 ```
@@ -72,6 +72,7 @@ middlewareStack := [
     StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
     ErrOn5xxMiddleware(),
+    ProxyMiddleware(),
     HttpTerminator()
 ]
 
@@ -81,7 +82,7 @@ butter := Butter.churnOut(middlewareStack)
 Or to use the default stack of middleware bundled with `Butter`, just *churn and go*:
 
 ```
-html := Butter.churnOut.get(`http://www.fantomfactory.org/`).asStr
+html := Butter.churnOut.get(`http://www.fantomfactory.org/`).body.str
 ```
 
 ## Butter Dishes
@@ -148,5 +149,57 @@ class TestStatusCodes {
 
 ## Calling RESTful Services
 
-Butter can be used to REST services.
+`Butter` has some conienience methods for calling RESTful services.
+
+### GET
+
+For a simple GET request:
+
+```
+butter   := ButterDish(Butter.churnOut())
+response := butter.get(`http://example.org/`)
+```
+
+### POST
+
+To send a POST request:
+
+```
+butter   := ButterDish(Butter.churnOut())
+jsonObj  := ["wot" : "ever"]
+response := butter.postJsonObj(`http://example.org/`, jsonObj)
+```
+
+### PUT
+
+To send a PUT request:
+
+```
+butter   := ButterDish(Butter.churnOut())
+jsonObj  := ["wot" : "ever"]
+response := butter.putJsonObj(`http://example.org/`, jsonObj)
+```
+
+### DELETE
+
+To send a DELETE request:
+
+```
+butter   := ButterDish(Butter.churnOut())
+response := butter.delete(`http://example.org/`)
+```
+
+### Misc
+
+For complete control over the HTTP requests, create a [ButteRequest](http://repo.status302.com/doc/afButter/ButteRequest.html) and set the headers and body yourself:
+
+```
+butter   := ButterDish(Butter.churnOut())
+request  := ButterRequest(`http://example.org/`) {
+    it.method = "POST"
+    it.headers.contentType = MimeType("application/json")
+    it.body.str = """ {"wot" : "ever"} """
+}
+response := butter.sendRequest(req)
+```
 
