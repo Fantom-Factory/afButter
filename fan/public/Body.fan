@@ -53,6 +53,11 @@ class Body {
 		set { jsonObj = it }
 	}
 
+	@NoDoc @Deprecated { msg="Use 'buf.size()' instead" }
+	Int size() {
+		buf.size
+	}
+	
 	internal new makeForReq(HttpRequestHeaders reqHeaders) {
 		this.reqHeaders = reqHeaders
 		// we start off with a buffer, as that is what most requests will use to set Str content etc
