@@ -53,9 +53,26 @@ class Body {
 		set { jsonObj = it }
 	}
 
+//	** Gets and sets the body content as a JSON object. 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
+//	** 
+//	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
+//	Obj? form {
+//		get { JsonInStream(buf.seek(0).in).readJson }
+//		set {
+//			if (reqHeaders.contentType != null)
+//				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
+//			str = JsonOutStream.writeJsonToStr(it)
+//		}
+//	}
+	
 	@NoDoc @Deprecated { msg="Use 'buf.size()' instead" }
 	Int size() {
 		buf.size
+	}
+	
+	@NoDoc @Deprecated { msg="Use 'buf.in()' instead" }
+	InStream in() {
+		buf.in
 	}
 	
 	internal new makeForReq(HttpRequestHeaders reqHeaders) {
@@ -67,6 +84,7 @@ class Body {
 	internal new makeForResIn(HttpResponseHeaders resHeaders, InStream in) {
 		this.resHeaders = resHeaders
 		// read in the whole instream only because we need to make sure we close it at some point
+		// use 'try' in case the 'in' is empty 
 		try buffer = in.readAllBuf
 		catch buffer = Buf()
 	}
@@ -74,6 +92,11 @@ class Body {
 	internal new makeForResStr(HttpResponseHeaders resHeaders, Str str) {
 		this.resHeaders = resHeaders
 		this.buffer = str.toBuf
+	}
+
+	internal new makeForResBuf(HttpResponseHeaders resHeaders, Buf buf) {
+		this.resHeaders = resHeaders
+		this.buffer = buf
 	}
 	
 	private Charset _strCharset() {

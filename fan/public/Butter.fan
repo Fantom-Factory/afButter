@@ -134,4 +134,3 @@ mixin Butter {
 		} ?: throw ButterErr(ErrMsgs.chainMiddlewareNotFound(name), middleware.map { it.typeof.name })
 	}	
 }
-

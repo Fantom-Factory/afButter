@@ -6,7 +6,7 @@ internal class TestOpenAuthMiddleware : ButterTest {
 		mw.timestampGen = OpenAuthTimestampGenStub()
 		mw.nonceGen		= OpenAuthNonceGenStub()
 		
-		res := ButterResponse(200, "", [:], "")
+		res := ButterResponse(200, "", HttpResponseHeaders(), "")
 		end := MockTerminator([res])		
 		req	:= ButterRequest(`http://yboss.yahooapis.com/ysearch/web?q=yahoo&format=xml`)
 		mw.sendRequest(end, req)
