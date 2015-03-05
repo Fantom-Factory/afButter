@@ -237,7 +237,7 @@ response := butter.delete(`http://example.org/`)
 
 Misc [#misc]
 ============
-For complete control over the HTTP requests, create a `ButteRequest` and set the headers and body yourself:
+For complete control over the HTTP requests, create a `ButteRequest` and set the headers and the body yourself:
 
 pre>
 butter   := ButterDish(Butter.churnOut())
@@ -253,6 +253,12 @@ response := butter.sendRequest(req)
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.2 [#v1.1.2]
+================
+ - New: 'Body.form' field for getting / setting URL encoded forms.
+ - New: 'ButterResponse.makeFromBuf()' ctor for [Bounce]`pod:afBounce`.
+ - Chg: Better gzip management in 'GzipMiddleware'.
+
 v1.1.0 [#v1.1.0]
 ================
  - New: 'ProxyMiddleware' re-uses the proxy mechanism used by 'web::WebClient'.

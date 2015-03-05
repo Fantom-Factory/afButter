@@ -9,6 +9,8 @@ class Body {
 	private HttpResponseHeaders?	resHeaders
 	
 	** The charset used to en / decode the string and json objects. If left as 'null' then it defaults to the 'Content-Type' HTTP Header, or UTF-8 if not set.
+	** 
+	** 'charset' should be set *before* the body content.
 	Charset? charset
 	
 	** Gets and sets the body content as a 'Buf'.
@@ -33,7 +35,8 @@ class Body {
 		}
 	}
 
-	** Gets and sets the body content as a JSON object. 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
+	** Gets and sets the body content as a JSON object. 
+	** 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	Obj? jsonObj {
@@ -53,17 +56,18 @@ class Body {
 		set { jsonObj = it }
 	}
 
-//	** Gets and sets the body content as a JSON object. 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
-//	** 
-//	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
-//	Obj? form {
-//		get { JsonInStream(buf.seek(0).in).readJson }
-//		set {
-//			if (reqHeaders.contentType != null)
-//				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
-//			str = JsonOutStream.writeJsonToStr(it)
-//		}
-//	}
+	** Gets and sets the body content as a URL encoded form (think forms on web pages). 
+	** 'Uri.encodeQuery()' / 'Uri.decodeQuery()' methods are used to convert objects to and from form values.
+	** 
+	** When set, the 'Content-Type' is set to 'application/x-www-form-urlencoded' (if it's not been set already).  
+	Str:Str form {
+		get { Uri.decodeQuery(str) }
+		set {
+			if (reqHeaders.contentType != null)
+				reqHeaders.contentType = MimeType("application/x-www-form-urlencoded; charset=${_strCharset}")
+			str = Uri.encodeQuery(it)
+		}
+	}
 	
 	@NoDoc @Deprecated { msg="Use 'buf.size()' instead" }
 	Int size() {
