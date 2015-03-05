@@ -61,7 +61,6 @@ class ButterResponse {
 		this.body 		= Body(this.headers, body)
 		f?.call(this)		
 	}
-
 	** Create a response from a 'Buf' body.
 	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf body, |This|? f := null) {
 		this.statusCode = statusCode
@@ -69,6 +68,15 @@ class ButterResponse {
 		this.headers	= headers
 		this.body 		= Body(this.headers, body)
  		f?.call(this)		
+	}
+
+	@NoDoc @Deprecated { msg="Use 'body.makeFromStr' instead" } 
+	new makeFromStrOld(Int statusCode, Str statusMsg, Str:Str headers, Str body, |This|? f := null) {
+		this.statusCode = statusCode
+		this.statusMsg 	= statusMsg
+		this.headers	= HttpResponseHeaders(headers)
+		this.body 		= Body(this.headers, body)
+		f?.call(this)		
 	}
 
 	@NoDoc @Deprecated { msg="Use 'body.str' instead" } 
