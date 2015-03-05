@@ -1,7 +1,7 @@
-#Butter v1.1.0
+#Butter v1.1.2
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.1.0](http://img.shields.io/badge/pod-v1.1.0-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
+[![pod: v1.1.2](http://img.shields.io/badge/pod-v1.1.2-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -191,7 +191,7 @@ response := butter.delete(`http://example.org/`)
 
 ### Misc
 
-For complete control over the HTTP requests, create a [ButteRequest](http://repo.status302.com/doc/afButter/ButteRequest.html) and set the headers and body yourself:
+For complete control over the HTTP requests, create a [ButteRequest](http://repo.status302.com/doc/afButter/ButteRequest.html) and set the headers and the body yourself:
 
 ```
 butter   := ButterDish(Butter.churnOut())

@@ -48,12 +48,21 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 }
 
 ** Throw by 'ErrOnXxxMiddleware' when a HTTP response returns a bad status code.
+** 
+** To prevent 'BadStatusErrs' from being thrown, just disable the relevant middleware.
+** For example, to prevent a 'BadStatusErr' from being thrown when a 404 is returned:
+** 
+**   butterDish.errOn4xxx.enabled = false
+** 
+** To prevent a 'BadStatusErr' from being thrown when a 500 is returned:
+** 
+**   butterDish.errOn5xxx.enabled = false 
 const class BadStatusErr : Err {
 		
-	** The failing HTTP URL
+	** The failing HTTP request URL
 	const Uri reqUrl
 	
-	** The failing HTTP URL
+	** The failing HTTP request Method
 	const Str reqMethod
 	
 	** The failing HTTP response status code
@@ -65,6 +74,7 @@ const class BadStatusErr : Err {
 	** The body of the failing HTTP response (if a string)
 	const Str? body
 
+	** Create a 'BadStatusErr'.
 	new make(Str reqMethod, Uri reqUrl, Int statusCode, Str statusMsg, Str? body := null, Err? cause := null) : super(mess(reqMethod, reqUrl, statusCode, statusMsg), cause) {
 		this.reqMethod 	= reqMethod
 		this.reqUrl 	= reqUrl
