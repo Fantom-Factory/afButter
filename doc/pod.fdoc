@@ -187,7 +187,7 @@ class TestStatusCodes {
 
 Calling RESTful Services [#rest]
 ********************************
-'Butter' has some conienience methods for calling RESTful services.
+'Butter' has some convenience methods for calling RESTful services.
 
 GET [#get]
 ==========
@@ -237,7 +237,7 @@ response := butter.delete(`http://example.org/`)
 
 Misc [#misc]
 ============
-For complete control over the HTTP requests, create a `ButteRequest` and set the headers and the body yourself:
+For complete control over the HTTP requests, create a `ButterRequest` and set the headers and the body yourself:
 
 pre>
 butter   := ButterDish(Butter.churnOut())
