@@ -1,14 +1,12 @@
 
-For 1.0.2
+For 1.1.4
 =========
 
 
 
 For Future
 ==========
-use proxy
 support for continue 100
-(have res take a stream and read it all on asStr, asBuf, etc...)
 
 Allow streaming.
 
