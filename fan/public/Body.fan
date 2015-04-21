@@ -89,18 +89,18 @@ class Body {
 		this.resHeaders = resHeaders
 		// read in the whole instream only because we need to make sure we close it at some point
 		// use 'try' in case the 'in' is empty 
-		try buffer = in.readAllBuf
+		try buffer = in.readAllBuf.seek(0)
 		catch buffer = Buf()
 	}
 	
 	internal new makeForResStr(HttpResponseHeaders resHeaders, Str str) {
 		this.resHeaders = resHeaders
-		this.buffer = str.toBuf
+		this.buffer = str.toBuf.seek(0)
 	}
 
 	internal new makeForResBuf(HttpResponseHeaders resHeaders, Buf buf) {
 		this.resHeaders = resHeaders
-		this.buffer = buf
+		this.buffer = buf.seek(0)
 	}
 	
 	private Charset _strCharset() {
