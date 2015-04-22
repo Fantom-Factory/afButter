@@ -255,6 +255,7 @@ Release Notes [#releaseNotes]
 *****************************
 v1.1.2.2 [#v1.1.2.2]
 ====================
+ - New: StickyHeaders getters and setters.
  - Bug: The 'Buf' in 'Body' is now reset to the beginning when used in a response.
 
 v1.1.2 [#v1.1.2]

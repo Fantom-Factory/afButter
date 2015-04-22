@@ -17,4 +17,17 @@ class StickyHeadersMiddleware : ButterMiddleware {
 		
 		return butter.sendRequest(req)
 	}
+	
+	** Getter for sticky header values.
+	@Operator
+	Str? get(Str key) {
+		stickyHeaders[key]
+	}
+
+	** Setter for sticky header values.
+	** Setting a 'null' value removes the value from the map.
+	@Operator
+	Void set(Str key, Str? val) {
+		stickyHeaders[key] = val
+	}
 }
