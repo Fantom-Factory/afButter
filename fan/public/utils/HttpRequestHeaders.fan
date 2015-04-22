@@ -133,16 +133,17 @@ class HttpRequestHeaders {
 		set { addOrRemove("X-Forwarded-For", it?.join(", ")) }
 	}
 
-	** Simple setter for setting raw Str values.
+	** Simple getter for setting raw Str values.
 	@Operator
 	Str? get(Str name) {
 		headers[name]
 	}
 
-	** Simple getter for getting raw Str values.
+	** Simple setter for getting raw Str values.
+	** Setting a 'null' value removes the value from the map.
 	@Operator
-	Void set(Str name, Str value) {
-		headers[name] = value
+	Void set(Str name, Str? value) {
+		addOrRemove(name, value)
 	}
 	
 	** Iterates over the headers.
