@@ -45,7 +45,6 @@ class OpenAuthMiddleware : ButterMiddleware {
 		return butter.sendRequest(req)
 	}
 	
-	// TODO: if works, move to a service!
 	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str consumerSecret, Str nonce, Int timestamp, Str signatureMethod) {
 		oauthParams	:= OpenAuthParams()
 		oauthParams["oauth_version"]			= "1.0"
