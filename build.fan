@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afButter"
 		summary = "A library that helps ease HTTP requests through a stack of middleware"
-		version = Version("1.1.4")
+		version = Version("1.1.5")
 
 		meta	= [
 			"proj.name"		: "Butter",
 			"tags"			: "system",
-			"repo.private"	: "false"		
+			"repo.private"	: "true"		
 		]
 
 		depends = [
