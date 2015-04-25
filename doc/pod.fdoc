@@ -253,9 +253,11 @@ response := butter.sendRequest(req)
 
 Release Notes [#releaseNotes]
 *****************************
-v1.1.2.2 [#v1.1.2.2]
-====================
+v1.1.4 [#v1.1.4]
+================
  - New: StickyHeaders getters and setters.
+ - Chg: 'Body' fields now handle 'null' values.
+ - Chg: Request headers are not set when 'Body' content is set to 'null'.
  - Bug: The 'Buf' in 'Body' is now reset to the beginning when used in a response.
 
 v1.1.2 [#v1.1.2]

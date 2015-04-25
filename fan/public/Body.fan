@@ -25,24 +25,30 @@ class Body {
 	**  - the charset defined in a 'Content-Type' HTTP header
 	**  - UTF-8
 	** 
-	** When set, the 'Content-Type' is set to 'text/plain' (if it's not been set already).  
+	** When set, the 'Content-Type' is set to 'text/plain' (if it's not been set already).
+	** 
+	** Returns an empty string if the body has not been set.
 	Str? str {
 		get { buf.seek(0).readAllStr }
 		set {
-			if (reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("text/plain; charset=${_strCharset}")
-			buffer = buf.seek(0).writeChars(it).flip
+			buffer = buf.seek(0).writeChars(it ?: "").flip
 		}
 	}
 
 	** Gets and sets the body content as a JSON object. 
 	** 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
 	** 
-	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
+	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).
+	**   
+	** Returns 'null' if the body has not been set.
 	Obj? jsonObj {
-		get { JsonInStream(buf.seek(0).in).readJson }
+		get { 
+			buf.isEmpty ? null : JsonInStream(buf.seek(0).in).readJson 
+		}
 		set {
-			if (reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
 			str = JsonOutStream.writeJsonToStr(it)
 		}
@@ -51,8 +57,10 @@ class Body {
 	** Gets and set the body content as a JSON map. Convenience for '([Str:Obj?]?) body.jsonObj'.
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
+	**   
+	** Returns the empty map 'Str:Obj?[:]' if the body has not been set.
 	[Str:Obj?]? jsonMap {
-		get { jsonObj }
+		get { jsonObj ?: Str:Obj?[:] }
 		set { jsonObj = it }
 	}
 
@@ -60,12 +68,14 @@ class Body {
 	** 'Uri.encodeQuery()' / 'Uri.decodeQuery()' methods are used to convert objects to and from form values.
 	** 
 	** When set, the 'Content-Type' is set to 'application/x-www-form-urlencoded' (if it's not been set already).  
-	Str:Str form {
+	**   
+	** Returns the empty map 'Str:Str[:]' if the body has not been set.
+	[Str:Str]? form {
 		get { Uri.decodeQuery(str) }
 		set {
-			if (reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("application/x-www-form-urlencoded; charset=${_strCharset}")
-			str = Uri.encodeQuery(it)
+			str = (it == null) ? null : Uri.encodeQuery(it)
 		}
 	}
 	

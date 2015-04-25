@@ -15,4 +15,25 @@ internal class TestBody : ButterTest {
 		verifyEq(body.buf.pos, 0)
 	}
 	
+	
+	Void testNullChecks() {
+		body := Body.makeForReq(HttpRequestHeaders([:]))
+		body.buf.clear
+		verifyEq("",   			body.str)
+		verifyEq(Str:Str[:],	body.form)
+		verifyEq(null, 			body.jsonObj)
+		verifyEq(Str:Obj?[:],	body.jsonMap)
+
+		body.str 	 = null
+		verifyEq("",   			body.str)
+		
+		body.form 	 = null
+		verifyEq(Str:Str[:],	body.form)
+		
+		body.jsonObj = null
+		verifyEq(null, 			body.jsonObj)
+		
+		body.jsonMap = null
+		verifyEq(Str:Obj?[:],	body.jsonMap)		
+	}
 }
