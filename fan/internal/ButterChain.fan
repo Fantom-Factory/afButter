@@ -7,7 +7,8 @@ internal class ButterChain : Butter {
 		if (middleware.isEmpty)
 			throw ArgErr(ErrMsgs.middlewareNotSupplied)
 
-		this.middleware = middleware.ro
+		// there's no reason why this list should be read only
+		this.middleware = middleware.rw
 	}
 
 	override ButterResponse sendRequest(ButterRequest req)	{

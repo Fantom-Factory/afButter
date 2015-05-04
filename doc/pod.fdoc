@@ -253,6 +253,10 @@ response := butter.sendRequest(req)
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.6 [#v1.1.6]
+================
+ - Chg: 'Butter.middleware()' list is now modifiable.
+
 v1.1.4 [#v1.1.4]
 ================
  - New: StickyHeaders getters and setters.

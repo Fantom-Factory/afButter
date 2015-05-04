@@ -15,7 +15,7 @@ mixin Butter {
 	** Returns an instance of the given middleware type as used by the 
 	abstract ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true)
 
-	** Returns an read only list of middleware instances used by this 'Butter' 
+	** Returns a (modifiable) list of middleware instances used by this 'Butter' 
 	abstract ButterMiddleware[] middleware()
 
 	** Builds a pack of butter from the given middleware stack.
