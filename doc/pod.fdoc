@@ -253,6 +253,11 @@ response := butter.sendRequest(req)
 
 Release Notes [#releaseNotes]
 *****************************
+v1.1.8 [#v1.1.8]
+================
+ - New: 'setHeader()' and 'setMethod()' builder methods on 'ButterRequest'.
+ - Bug: 'FollowRedirectsMiddleware' now re-sets the 'host' header.
+
 v1.1.6 [#v1.1.6]
 ================
  - Chg: 'Butter.middleware()' list is now modifiable.

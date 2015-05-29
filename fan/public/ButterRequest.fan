@@ -29,6 +29,18 @@ class ButterRequest {
 		f?.call(this)
 	}
 	
+	** Builder method for setting the HTTP method.
+	This setMethod(Str method) {
+		this.method = method 
+		return this
+	}
+
+	** Builder method for setting a header value.
+	This setHeader(Str name, Str? value) {
+		headers.set(name, value)
+		return this
+	}
+	
 	@NoDoc @Deprecated { msg="Use 'body.set' instead" }  
 	This setBodyFromStr(Str str) {
 		body.str = str
