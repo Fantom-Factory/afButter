@@ -39,6 +39,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 					log.warn(LogMsgs.redirectGivenWithNoLocation(res.statusCode))
 				else {
 					req.url = res.headers.location
+					req.headers.host = res.headers.location.host
 					redirect = true
 					
 					if (303 == res.statusCode)
@@ -48,7 +49,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 						req.method = "get"
 					
 					// Should we store permanent redirects and auto-change the req url?
-					// Naa, that's web browser behaviour so speed up page rendering.
+					// Naa, that's web browser behaviour to speed up page rendering.
 					// We're just mooching around the net!
 				}
 			}
