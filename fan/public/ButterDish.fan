@@ -7,6 +7,7 @@
 ** For example, without using a 'ButterDish':
 ** 
 ** pre>
+**   syntax: fantom
 **   butter := Butter.churnOut()
 **   ((FollowRedriectsMiddleware) butter.findMiddleware(FollowRedriectsMiddleware#)).enabled = true
 **   ((ErrOn5xxMiddleware) butter.findMiddleware(ErrOn5xxMiddleware#)).enabled = true
@@ -15,6 +16,7 @@
 ** Compare *with* using a 'ButterDish':
 ** 
 ** pre>
+**   syntax: fantom
 **   butter := ButterDish(Butter.churnOut())
 **   butter.followRedirects.enabled = true
 **   butter.errOn5xx.enabled = true
