@@ -9,6 +9,7 @@ using web::WebUtil
 ** 
 ** To use a proxy, set the full proxy URL (as a 'Uri') in the request stash under the key 'afButter.proxy':
 ** 
+**   syntax: fantom
 **   req.stash[afButter.proxy] = `http://proxy.example.org:8069`
 ** 
 class HttpTerminator : ButterMiddleware {

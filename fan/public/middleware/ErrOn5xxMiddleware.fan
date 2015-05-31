@@ -52,10 +52,12 @@ class ErrOn5xxMiddleware : ButterMiddleware {
 ** To prevent 'BadStatusErrs' from being thrown, just disable the relevant middleware.
 ** For example, to prevent a 'BadStatusErr' from being thrown when a 404 is returned:
 ** 
+**   syntax: fantom
 **   butterDish.errOn4xxx.enabled = false
 ** 
 ** To prevent a 'BadStatusErr' from being thrown when a 500 is returned:
 ** 
+**   syntax: fantom
 **   butterDish.errOn5xxx.enabled = false 
 const class BadStatusErr : Err {
 		
