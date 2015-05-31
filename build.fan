@@ -5,12 +5,12 @@ class Build : BuildPod {
 	new make() {
 		podName = "afButter"
 		summary = "A library that helps ease HTTP requests through a stack of middleware"
-		version = Version("1.1.5")
+		version = Version("1.1.8")
 
 		meta	= [
 			"proj.name"		: "Butter",
-			"tags"			: "system",
-			"repo.private"	: "true"		
+			"repo.tags"		: "system",
+			"repo.public"	: "true"		
 		]
 
 		depends = [
@@ -21,6 +21,6 @@ class Build : BuildPod {
 		]
 		
 		srcDirs = [`test/`, `test/oauth-code/`, `test/oauth/`, `fan/`, `fan/public/`, `fan/public/utils/`, `fan/public/middleware/`, `fan/internal/`, `fan/internal/utils/`]
-		resDirs = [,]
+		resDirs = [`doc/`,]
 	}
 }
