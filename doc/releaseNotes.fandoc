@@ -1,14 +1,11 @@
 Versions
 ********
 
-v1.1.8
-======
- - New: 'setHeader()' and 'setMethod()' builder methods on 'ButterRequest'.
- - Bug: 'FollowRedirectsMiddleware' now re-sets the 'host' header.
-
 v1.1.6
 ======
+ - New: 'setHeader()' and 'setMethod()' builder methods on 'ButterRequest'.
  - Chg: 'Butter.middleware()' list is now modifiable.
+ - Bug: 'FollowRedirectsMiddleware' now re-sets the 'host' header.
 
 v1.1.4
 ======
