@@ -18,22 +18,46 @@ internal class TestBody : ButterTest {
 	
 	Void testNullChecks() {
 		body := Body.makeForReq(HttpRequestHeaders([:]))
-		body.buf.clear
-		verifyEq("",   			body.str)
-		verifyEq(Str:Str[:],	body.form)
-		verifyEq(null, 			body.jsonObj)
-		verifyEq(Str:Obj?[:],	body.jsonMap)
+		verifyEq(body.str,		null)
+		verifyEq(body.form,		null)
+		verifyEq(body.jsonObj,	null)
+		verifyEq(body.jsonMap,	null)
 
-		body.str 	 = null
-		verifyEq("",   			body.str)
+		body.str = null
+		verifyEq(body.str,		null)
 		
-		body.form 	 = null
-		verifyEq(Str:Str[:],	body.form)
+		body.form = null
+		verifyEq(body.form, 	null)
 		
 		body.jsonObj = null
-		verifyEq(null, 			body.jsonObj)
+		verifyEq(body.jsonObj, 	null)
 		
 		body.jsonMap = null
-		verifyEq(Str:Obj?[:],	body.jsonMap)		
+		verifyEq(body.jsonMap,	null)		
+
+		
+		body.buf = null
+		body.str = "Dude!"
+		verifyEq(body.str,		"Dude!")
+		body.str = "Dude!"
+		verifyEq(body.str,		"Dude!")
+		
+		body.buf = null
+		body.form = ["wot":"ever"]
+		verifyEq(body.form,		["wot":"ever"])
+		body.form = ["wot":"ever"]
+		verifyEq(body.form,		["wot":"ever"])
+		
+		body.buf = null
+		body.jsonObj = 69
+		verifyEq(body.jsonObj,	69)
+		body.jsonObj = 69
+		verifyEq(body.jsonObj,	69)
+		
+		body.buf = null
+		body.jsonMap = ["wot":"ever"]
+		verifyEq(body.jsonMap, Str:Obj?["wot":"ever"])
+		body.jsonMap = ["wot":"ever"]
+		verifyEq(body.jsonMap, Str:Obj?["wot":"ever"])
 	}
 }

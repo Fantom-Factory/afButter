@@ -27,7 +27,7 @@ class HttpTerminator : ButterMiddleware {
 			req.headers.host = normaliseHost(req.url)
 
 		// set the Content-Length, if it's not been already
-		bufSize := req.body.buf.size
+		bufSize := req.body.size
 		if (req.headers.contentLength == null)
 			if (req.method == "GET" && bufSize == 0)
 				null?.toStr // don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
@@ -50,8 +50,10 @@ class HttpTerminator : ButterMiddleware {
 			out.print("\r\n")
 			out.flush
 
-			req.body.buf.seek(0).in.pipe(out)
-			out.flush
+			if (req.body.buf != null) {
+				req.body.buf.seek(0).in.pipe(out)
+				out.flush
+			}
 		
 			return ButterResponse(socket.in)
 

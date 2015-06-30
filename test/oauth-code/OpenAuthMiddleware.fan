@@ -51,7 +51,7 @@ class OpenAuthMiddleware : ButterMiddleware {
 		oauthParams["oauth_timestamp"]			= timestamp.toStr
 		oauthParams["oauth_nonce"]				= nonce
 		oauthParams["oauth_consumer_key"]		= consumerKey
-		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// TODO: OAuth have PLAINTEXT option
+		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// OAuth have PLAINTEXT option
 		
 		tokenKey    := "nnch734d00sl2jdk"
 		tokenSecret := "pfkkdhi9sl3r4s00"
