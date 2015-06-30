@@ -1,5 +1,8 @@
 Versions
 ********
+v1.1.8
+======
+ - Chg: Finally nailed the 'nullability' of the properties of 'Body'.
 
 v1.1.6
 ======

@@ -4,7 +4,7 @@ using util
 // We would need a callback for when socket out becomes available. 
 ** Convenience methods for reading and writing content.
 class Body {	
-	private Buf						buffer
+	private Buf?						buffer
 	private HttpRequestHeaders?		reqHeaders
 	private HttpResponseHeaders?	resHeaders
 	
@@ -14,9 +14,9 @@ class Body {
 	Charset? charset
 	
 	** Gets and sets the body content as a 'Buf'.
-	Buf buf {
+	Buf? buf {
 		// don't seek so we can add more and more to it
-		get { buffer.charset = _strCharset; return buffer }
+		get { if (buffer != null) buffer.charset = _strCharset; return buffer }
 		set { buffer = it }
 	}
 
@@ -27,13 +27,13 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'text/plain' (if it's not been set already).
 	** 
-	** Returns an empty string if the body has not been set.
+	** Returns 'null' if the body has not been set.
 	Str? str {
-		get { buf.seek(0).readAllStr }
+		get { (buf == null) ? null : buf.seek(0).readAllStr }
 		set {
 			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("text/plain; charset=${_strCharset}")
-			buffer = buf.seek(0).writeChars(it ?: "").flip
+			buffer = (it == null) ? null : (buf ?: Buf()).seek(0).writeChars(it).flip
 		}
 	}
 
@@ -45,12 +45,12 @@ class Body {
 	** Returns 'null' if the body has not been set.
 	Obj? jsonObj {
 		get { 
-			buf.isEmpty ? null : JsonInStream(buf.seek(0).in).readJson 
+			(buf == null) ? null : JsonInStream(buf.seek(0).in).readJson 
 		}
 		set {
 			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
-			str = JsonOutStream.writeJsonToStr(it)
+			str = (it == null) ? null : JsonOutStream.writeJsonToStr(it)
 		}
 	}
 
@@ -60,7 +60,7 @@ class Body {
 	**   
 	** Returns the empty map 'Str:Obj?[:]' if the body has not been set.
 	[Str:Obj?]? jsonMap {
-		get { jsonObj ?: Str:Obj?[:] }
+		get { jsonObj }
 		set { jsonObj = it }
 	}
 
@@ -71,7 +71,7 @@ class Body {
 	**   
 	** Returns the empty map 'Str:Str[:]' if the body has not been set.
 	[Str:Str]? form {
-		get { Uri.decodeQuery(str) }
+		get { (buf == null) ? null : Uri.decodeQuery(str) }
 		set {
 			if (it != null && reqHeaders.contentType != null)
 				reqHeaders.contentType = MimeType("application/x-www-form-urlencoded; charset=${_strCharset}")
@@ -79,20 +79,20 @@ class Body {
 		}
 	}
 	
-	@NoDoc @Deprecated { msg="Use 'buf.size()' instead" }
+	** Returns the size of the body in bytes. Shortcut for 'buf?.size ?: 0'.
 	Int size() {
-		buf.size
+		buf?.size ?: 0
 	}
 	
-	@NoDoc @Deprecated { msg="Use 'buf.in()' instead" }
-	InStream in() {
-		buf.in
+	@NoDoc @Deprecated { msg="Use 'buf?.seek(0)?.in' instead" }
+	InStream? in() {
+		buf?.seek(0)?.in
 	}
 	
 	internal new makeForReq(HttpRequestHeaders reqHeaders) {
 		this.reqHeaders = reqHeaders
 		// we start off with a buffer, as that is what most requests will use to set Str content etc
-		buffer = Buf()
+		buffer = null
 	}	
 	
 	internal new makeForResIn(HttpResponseHeaders resHeaders, InStream in) {
@@ -100,17 +100,17 @@ class Body {
 		// read in the whole instream only because we need to make sure we close it at some point
 		// use 'try' in case the 'in' is empty 
 		try buffer = in.readAllBuf.seek(0)
-		catch buffer = Buf()
+		catch buffer = null
 	}
 	
-	internal new makeForResStr(HttpResponseHeaders resHeaders, Str str) {
+	internal new makeForResStr(HttpResponseHeaders resHeaders, Str? str) {
 		this.resHeaders = resHeaders
-		this.buffer = str.toBuf.seek(0)
+		this.buffer = str?.toBuf?.seek(0)
 	}
 
-	internal new makeForResBuf(HttpResponseHeaders resHeaders, Buf buf) {
+	internal new makeForResBuf(HttpResponseHeaders resHeaders, Buf? buf) {
 		this.resHeaders = resHeaders
-		this.buffer = buf.seek(0)
+		this.buffer = buf?.seek(0)
 	}
 	
 	private Charset _strCharset() {

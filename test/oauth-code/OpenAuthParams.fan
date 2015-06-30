@@ -56,7 +56,7 @@ internal class OpenAuthParams {
 			query = query.replace(char.toChar, "%" + char.toHex(2).upper)
 		}
 		
-		// TODO: ask the Fantom boys to add a static method to Uri to do all this 
+		// ask the Fantom boys to add a static method to Uri to do all this 
 		return query				
 	}
 	

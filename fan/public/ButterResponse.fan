@@ -54,7 +54,7 @@ class ButterResponse {
 	}
 
 	** Create a response from a 'Str' body.
-	new makeFromStr(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Str body, |This|? f := null) {
+	new makeFromStr(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Str? body, |This|? f := null) {
 		this.statusCode = statusCode
 		this.statusMsg 	= statusMsg
 		this.headers	= headers
@@ -62,7 +62,7 @@ class ButterResponse {
 		f?.call(this)		
 	}
 	** Create a response from a 'Buf' body.
-	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf body, |This|? f := null) {
+	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf? body, |This|? f := null) {
 		this.statusCode = statusCode
 		this.statusMsg 	= statusMsg
 		this.headers	= headers
@@ -71,7 +71,7 @@ class ButterResponse {
 	}
 
 	@NoDoc @Deprecated { msg="Use 'body.makeFromStr' instead" } 
-	new makeFromStrOld(Int statusCode, Str statusMsg, Str:Str headers, Str body, |This|? f := null) {
+	new makeFromStrOld(Int statusCode, Str statusMsg, Str:Str headers, Str? body, |This|? f := null) {
 		this.statusCode = statusCode
 		this.statusMsg 	= statusMsg
 		this.headers	= HttpResponseHeaders(headers)
@@ -85,13 +85,13 @@ class ButterResponse {
 	}
 
 	@NoDoc @Deprecated { msg="Use 'body.buf' instead" } 
-	Buf asBuf() {
+	Buf? asBuf() {
 		body.buf
 	}
 
 	@NoDoc @Deprecated { msg="Use 'body.buf.seek(0).in' instead" } 
-	InStream asInStream() {
-		body.buf.seek(0).in
+	InStream? asInStream() {
+		body.buf?.seek(0)?.in
 	}
 
 	@NoDoc @Deprecated { msg="Use 'body.jsonObj' instead" } 
