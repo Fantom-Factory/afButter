@@ -65,7 +65,7 @@ mixin Butter {
 			// see http://fantom.org/sidewalk/topic/2236
 			caseSensitive := Str:Str[:].addAll(form)
 			enc := Uri.encodeQuery(caseSensitive)
-			it.body.buf.writeChars(enc)
+			it.body.str = enc
 		})
 	}
 	
