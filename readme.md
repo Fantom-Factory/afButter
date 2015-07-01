@@ -1,7 +1,7 @@
-#Butter v1.1.6
+#Butter v1.1.8
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.1.6](http://img.shields.io/badge/pod-v1.1.6-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
+[![pod: v1.1.8](http://img.shields.io/badge/pod-v1.1.8-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -24,7 +24,7 @@ To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan
 
 ## Documentation
 
-Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afButter/).
+Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afButter/).
 
 ## Quick Start
 
