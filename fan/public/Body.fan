@@ -20,7 +20,7 @@ class Body {
 		set { buffer = it }
 	}
 
-	** Gets and sets the body content as a string. The string is en / decodes using a charset found in the following precedence:
+	** Gets and sets the body content as a string. The string is en / decoded using a charset found in the following precedence:
 	**  - any charset set via the 'charset' field
 	**  - the charset defined in a 'Content-Type' HTTP header
 	**  - UTF-8
