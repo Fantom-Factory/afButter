@@ -31,9 +31,9 @@ class Body {
 	Str? str {
 		get { (buf == null) ? null : buf.seek(0).readAllStr }
 		set {
-			if (it != null && reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType == null)
 				reqHeaders.contentType = MimeType("text/plain; charset=${_strCharset}")
-			buffer = (it == null) ? null : (buf ?: Buf()).seek(0).writeChars(it).flip
+			buffer = (it == null) ? null : (buf ?: Buf() { it.charset = _strCharset }).seek(0).writeChars(it)
 		}
 	}
 
@@ -48,7 +48,7 @@ class Body {
 			(buf == null) ? null : JsonInStream(buf.seek(0).in).readJson 
 		}
 		set {
-			if (it != null && reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType == null)
 				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
 			str = (it == null) ? null : JsonOutStream.writeJsonToStr(it)
 		}
@@ -73,7 +73,7 @@ class Body {
 	[Str:Str]? form {
 		get { (buf == null) ? null : Uri.decodeQuery(str) }
 		set {
-			if (it != null && reqHeaders.contentType != null)
+			if (it != null && reqHeaders.contentType == null)
 				reqHeaders.contentType = MimeType("application/x-www-form-urlencoded; charset=${_strCharset}")
 			str = (it == null) ? null : Uri.encodeQuery(it)
 		}
@@ -114,6 +114,6 @@ class Body {
 	}
 	
 	private Charset _strCharset() {
-		((&charset ?: reqHeaders?.contentType?.charset) ?: resHeaders?.contentType?.charset) ?: Charset.utf8
+		(&charset ?: reqHeaders?.contentType?.charset) ?: Charset.utf8
 	}
 }
