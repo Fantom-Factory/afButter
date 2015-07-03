@@ -55,17 +55,8 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/x-www-form-urlencoded'.
 	virtual ButterResponse postForm(Uri url, Str:Str form) {
 		sendRequest(ButterRequest(url) {
-			it.method	= "POST"
-			it.headers.contentType = MimeType("application/x-www-form-urlencoded")
-
-			//sys::UnsupportedErr: java.lang.UnsupportedOperationException
-			//  fan.sys.Map$CIHashMap.keySet (Map.java:650)
-			//  fan.sys.Map.keysIterator (Map.java:629)
-			//  fan.sys.Uri.encodeQuery (Uri.java:87)
-			// see http://fantom.org/sidewalk/topic/2236
-			caseSensitive := Str:Str[:].addAll(form)
-			enc := Uri.encodeQuery(caseSensitive)
-			it.body.str = enc
+			it.method = "POST"
+			it.body.form = form
 		})
 	}
 	

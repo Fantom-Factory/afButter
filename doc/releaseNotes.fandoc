@@ -3,6 +3,7 @@ Versions
 v1.1.8
 ======
  - Chg: Finally nailed the 'nullability' of the properties of 'Body'.
+ - Bug: 'Body' methods could overwrite previously set header 'MimeTypes'.
 
 v1.1.6
 ======
