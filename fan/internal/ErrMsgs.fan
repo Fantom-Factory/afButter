@@ -9,8 +9,8 @@ internal const class ErrMsgs {
 		"Middleware is empty"
 	}
 
-	static Str terminatorNotFound(Type type) {
-		"Middleware $type.qname is not a terminator / did not process the request"
+	static Str terminatorNotFound(Type? type) {
+		"Middleware ${type?.qname} is not a terminator / did not process the request"
 	}
 
 	static Str chainMiddlewareNotFound(Str mwType) {
