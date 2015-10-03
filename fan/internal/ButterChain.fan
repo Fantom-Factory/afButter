@@ -16,7 +16,7 @@ internal class ButterChain : Butter {
 		try {
 			if (depth >= middleware.size) 
 				// throw 'cos what can we return?
-				throw ButterErr(ErrMsgs.terminatorNotFound(middleware.last.typeof))
+				throw ButterErr(ErrMsgs.terminatorNotFound(middleware.last?.typeof))
 			
 			return middleware[depth].sendRequest(this, req)
 			

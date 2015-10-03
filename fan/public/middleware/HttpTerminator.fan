@@ -67,7 +67,7 @@ class HttpTerminator : ButterMiddleware {
 		connUrl := proxyUrl ?: req.url
 		isHttps := connUrl.scheme == "https"
 		defPort := isHttps ? 443 : 80
-		socket 	:= isHttps ? TcpSocket.makeSsl: TcpSocket.make
+		socket 	:= isHttps ? TcpSocket.makeTls: TcpSocket.make
 		if (options != null) socket.options.copyFrom(this.options)
 
 		socket.connect(IpAddr(connUrl.host), connUrl.port ?: defPort)
