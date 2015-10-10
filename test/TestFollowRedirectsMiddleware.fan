@@ -220,4 +220,39 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		verifyEq(res.statusCode, 200)
 	}
 	
+	Void testFullUrlRedirect() {
+		mw.tooManyRedirects	= 3
+		end	:= MockTerminator([
+			ButterResponse(301, "", HttpResponseHeaders(["Location":"http://www.example.com/zacharySmith"]), ""), 
+			ButterResponse(200, "Danger, Will Robinson!", HttpResponseHeaders(), "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`http://www.example.com/lostInSpace/willRobinson`))
+		verifyEq(end.req.url, `http://www.example.com/zacharySmith`)
+		verifyEq(res.statusCode, 200)
+		verifyEq(res.statusMsg, "Danger, Will Robinson!")
+	}
+
+	Void testAbsUrlRedirect() {
+		mw.tooManyRedirects	= 3
+		end	:= MockTerminator([
+			ButterResponse(301, "", HttpResponseHeaders(["Location":"/zacharySmith"]), ""), 
+			ButterResponse(200, "Danger, Will Robinson!", HttpResponseHeaders(), "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`http://www.example.com/lostInSpace/willRobinson`))
+		verifyEq(end.req.url, `http://www.example.com/zacharySmith`)
+		verifyEq(res.statusCode, 200)
+		verifyEq(res.statusMsg, "Danger, Will Robinson!")
+	}
+
+	Void testRelUrlRedirect() {
+		mw.tooManyRedirects	= 3
+		end	:= MockTerminator([
+			ButterResponse(301, "", HttpResponseHeaders(["Location":"zacharySmith"]), ""), 
+			ButterResponse(200, "Danger, Will Robinson!", HttpResponseHeaders(), "")
+		])
+		res := mw.sendRequest(end, ButterRequest(`http://www.example.com/lostInSpace/willRobinson`))
+		verifyEq(end.req.url, `http://www.example.com/lostInSpace/zacharySmith`)
+		verifyEq(res.statusCode, 200)
+		verifyEq(res.statusMsg, "Danger, Will Robinson!")
+	}
 }

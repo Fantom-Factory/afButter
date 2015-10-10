@@ -23,7 +23,7 @@ internal class TestStickyCookiesMiddleware : ButterTest {
 		mw.sendRequest(end, ButterRequest(`/`))
 
 		verifyEq(end.req.headers.cookie[0].name, "judge")
-		verifyEq(end.req.headers.cookie[0].val, "Dredd")
+		verifyEq(end.req.headers.cookie[0].val, "\"Dredd\"")
 		
 		// test cookies time out
 		mw.cookieData["judge"].timeSet = mw.cookieData["judge"].timeSet - 1min
@@ -49,7 +49,7 @@ internal class TestStickyCookiesMiddleware : ButterTest {
 		mw.sendRequest(end, ButterRequest(`/`))
 
 		verifyEq(end.req.headers.cookie[0].name, "judge")
-		verifyEq(end.req.headers.cookie[0].val, "Dredd")
+		verifyEq(end.req.headers.cookie[0].val, "\"Dredd\"")
 		
 		// test cookie did not time out
 		mw.cookieData["judge"].timeSet = mw.cookieData["judge"].timeSet - 1min

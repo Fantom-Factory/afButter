@@ -38,7 +38,18 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 				if (res.headers.location == null)
 					log.warn(LogMsgs.redirectGivenWithNoLocation(res.statusCode))
 				else {
-					req.url = res.headers.location
+					newUrl := res.headers.location
+
+					if (newUrl.scheme == null && newUrl.auth == null && newUrl.pathStr.isEmpty.not && newUrl.isPathAbs.not)
+						newUrl = req.url + newUrl
+					
+					if (newUrl.auth == null && req.url.auth != null)
+						newUrl = req.url.auth.toUri.plusSlash + newUrl.relTo(`/`)
+
+					if (newUrl.scheme == null && req.url.scheme != null)
+						newUrl = `${req.url.scheme}://${newUrl}`
+
+					req.url = newUrl
 					req.headers.host = res.headers.location.host
 					redirect = true
 					
