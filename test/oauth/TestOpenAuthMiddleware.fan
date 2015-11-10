@@ -20,20 +20,39 @@ internal class TestOpenAuthMiddleware : ButterTest {
 		consumerKey		:= "key"
 		consumerSecret	:= "secret"
 		
-		query	:= Uri.encodeQuery(["Cats and dogs":null])
-		qMap	:= ["format":"json", "q":query]
+		oauth	:= OpenAuthMiddleware(consumerKey, consumerSecret)
+		qMap	:= ["format":"json", "q":"Cats and dogs"]
 
 		client	:= ButterDish(Butter.churnOut([
-			OpenAuthMiddleware(consumerKey, consumerSecret),
+			oauth,
 			ErrOn5xxMiddleware(),
 			HttpTerminator()
 		]))
-
-		req	:= `http://term.ie/oauth/example/request_token.php`.plusQuery(qMap)
-		res := client.get(req)
 		
-		boss := res.body.str
-		verifyEq("oauth_token=requestkey&oauth_token_secret=requestsecret", res.body.str) 
+		
+
+		// ---- Getting a Request Token ----
+		req	:= `http://term.ie/oauth/example/request_token.php`
+		res := client.get(req)
+		verifyEq("oauth_token=requestkey&oauth_token_secret=requestsecret", res.body.str)
+
+		
+		
+		// ---- Getting an Access Token ----
+		oauth.tokenKey 	  = "requestkey"
+		oauth.tokenSecret = "requestsecret"
+		req	= `http://term.ie/oauth/example/access_token.php`.plusQuery(qMap)
+		res = client.get(req)
+		verifyEq("oauth_token=accesskey&oauth_token_secret=accesssecret", res.body.str)
+
+		
+		
+		// ---- Making Authenticated Calls ----
+		oauth.tokenKey 	  = "accesskey"
+		oauth.tokenSecret = "accesssecret"
+		req	= `http://term.ie/oauth/example/echo_api.php`.plusQuery(qMap)
+		res = client.get(req)
+		verifyEq("q=Cats+and+dogs&format=json", res.body.str)
 	}
 }
 

@@ -5,7 +5,7 @@ using web::WebUtil
 ** 'OpenAuthMiddleware' automatically signs all HTTP requests with the given credentials as per the OAuth 1.0 
 ** Specification.
 ** 
-** Here is an awesome guide on [How To Sign HTTP Requests With OAuth 1.0]`http://hueniverse.com/oauth/guide/authentication/`.
+** Here is an awesome guide on [How To Sign HTTP Requests With OAuth 1.0]`http://nouncer.com/oauth/authentication.html`.
 ** 
 ** Note that 'OpenAuthMiddleware' is *NOT* part of the default 'Butter' stack. To use, you must create your own:
 ** 
@@ -23,11 +23,17 @@ using web::WebUtil
 ** headers have been set.
 class OpenAuthMiddleware : ButterMiddleware {
 	
-	internal 	OpenAuthTimestampGen	timestampGen	:= OpenAuthTimestampGen()
-	@NoDoc		OpenAuthNonceGen 		nonceGen		:= OpenAuthNonceGen()
+	@NoDoc 	OpenAuthTimestampGen	timestampGen	:= OpenAuthTimestampGen()
+	@NoDoc	OpenAuthNonceGen 		nonceGen		:= OpenAuthNonceGen()
 	
-	Str consumerKey
-	Str consumerSecret
+	** The identifier portion of the client credentials (equivalent to a username)
+				Str consumerKey
+				Str consumerSecret
+
+	** Optional
+				Str? tokenKey
+	** Optional
+				Str? tokenSecret
 	
 	new make(Str consumerKey, Str consumerSecret, |This|? in := null) {
 		this.consumerKey 	= consumerKey
@@ -36,30 +42,27 @@ class OpenAuthMiddleware : ButterMiddleware {
 	}
 	
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
-
 		seconds	:= timestampGen.generate
 		nonce	:= nonceGen.generate(seconds)
 
-		req.headers["Authorization"] = generateAuthorizationHeader(req.url, req.method, consumerKey, consumerSecret, nonce, seconds, "HMAC-SHA1")
+		req.headers["Authorization"] = generateAuthorizationHeader(req.url, req.method, consumerKey, consumerSecret, tokenKey, tokenSecret, nonce, seconds, "HMAC-SHA1")
 		
 		return butter.sendRequest(req)
 	}
 	
-	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str consumerSecret, Str nonce, Int timestamp, Str signatureMethod) {
+	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str consumerSecret, Str? tokenKey, Str? tokenSecret, Str nonce, Int timestamp, Str signatureMethod) {
 		// TODO: support OAuth PLAINTEXT option
 		if (signatureMethod != "HMAC-SHA1")
 			throw UnsupportedErr("Only the following signature methods are supported: ${signatureMethod}")
 
 		oauthParams	:= OpenAuthParams()
-		oauthParams["oauth_version"]			= "1.0"
-		oauthParams["oauth_timestamp"]			= timestamp.toStr
-		oauthParams["oauth_nonce"]				= nonce
 		oauthParams["oauth_consumer_key"]		= consumerKey
+		oauthParams["oauth_nonce"]				= nonce
+		oauthParams["oauth_timestamp"]			= timestamp.toStr
 		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"
-		
-		tokenKey    := "nnch734d00sl2jdk"
-		tokenSecret := "pfkkdhi9sl3r4s00"
-		oauthParams["oauth_token"]= tokenKey	
+		oauthParams["oauth_version"]			= "1.0"
+		if (tokenKey != null)
+			oauthParams["oauth_token"]			= tokenKey	
 		
 		reqUrl.query.each |val, key| { 
 			oauthParams[key] = val
@@ -70,7 +73,7 @@ class OpenAuthMiddleware : ButterMiddleware {
 		signatureBaseStr	:= OpenAuthParams.percentEscape(reqMethod) + "&" + 
 							   OpenAuthParams.percentEscape(normalizedUri) + "&" + 
 							   OpenAuthParams.percentEscape(normalizedParams)
-		secretKey			:= consumerSecret + "&"	+ tokenSecret
+		secretKey			:= OpenAuthParams.percentEscape(consumerSecret) + "&" + (tokenSecret == null ? "" : OpenAuthParams.percentEscape(tokenSecret))
 		signature			:= signatureBaseStr.toBuf.hmac("SHA-1", secretKey.toBuf).toBase64
 
 		oauthParams["oauth_signature"] 	= signature		
