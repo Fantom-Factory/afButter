@@ -46,12 +46,16 @@ class OpenAuthMiddleware : ButterMiddleware {
 	}
 	
 	static Str generateAuthorizationHeader(Uri reqUrl, Str reqMethod, Str consumerKey, Str consumerSecret, Str nonce, Int timestamp, Str signatureMethod) {
+		// TODO: support OAuth PLAINTEXT option
+		if (signatureMethod != "HMAC-SHA1")
+			throw UnsupportedErr("Only the following signature methods are supported: ${signatureMethod}")
+
 		oauthParams	:= OpenAuthParams()
 		oauthParams["oauth_version"]			= "1.0"
 		oauthParams["oauth_timestamp"]			= timestamp.toStr
 		oauthParams["oauth_nonce"]				= nonce
 		oauthParams["oauth_consumer_key"]		= consumerKey
-		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"	// OAuth have PLAINTEXT option
+		oauthParams["oauth_signature_method"]	= "HMAC-SHA1"
 		
 		tokenKey    := "nnch734d00sl2jdk"
 		tokenSecret := "pfkkdhi9sl3r4s00"

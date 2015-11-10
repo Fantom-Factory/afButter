@@ -33,8 +33,8 @@ class OpenAuthTimestampGen {
 	virtual Int generate() {
 		timestamp := (DateTime.now - unixEpoch).toSec
 
-//		if ((timestamp - oldTimestamp) <= 5)
-//			return oldTimestamp
+		if ((timestamp - oldTimestamp) <= 5)
+			return oldTimestamp
 		
 		oldTimestamp = timestamp
 		return timestamp

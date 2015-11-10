@@ -16,25 +16,25 @@ internal class TestOpenAuthMiddleware : ButterTest {
 	}
 
 	** @see http://term.ie/oauth/example/index.php
-//	Void testAgainstRealServer() {
-//		consumerKey		:= "key"
-//		consumerSecret	:= "secret"
-//		
-//		query	:= Uri.encodeQuery(["Cats and dogs":null])
-//		qMap	:= ["format":"json", "q":query]
-//
-//		client	:= ButterDish(Butter.churnOut([
-//			OpenAuthMiddleware(consumerKey, consumerSecret),
-//			ErrOn5xxMiddleware(),
-//			HttpTerminator()
-//		]))
-//
-//		req	:= `http://term.ie/oauth/example/request_token.php`.plusQuery(qMap)
-//		res := client.get(req)
-//		
-//		boss := res.asStr
-//		verifyEq("oauth_token=requestkey&oauth_token_secret=requestsecret", res.asStr) 
-//	}
+	Void testAgainstRealServer() {
+		consumerKey		:= "key"
+		consumerSecret	:= "secret"
+		
+		query	:= Uri.encodeQuery(["Cats and dogs":null])
+		qMap	:= ["format":"json", "q":query]
+
+		client	:= ButterDish(Butter.churnOut([
+			OpenAuthMiddleware(consumerKey, consumerSecret),
+			ErrOn5xxMiddleware(),
+			HttpTerminator()
+		]))
+
+		req	:= `http://term.ie/oauth/example/request_token.php`.plusQuery(qMap)
+		res := client.get(req)
+		
+		boss := res.body.str
+		verifyEq("oauth_token=requestkey&oauth_token_secret=requestsecret", res.body.str) 
+	}
 }
 
 internal class OpenAuthNonceGenStub : OpenAuthNonceGen {
