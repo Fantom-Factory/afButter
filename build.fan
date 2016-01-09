@@ -20,7 +20,7 @@ class Build : BuildPod {
 			"util 1.0"
 		]
 
-		srcDirs = [`test/`, `test/oauth-code/`, `test/oauth/`, `fan/`, `fan/public/`, `fan/public/utils/`, `fan/public/middleware/`, `fan/internal/`, `fan/internal/utils/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/utils/`, `fan/public/`, `fan/public/middleware/`, `fan/public/utils/`, `test/`, `test/oauth/`, `test/oauth-code/`]
 		resDirs = [`doc/`,]
 	}
 }
