@@ -40,6 +40,17 @@ class HttpRequestHeaders {
 		set { addOrRemove("Accept-Language", it?.toStr) }
 	}
 
+	** Authorization header. For *BASIC* authorisation, encode the credentials like this:
+	** 
+	**   syntax: fantom
+	**   creds := "Basic" + "${username}:${password}".toBuf.toBase64 
+	** 
+	** Example: 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
+	Str? authorization {
+		get { headers["Authorization"] }
+		set { addOrRemove("Authorization", it) }
+	}
+
 	** The length of the request body in octets (8-bit bytes).
 	** 
 	** Example: 'Content-Length: 348'
