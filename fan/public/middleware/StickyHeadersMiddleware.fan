@@ -6,11 +6,14 @@
 class StickyHeadersMiddleware : ButterMiddleware {
 
 	** The header values set in every request 
-	HttpRequestHeaders stickyHeaders	:= HttpRequestHeaders()
+	HttpRequestHeaders headers	:= HttpRequestHeaders()
+	
+	@NoDoc @Deprecated { msg="Use 'headers' instead" }
+	HttpRequestHeaders stickyHeaders()	{ headers }
 	
 	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {		
-		stickyHeaders.map.each |val, key| {
+		headers.map.each |val, key| {
 			if (!req.headers.containsKey(key))
 				req.headers[key] = val
 		}
@@ -21,13 +24,13 @@ class StickyHeadersMiddleware : ButterMiddleware {
 	** Getter for sticky header values.
 	@Operator
 	Str? get(Str key) {
-		stickyHeaders[key]
+		headers[key]
 	}
 
 	** Setter for sticky header values.
 	** Setting a 'null' value removes the value from the map.
 	@Operator
 	Void set(Str key, Str? val) {
-		stickyHeaders[key] = val
+		headers[key] = val
 	}
 }

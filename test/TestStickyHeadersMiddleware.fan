@@ -6,7 +6,7 @@ internal class TestStickyHeadersMiddleware : ButterTest {
 		res := ButterResponse(200, "", HttpResponseHeaders(), "")
 		end := MockTerminator([res, res])
 		
-		mw.stickyHeaders.userAgent = "Whoop!"
+		mw.headers.userAgent = "Whoop!"
 		
 		mw.sendRequest(end, ButterRequest(`/`))
 		verifyEq(end.req.headers.userAgent, "Whoop!")
@@ -20,7 +20,7 @@ internal class TestStickyHeadersMiddleware : ButterTest {
 		res := ButterResponse(200, "", HttpResponseHeaders(), "")
 		end := MockTerminator([res, res])
 		
-		mw.stickyHeaders.userAgent = "Whoop!"
+		mw.headers.userAgent = "Whoop!"
 		req := ButterRequest(`/`)
 		req.headers.userAgent = "Dredd"
 		
