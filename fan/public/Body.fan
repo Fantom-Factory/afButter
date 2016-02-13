@@ -54,11 +54,21 @@ class Body {
 		}
 	}
 
+	** Gets and set the body content as a JSON list. Convenience for '(Obj?[]?) body.jsonObj'.
+	** 
+	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
+	**   
+	** Returns 'null' if the body has not been set.
+	Obj?[]? jsonList {
+		get { jsonObj }
+		set { jsonObj = it }
+	}
+
 	** Gets and set the body content as a JSON map. Convenience for '([Str:Obj?]?) body.jsonObj'.
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	**   
-	** Returns the empty map 'Str:Obj?[:]' if the body has not been set.
+	** Returns 'null' if the body has not been set.
 	[Str:Obj?]? jsonMap {
 		get { jsonObj }
 		set { jsonObj = it }
