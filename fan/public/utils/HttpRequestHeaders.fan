@@ -43,7 +43,7 @@ class HttpRequestHeaders {
 	** Authorization header. For *BASIC* authorisation, encode the credentials like this:
 	** 
 	**   syntax: fantom
-	**   creds := "Basic" + "${username}:${password}".toBuf.toBase64 
+	**   creds := "Basic " + "${username}:${password}".toBuf.toBase64 
 	** 
 	** Example: 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
 	Str? authorization {
