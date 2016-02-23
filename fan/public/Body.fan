@@ -37,6 +37,20 @@ class Body {
 		}
 	}
 
+	** Gets and sets the body content as a JSON. 
+	** 
+	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).
+	**   
+	** Returns 'null' if the body has not been set.
+	Str? json {
+		get { str }
+		set {
+			if (it != null && reqHeaders.contentType == null)
+				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
+			str = it
+		}
+	}
+
 	** Gets and sets the body content as a JSON object. 
 	** 'JsonInStream' / 'JsonOutStream' are used to convert objects to and from JSON strings.
 	** 
