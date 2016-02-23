@@ -69,6 +69,15 @@ mixin Butter {
 		})
 	}
 
+	** Makes a HTTP POST request to the URL with the given JSON Str.
+	** The 'Content-Type' is set to 'application/json'.
+	virtual ButterResponse postJson(Uri url, Str? json) {
+		sendRequest(ButterRequest(url) {
+			it.method = "POST"
+			it.body.json = json
+		})
+	}
+
 	** Makes a HTTP POST request to the URL with the given JSON Obj.
 	** The 'Content-Type' is set to 'application/json'.
 	virtual ButterResponse postJsonObj(Uri url, Obj? jsonObj) {
@@ -94,6 +103,15 @@ mixin Butter {
 		sendRequest(ButterRequest(url) {
 			it.method	= "PUT"
 			it.body.str = content
+		})
+	}
+
+	** Makes a HTTP PUT request to the URL with the given JSON string.
+	** The 'Content-Type' is set to 'application/json'.
+	virtual ButterResponse putJson(Uri url, Str? json) {
+		sendRequest(ButterRequest(url) {
+			it.method = "PUT"
+			it.body.json = json
 		})
 	}
 
