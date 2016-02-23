@@ -2,6 +2,7 @@ Versions
 ********
 v1.1.10
 =======
+ - New: Multipart form support - see 'ButterRequest.writeMultipartForm()'.
  - New: Added 'Butter.postJson()', 'Butter.putJson()', and 'Body.json'.
  - Chg: Updated to work with Fantom 1.0.68.
  - Chg: 'FollowRedirectsMiddleware' resolves partial redirect URIs against the request URL.

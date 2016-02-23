@@ -41,6 +41,23 @@ class ButterRequest {
 		return this
 	}
 	
+	** Writes a Multipart Form to the body. Use to simulate file uploads.
+	** 
+	** pre>
+	** syntax:fantom
+	** request.writeMultipartForm |MultipartForm form| {
+	**     form.writeJsonObj("meta", ["desc":"Awesome!"])
+	**     form.writeFile("upload", `newGame.pod`.toFile)
+	** }
+	** <pre
+	This writeMultipartForm(|MultipartForm| formFunc) {
+		form := MultipartForm(this)
+		form.start
+		formFunc(form)
+		form.finish
+		return this
+	}
+	
 	@NoDoc @Deprecated { msg="Use 'body.set' instead" }  
 	This setBodyFromStr(Str str) {
 		body.str = str
@@ -56,5 +73,68 @@ class ButterRequest {
 	@NoDoc
 	override Str toStr() {
 		"${method} ${url} HTTP/${version}"
+	}
+}
+
+** Represents Multipart Form Data as defined by [RFC 2388]`https://www.ietf.org/rfc/rfc2388.txt`.
+** Used to write data to a request.
+class MultipartForm {
+	private ButterRequest	req
+	private OutStream		out
+	private Str				boundary
+
+	internal new make(ButterRequest req) {
+		this.req		= req
+		this.out		= req.body.buf.out
+		this.boundary	= "Boundary-" + Buf.random(16).toHex
+		req.headers.contentType = MimeType("multipart/form-data; boundary=$boundary")
+	}
+
+	internal Void start() {
+		out.print("--").print(boundary).print("\r\n")
+	}
+
+	** Writes a part.
+	This write(Str name, Buf content, MimeType? contentType) {
+		out.print("Content-Disposition: form-data; name=\"${quote(name)}\"\r\n")
+		if (contentType != null)
+			out.print("Content-Type: ${contentType}\r\n")
+		out.print("\r\n")
+		out.print(content)
+		out.print("\r\n")		
+		return this
+	}
+
+	** Writes a JSON part.
+	This writeJson(Str name, Str json) {
+		write(name, json.toBuf, MimeType("application/json; charset=utf-8"))
+		return this
+	}
+
+	** Writes a JSON part.
+	This writeJsonObj(Str name, Obj? jsonObj) {
+		writeJson(name, JsonOutStream.writeJsonToStr(jsonObj))
+	}
+
+	** Writes a File part.
+	This writeFile(Str name, File file) {
+		mimeType := file.mimeType ?: MimeType("application/octet-stream")
+
+		out.print("--").print(boundary).print("\r\n")
+		out.print("Content-Disposition: form-data; name=\"${quote(name)}\"; filename=\"${quote(file.name)}\"\r\n")
+		out.print("Content-Type: ${mimeType}\r\n")
+		out.print("\r\n")
+		out.writeBuf(file.readAllBuf)
+		out.print("\r\n")		
+		return this
+	}
+	
+	internal Void finish() {
+		out.print("--").print(boundary).print("--\r\n")
+	}
+	
+	private Str quote(Str name) {
+		// TODO quote as per RFC 2047
+		name.toCode(null)
 	}
 }
