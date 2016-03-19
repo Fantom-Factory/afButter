@@ -55,7 +55,7 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/x-www-form-urlencoded'.
 	virtual ButterResponse postForm(Uri url, Str:Str form) {
 		sendRequest(ButterRequest(url) {
-			it.method = "POST"
+			it.method 	 = "POST"
 			it.body.form = form
 		})
 	}
@@ -64,8 +64,9 @@ mixin Butter {
 	** The 'Content-Type' is set to 'text/plain'.
 	virtual ButterResponse postStr(Uri url, Str content, Charset charset := Charset.utf8) {
 		sendRequest(ButterRequest(url) {
-			it.method	= "POST"
-			it.body.str = content
+			it.method		= "POST"
+			it.body.str 	= content
+			it.body.charset = charset
 		})
 	}
 
@@ -73,7 +74,7 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/json'.
 	virtual ButterResponse postJson(Uri url, Str? json) {
 		sendRequest(ButterRequest(url) {
-			it.method = "POST"
+			it.method 	 = "POST"
 			it.body.json = json
 		})
 	}
@@ -82,7 +83,7 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/json'.
 	virtual ButterResponse postJsonObj(Uri url, Obj? jsonObj) {
 		sendRequest(ButterRequest(url) {
-			it.method = "POST"
+			it.method 	 	= "POST"
 			it.body.jsonObj = jsonObj
 		})
 	}
@@ -101,8 +102,9 @@ mixin Butter {
 	** The 'Content-Type' is set to 'text/plain'.
 	virtual ButterResponse putStr(Uri url, Str content, Charset charset := Charset.utf8) {
 		sendRequest(ButterRequest(url) {
-			it.method	= "PUT"
-			it.body.str = content
+			it.method		= "PUT"
+			it.body.str 	= content
+			it.body.charset = charset
 		})
 	}
 
@@ -110,7 +112,7 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/json'.
 	virtual ButterResponse putJson(Uri url, Str? json) {
 		sendRequest(ButterRequest(url) {
-			it.method = "PUT"
+			it.method 	 = "PUT"
 			it.body.json = json
 		})
 	}
@@ -119,7 +121,7 @@ mixin Butter {
 	** The 'Content-Type' is set to 'application/json'.
 	virtual ButterResponse putJsonObj(Uri url, Obj? jsonObj) {
 		sendRequest(ButterRequest(url) {
-			it.method = "PUT"
+			it.method 		= "PUT"
 			it.body.jsonObj = jsonObj
 		})
 	}
