@@ -178,6 +178,11 @@ class HttpResponseHeaders {
 		} as Str:Str).ro
 	}
 
+	** Iterates over the headers.
+	Void each(|Str val, Str key| c) {
+		keyVals.each { c(it.val, it.key) }
+	}
+
 	@NoDoc
 	KeyVal[] convertMap([Str:Str]? headers) {
 		keyVals := KeyVal[,]
@@ -185,6 +190,7 @@ class HttpResponseHeaders {
 		return keyVals
 	}
 
+	@NoDoc
 	override Str toStr() {
 		map.toStr
 	}

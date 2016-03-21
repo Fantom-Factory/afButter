@@ -79,6 +79,23 @@ class ButterResponse {
 		f?.call(this)		
 	}
 
+	** Dumps a debug string that in some way resembles the full HTTP response.
+	Str dump() {
+		buf := StrBuf()
+		out := buf.out
+
+		out.print("HTTP/${version} ${statusCode} ${statusMsg}\n")
+		headers.each |v, k| { out.print("${k}: ${v}\n") }
+		out.print("\n")
+
+		if (body.buf != null) {
+			try	  out.print(body.str)
+			catch out.print("** ERROR: Body does not contain string content **")
+		}
+
+		return buf.toStr
+	}
+	
 	@NoDoc @Deprecated { msg="Use 'body.str' instead" } 
 	Str? asStr() {
 		body.str
