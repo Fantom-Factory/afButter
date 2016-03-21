@@ -21,18 +21,7 @@ class HttpTerminator : ButterMiddleware {
 		if (!req.url.isAbs || req.url.host == null)
 			throw ButterErr(ErrMsgs.reqUriHasNoScheme(req.url))
 
-		// set the Host, if it's not been already
-		// Host is mandatory for HTTP/1.1, and does no harm in HTTP/1.0
-		if (req.headers.host == null)
-			req.headers.host = normaliseHost(req.url)
-
-		// set the Content-Length, if it's not been already
-		bufSize := req.body.size
-		if (req.headers.contentLength == null)
-			if (req.method == "GET" && bufSize == 0)
-				null?.toStr // don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
-			else
-				req.headers.contentLength = bufSize
+		req._primeForSend
 
 		proxyUrl := proxyUrl(req)
 		socket	 := req.stash["afButter.socket"] as TcpSocket ?: connect(req, proxyUrl)
@@ -81,19 +70,6 @@ class HttpTerminator : ButterMiddleware {
 			Utils.getLog(this.typeof).warn(LogMsgs.httpTerminator_proxyNotUri(proxyObj))
 		proxyUrl := proxyObj as Uri
 		return proxyUrl
-	}
-	
-	// Returns a normalised host string from a URL.
-	static Str normaliseHost(Uri url) {
-		uri  := (url.host == null) ? `//$url` : url
-		host := uri.host 
-		if (host == null || host.isEmpty)
-			throw ArgErr(ErrMsgs.hostNotDefined(url))
-		isHttps := url.scheme == "https"
-		defPort := isHttps ? 443 : 80
-		if (uri.port != null && uri.port != defPort)
-			host += ":${uri.port}"
-		return host
 	}
 }
 
