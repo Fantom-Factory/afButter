@@ -138,6 +138,12 @@ class Body {
 	}
 	
 	private Charset _strCharset() {
-		(&charset ?: reqHeaders?.contentType?.charset) ?: Charset.utf8
+		if (&charset != null)
+			return &charset
+		if (resHeaders?.contentType?.charset != null)
+			return resHeaders.contentType.charset
+		if (reqHeaders?.contentType?.charset != null)
+			return reqHeaders.contentType.charset
+		return Charset.utf8
 	}
 }
