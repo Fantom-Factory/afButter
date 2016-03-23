@@ -90,7 +90,7 @@ class ButterRequest {
 				headers.contentLength = bufSize
 	}
 
-	// Returns a normalised host string from a URL.
+	** Returns a normalised host string from a URL.
 	internal static Str _normaliseHost(Uri url) {
 		uri  := (url.host == null) ? `//$url` : url
 		host := uri.host 

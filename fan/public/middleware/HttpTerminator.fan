@@ -71,5 +71,10 @@ class HttpTerminator : ButterMiddleware {
 		proxyUrl := proxyObj as Uri
 		return proxyUrl
 	}
+	
+	@NoDoc	// used by Bounce
+	static Str normaliseHost(Uri url) {
+		ButterRequest._normaliseHost(url)
+	}
 }
 
