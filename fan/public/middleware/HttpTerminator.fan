@@ -74,7 +74,7 @@ class HttpTerminator : ButterMiddleware {
 	
 	@NoDoc	// used by Bounce
 	static Str normaliseHost(Uri url) {
-		ButterRequest._normaliseHost(url)
+		ButterRequest.normaliseHost(url)
 	}
 }
 

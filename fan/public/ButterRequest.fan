@@ -79,7 +79,7 @@ class ButterRequest {
 		// set the Host, if it's not been already
 		// Host is mandatory for HTTP/1.1, and does no harm in HTTP/1.0
 		if (headers.host == null)
-			headers.host = _normaliseHost(url)
+			headers.host = normaliseHost(url)
 
 		// set the Content-Length, if it's not been already
 		bufSize := body.size
@@ -91,7 +91,7 @@ class ButterRequest {
 	}
 
 	** Returns a normalised host string from a URL.
-	internal static Str _normaliseHost(Uri url) {
+	static Str normaliseHost(Uri url) {
 		uri  := (url.host == null) ? `//$url` : url
 		host := uri.host 
 		if (host == null || host.isEmpty)
