@@ -14,6 +14,9 @@ class QualityValues {
 	
 	** Parses a HTTP header value into a 'name:qvalue' map.
 	** Throws 'ParseErr' if the header Str is invalid.
+	** 
+	**   syntax: fantom
+	**   QualityValues("Accept: audio/*; q=0.2, audio/basic")
 	static new fromStr(Str? header := null, Bool checked := true) {
 		qvalues	:= Utils.makeMap(Str#, Float#)
 		
