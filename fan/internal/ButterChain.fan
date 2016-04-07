@@ -2,6 +2,7 @@
 internal class ButterChain : Butter {
 	override ButterMiddleware[]	middleware
 	private Int?				depth
+	private const Log			log	:= this.typeof.pod.log
 	
 	new make(ButterMiddleware[] middleware) {
 		if (middleware.isEmpty)
@@ -18,7 +19,18 @@ internal class ButterChain : Butter {
 				// throw 'cos what can we return?
 				throw ButterErr(ErrMsgs.terminatorNotFound(middleware.last?.typeof))
 			
-			return middleware[depth].sendRequest(this, req)
+			dump := log.isDebug && depth == middleware.size - 1
+			if (dump && middleware[depth] is HttpTerminator)
+				req._primeForSend	// ensure we dump *exactly* what's being sent
+			if (dump)
+				log.debug("\n\nButter Request:\n${req.dump}\n")
+			
+			// make the call!
+			res := middleware[depth].sendRequest(this, req)
+			
+			if (dump)
+				log.debug("\n\nButter Response:\n${res.dump}\n")
+			return res
 			
 		} finally {
 			depth = (depth == 0) ? null : depth - 1
@@ -28,5 +40,4 @@ internal class ButterChain : Butter {
 	override ButterMiddleware? findMiddleware(Type middlewareType, Bool checked := true) {
 		middleware.findType(middlewareType).first ?: (checked ? throw ButterErr(ErrMsgs.chainMiddlewareNotFound(middlewareType.qname), middleware.map { it.typeof.qname }) : null) 
 	}
-
 }
