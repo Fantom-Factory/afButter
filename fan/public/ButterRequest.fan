@@ -75,7 +75,8 @@ class ButterRequest {
 		return buf.toStr
 	}
 	
-	internal Void _primeForSend() {
+	@NoDoc	// this is the sort of thing I'll prob need to call one day!
+	Void _primeForSend() {
 		// set the Host, if it's not been already
 		// Host is mandatory for HTTP/1.1, and does no harm in HTTP/1.0
 		if (headers.host == null)
@@ -84,8 +85,11 @@ class ButterRequest {
 		// set the Content-Length, if it's not been already
 		bufSize := body.size
 		if (headers.contentLength == null)
+			// don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
 			if (method == "GET" && bufSize == 0)
-				null?.toStr // don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
+				// then again, set Content-Length if there's a Content-Type - see http://fantom.org/forum/topic/2520
+				if (headers.contentType != null)
+					headers.contentLength = 0
 			else
 				headers.contentLength = bufSize
 	}

@@ -8,6 +8,7 @@ v1.1.10
  - Chg: Updated to work with Fantom 1.0.68.
  - Chg: 'FollowRedirectsMiddleware' resolves partial redirect URIs against the request URL.
  - Bug: Responses didn't set the Str charset on the 'body.buf'.
+ - Bug: Autoset request Content-Length should there be a Content-Type.
 
 v1.1.8
 ======
