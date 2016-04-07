@@ -88,7 +88,7 @@ class ButterResponse {
 		headers.each |v, k| { out.print("${k}: ${v}\n") }
 		out.print("\n")
 
-		if (body.buf != null) {
+		if (body.buf != null && body.buf.size > 0) {
 			try	  out.print(body.str)
 			catch out.print("** ERROR: Body does not contain string content **")
 		}

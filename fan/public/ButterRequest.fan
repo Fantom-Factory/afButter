@@ -67,7 +67,7 @@ class ButterRequest {
 		headers.each |v, k| { out.print("${k}: ${v}\n") }
 		out.print("\n")
 
-		if (body.buf != null) {
+		if (body.buf != null && body.buf.size > 0) {
 			try	  out.print(body.str)
 			catch out.print("** ERROR: Body does not contain string content **")
 		}
@@ -86,11 +86,11 @@ class ButterRequest {
 		bufSize := body.size
 		if (headers.contentLength == null)
 			// don't bother setting Content-Length for GET reqs with an empty body, Firefox v32 doesn't
-			if (method == "GET" && bufSize == 0)
+			if (method == "GET" && bufSize == 0) {
 				// then again, set Content-Length if there's a Content-Type - see http://fantom.org/forum/topic/2520
 				if (headers.contentType != null)
 					headers.contentLength = 0
-			else
+			} else
 				headers.contentLength = bufSize
 	}
 
