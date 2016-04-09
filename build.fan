@@ -14,10 +14,10 @@ class Build : BuildPod {
 		]
 
 		depends = [
-			"sys  1.0", 
-			"inet 1.0", 
-			"web  1.0",
-			"util 1.0"
+			"sys  1.0.68 - 1.0", 
+			"inet 1.0.68 - 1.0", 
+			"web  1.0.68 - 1.0",
+			"util 1.0.68 - 1.0"
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/utils/`, `fan/public/`, `fan/public/middleware/`, `fan/public/utils/`, `test/`, `test/oauth/`, `test/oauth-code/`]
