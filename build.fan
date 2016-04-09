@@ -10,7 +10,7 @@ class Build : BuildPod {
 		meta	= [
 			"proj.name"		: "Butter",
 			"repo.tags"		: "system, web",
-			"repo.public"	: "false"		
+			"repo.public"	: "true"		
 		]
 
 		depends = [
