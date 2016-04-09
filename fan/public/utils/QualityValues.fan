@@ -6,7 +6,14 @@
 **
 ** @see `http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3`
 class QualityValues {
-	private Str:Float	qvalues
+	
+	** Returns a dup of the internal 'name:qvalue' map.
+	** 
+	** Use 'get()' and 'set()' to modify qvalues.
+	Str:Float	qvalues {
+		get { &qvalues.dup }
+		private set
+	}
 	
 	private new make(Str:Float qvalues) {
 		this.qvalues = qvalues
@@ -62,7 +69,7 @@ class QualityValues {
 
 	** Returns the qvalue associated with 'name'. Defaults to '0' if 'name' is not mapped.
 	** 
-	** 'name' is case-insensitive.
+	** Wildcards are *not* honoured but 'name' is case-insensitive.
 	@Operator
 	Float get(Str name) {
 		qvalues.get(name, 0f)
@@ -70,7 +77,7 @@ class QualityValues {
 	
 	** Sets the given quality value. 
 	**  
-	** 'name' is case-insensitive.
+	** Wildcards are *not* honoured but 'name' is case-insensitive.
 	@Operator
 	This set(Str name, Float qval) {
 		if (qval < 0.0f || qval > 1.0f)
@@ -79,14 +86,22 @@ class QualityValues {
 		return this
 	}
 
-	** Returns 'true' if 'name' was supplied in the header
+	** Returns 'true' if 'name' was supplied in the header.
+	** 
+	** This method matches against '*' wildcards.
 	Bool contains(Str name) {
-		qvalues.containsKey(name)
+		qvalues.any |qval, mime| {
+			Regex.glob(mime).matches(name)
+		}
 	}
 
 	** Returns 'true' if the name was supplied in the header AND has a qvalue > 0.0
+	** 
+	** This method matches against '*' wildcards.
 	Bool accepts(Str name) {
-		get(name) > 0f
+		qvalues.any |qval, mime| {
+			Regex.glob(mime).matches(name) && qval > 0f
+		}
 	}
 	
 	** Returns the number of values given in the header
@@ -99,7 +114,12 @@ class QualityValues {
 		qvalues.isEmpty
 	}
 	
-	** Returns a dup of the internal 'name:qvalue' map 
+	** Clears the qvalues
+	Void clear() {
+		qvalues.clear
+	}
+	
+	@NoDoc @Deprecated { msg="Use 'qvalues' instead" } 
 	Str:Float toMap() {
 		qvalues.dup
 	}
