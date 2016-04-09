@@ -7,9 +7,6 @@
 ** @see `http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3`
 class QualityValues {
 	
-	** Returns a dup of the internal 'name:qvalue' map.
-	** 
-	** Use 'get()' and 'set()' to modify qvalues.
 	private Str:Float map
 	
 	private new make(Str:Float qvalues) {
