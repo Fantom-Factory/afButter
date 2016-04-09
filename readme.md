@@ -148,7 +148,7 @@ class TestStatusCodes {
 
 ## Calling RESTful Services
 
-`Butter` has some convenience methods for calling RESTful services.
+Butter has some convenience methods for calling RESTful services.
 
 ### GET
 
@@ -200,5 +200,49 @@ request  := ButterRequest(`http://example.org/`) {
     it.body.str = """ {"wot" : "ever"} """
 }
 response := butter.sendRequest(req)
+```
+
+## Logging
+
+Butter can log all requests and responses to std out. To use, set the Butter logger to `DEBUG`.
+
+For example:
+
+```
+Log.get("afButter").level = LogLevel.debug
+Butter.churnOut.get(`http://www.fantomfactory.org/`)
+```
+
+Will produce the following output:
+
+```
+[debug] [afButter]
+
+Butter Request:
+GET http://www.fantomfactory.org/ HTTP/1.1
+Host: www.fantomfactory.org
+Accept-Encoding: gzip
+
+
+
+[debug] [afButter]
+
+Butter Response:
+HTTP/1.1 200 OK
+Date: Thu, 07 Apr 2016 15:49:57 GMT
+Server: Wisp/1.0.67
+Content-Length: 6604
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Type: text/html; charset=utf-8
+Cache-Control: max-age=0, no-cache
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home :: Fantom-Factory</title>
+    <meta charset="utf-8">
+    <meta id="viewport" name="viewport" content="initial-scale=1.0">
+    ...
 ```
 
