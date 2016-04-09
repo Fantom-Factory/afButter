@@ -59,7 +59,7 @@ class Body {
 	** Returns 'null' if the body has not been set.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
-	** [Json library]`pod::afJson` should you need pretty printing or more control over conversion.
+	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
 	Obj? jsonObj {
 		get { 
 			(buf == null) ? null : JsonInStream(buf.seek(0).in).readJson 
@@ -78,7 +78,7 @@ class Body {
 	** Returns 'null' if the body has not been set.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
-	** [Json library]`pod::afJson` should you need pretty printing or more control over conversion.
+	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
 	Obj?[]? jsonList {
 		get { jsonObj }
 		set { jsonObj = it }
@@ -91,7 +91,7 @@ class Body {
 	** Returns 'null' if the body has not been set.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
-	** [Json library]`pod::afJson` should you need pretty printing or more control over conversion.
+	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
 	[Str:Obj?]? jsonMap {
 		get { jsonObj }
 		set { jsonObj = it }
