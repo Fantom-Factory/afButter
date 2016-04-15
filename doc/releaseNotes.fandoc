@@ -1,7 +1,12 @@
 Versions
 ********
-v1.1.10
-=======
+
+v1.2.2
+======
+ - Chg: 'ButterResponse.dump()' de-gzips body before dumping.
+
+v1.2.0
+======
  - New: Multipart form support - see 'ButterRequest.writeMultipartForm()'.
  - New: Added 'Butter.postJson()', 'Butter.putJson()', and 'Body.json'.
  - New: 'dump()' methods for 'ButterRequest' and 'ButterResponse'.
