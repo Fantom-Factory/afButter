@@ -127,7 +127,7 @@ class Body {
 	internal new makeForReq(HttpRequestHeaders reqHeaders) {
 		this.reqHeaders = reqHeaders
 		// we start off with a buffer, as that is what most requests will use to set Str content etc
-		buffer = null
+		buffer = Buf()
 	}	
 	
 	internal new makeForResIn(HttpResponseHeaders resHeaders, InStream in) {
