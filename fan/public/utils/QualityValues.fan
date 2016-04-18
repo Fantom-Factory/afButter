@@ -5,7 +5,7 @@
 ** name exists AND has a qvalue greater than 0.0.
 **
 **   syntax: fantom
-**   QualityValues("Accept: audio/*; q=0.2, audio/basic")
+**   QualityValues("audio/*; q=0.2, audio/basic")
 ** 
 ** @see `http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3`
 class QualityValues {
@@ -17,10 +17,12 @@ class QualityValues {
 	}
 	
 	** Parses a HTTP header value into a 'name:qvalue' map.
+	** Values are comma delimited with an optional q value.
+	** 
 	** Throws 'ParseErr' if the header Str is invalid.
 	** 
 	**   syntax: fantom
-	**   QualityValues("Accept: audio/*; q=0.2, audio/basic")
+	**   QualityValues("audio/*; q=0.2, audio/basic")
 	static new fromStr(Str? header := null, Bool checked := true) {
 		qvalues	:= Utils.makeMap(Str#, Float#)
 		
