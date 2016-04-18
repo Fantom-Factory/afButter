@@ -4,6 +4,7 @@ Versions
 v1.2.2
 ======
  - Chg: 'ButterResponse.dump()' de-gzips body before dumping.
+ - Chg: 'Body.in()' is no longer deprecated.
 
 v1.2.0
 ======

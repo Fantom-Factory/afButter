@@ -112,12 +112,14 @@ class Body {
 		}
 	}
 	
-	** Returns the size of the body in bytes. Shortcut for 'buf?.size ?: 0'.
+	** Returns the size of the body in bytes. 
+	** Shortcut for 'buf?.size ?: 0'.
 	Int size() {
 		buf?.size ?: 0
 	}
 	
-	@NoDoc @Deprecated { msg="Use 'buf?.seek(0)?.in' instead" }
+	** Returns the contents of the body as in 'InStream'.
+	** Shortcut for 'buf?.seek(0)?.in'.
 	InStream? in() {
 		buf?.seek(0)?.in
 	}
