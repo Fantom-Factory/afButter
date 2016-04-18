@@ -4,6 +4,9 @@
 ** useful accessor methods; like [#accepts(Str name)]`QualityValues.accepts` which returns 'true' only if the 
 ** name exists AND has a qvalue greater than 0.0.
 **
+**   syntax: fantom
+**   QualityValues("Accept: audio/*; q=0.2, audio/basic")
+** 
 ** @see `http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.3`
 class QualityValues {
 	
