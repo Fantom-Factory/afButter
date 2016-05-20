@@ -52,9 +52,8 @@ class ButterRequest {
 	** <pre
 	This writeMultipartForm(|MultipartForm| formFunc) {
 		form := MultipartForm(this)
-		form.start
+		form._writeBoundry
 		formFunc(form)
-		form.finish
 		return this
 	}
 
@@ -139,50 +138,57 @@ class MultipartForm {
 		req.headers.contentType = MimeType("multipart/form-data; boundary=$boundary")
 	}
 
-	internal Void start() {
-		out.print("--").print(boundary).print("\r\n")
-	}
-
-	** Writes a part.
-	This write(Str name, Buf content, MimeType? contentType) {
-		out.print("Content-Disposition: form-data; name=\"${quote(name)}\"\r\n")
-		if (contentType != null)
-			out.print("Content-Type: ${contentType}\r\n")
-		out.print("\r\n")
-		out.print(content)
-		out.print("\r\n")		
-		return this
+	** Writes a JSON part. Converts the given obj to a JSON str first. (using 'JsonOutStream'.)
+	This writeJsonObj(Str name, Obj? jsonObj) {
+		writeJson(name, JsonOutStream.writeJsonToStr(jsonObj))
 	}
 
 	** Writes a JSON part.
 	This writeJson(Str name, Str json) {
 		write(name, json.toBuf, MimeType("application/json; charset=utf-8"))
+	}
+
+	** Writes a standard text part. Use for setting form fields.
+	This writeText(Str name, Str text) {
+		write(name, text.toBuf)
+	}
+
+	** Writes a part.
+	This write(Str name, Buf content, MimeType? contentType := null) {
+		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"\r\n")
+		if (contentType != null)
+			out.print("Content-Type: ${contentType}\r\n")
+		out.print("\r\n")
+		out.writeBuf(content.seek(0))
+		out.print("\r\n")		
+		_writeBoundry
 		return this
 	}
 
-	** Writes a JSON part.
-	This writeJsonObj(Str name, Obj? jsonObj) {
-		writeJson(name, JsonOutStream.writeJsonToStr(jsonObj))
-	}
-
-	** Writes a File part.
-	This writeFile(Str name, File file) {
-		mimeType := file.mimeType ?: MimeType("application/octet-stream")
+	** Writes a File part. If 'mimeType' is not passed in, it is taken from the file's extension.
+	This writeFile(Str name, File file, MimeType? mimeType := null) {
+		if (!file.exists)
+			throw IOErr("File not found: ${file.normalize.osPath}")
+		
+		if (mimeType == null)
+			// files *should* always have a MimeType
+			mimeType = file.mimeType ?: MimeType("application/octet-stream")
 
 		out.print("--").print(boundary).print("\r\n")
-		out.print("Content-Disposition: form-data; name=\"${quote(name)}\"; filename=\"${quote(file.name)}\"\r\n")
+		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"; filename=\"${_quote(file.name)}\"\r\n")
 		out.print("Content-Type: ${mimeType}\r\n")
 		out.print("\r\n")
 		out.writeBuf(file.readAllBuf)
 		out.print("\r\n")		
+		_writeBoundry
 		return this
 	}
 	
-	internal Void finish() {
+	internal Void _writeBoundry() {
 		out.print("--").print(boundary).print("--\r\n")
 	}
 	
-	private Str quote(Str name) {
+	private Str _quote(Str name) {
 		// TODO quote as per RFC 2047
 		name.toCode(null)
 	}
