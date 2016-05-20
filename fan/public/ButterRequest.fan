@@ -52,8 +52,8 @@ class ButterRequest {
 	** <pre
 	This writeMultipartForm(|MultipartForm| formFunc) {
 		form := MultipartForm(this)
-		form._writeBoundry
 		formFunc(form)
+		form._writeBoundryEnd
 		return this
 	}
 
@@ -150,23 +150,24 @@ class MultipartForm {
 
 	** Writes a standard text part. Use for setting form fields.
 	This writeText(Str name, Str text) {
-		write(name, text.toBuf)
+		write(name, text.toBuf, MimeType("text/plain; charset=utf-8"))
 	}
 
 	** Writes a part.
 	This write(Str name, Buf content, MimeType? contentType := null) {
+		_writeBoundry
 		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"\r\n")
 		if (contentType != null)
 			out.print("Content-Type: ${contentType}\r\n")
 		out.print("\r\n")
 		out.writeBuf(content.seek(0))
 		out.print("\r\n")		
-		_writeBoundry
 		return this
 	}
 
 	** Writes a File part. If 'mimeType' is not passed in, it is taken from the file's extension.
 	This writeFile(Str name, File file, MimeType? mimeType := null) {
+		_writeBoundry
 		if (!file.exists)
 			throw IOErr("File not found: ${file.normalize.osPath}")
 		
@@ -174,17 +175,19 @@ class MultipartForm {
 			// files *should* always have a MimeType
 			mimeType = file.mimeType ?: MimeType("application/octet-stream")
 
-		out.print("--").print(boundary).print("\r\n")
 		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"; filename=\"${_quote(file.name)}\"\r\n")
 		out.print("Content-Type: ${mimeType}\r\n")
 		out.print("\r\n")
 		out.writeBuf(file.readAllBuf)
 		out.print("\r\n")		
-		_writeBoundry
 		return this
 	}
 	
 	internal Void _writeBoundry() {
+		out.print("--").print(boundary).print("\r\n")
+	}
+	
+	internal Void _writeBoundryEnd() {
 		out.print("--").print(boundary).print("--\r\n")
 	}
 	
