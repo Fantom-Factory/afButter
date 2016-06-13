@@ -27,7 +27,7 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'text/plain' (if it's not been set already).
 	** 
-	** Returns 'null' if the body has not been set.
+	** Returns 'null' if the body has not been set, and an empty Str if it's empty.
 	Str? str {
 		get { (buf == null) ? null : buf.seek(0).readAllStr }
 		set {
@@ -41,9 +41,9 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).
 	**   
-	** Returns 'null' if the body has not been set.
+	** Returns 'null' if the body has not been set or if it is empty.
 	Str? json {
-		get { str }
+		get { str.trimToNull }
 		set {
 			if (it != null && reqHeaders.contentType == null)
 				reqHeaders.contentType = MimeType("application/json; charset=${_strCharset}")
@@ -56,13 +56,13 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).
 	**   
-	** Returns 'null' if the body has not been set.
+	** Returns 'null' if the body has not been set or if it's empty.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
 	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
 	Obj? jsonObj {
 		get { 
-			(buf == null) ? null : JsonInStream(buf.seek(0).in).readJson 
+			(buf == null || buf.isEmpty) ? null : JsonInStream(buf.seek(0).in).readJson 
 		}
 		set {
 			if (it != null && reqHeaders.contentType == null)
@@ -75,7 +75,7 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	**   
-	** Returns 'null' if the body has not been set.
+	** Returns 'null' if the body has not been set or if it's empty.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
 	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
@@ -88,7 +88,7 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'application/json' (if it's not been set already).  
 	**   
-	** Returns 'null' if the body has not been set.
+	** Returns 'null' if the body has not been set or if it's empty.
 	** 
 	** Note that [JsonOutStream]`util::JsonOutStream` is used for the conversion. See the
 	** [Json library]`pod:afJson` should you need pretty printing or more control over conversion.
@@ -102,7 +102,7 @@ class Body {
 	** 
 	** When set, the 'Content-Type' is set to 'application/x-www-form-urlencoded' (if it's not been set already).  
 	**   
-	** Returns the empty map 'Str:Str[:]' if the body has not been set.
+	** Returns 'null' if the body has not been set or if it's empty.
 	[Str:Str]? form {
 		get { (buf == null) ? null : Uri.decodeQuery(str) }
 		set {
