@@ -132,6 +132,8 @@ class MultipartForm {
 	private Str				boundary
 
 	internal new make(ButterRequest req) {
+		req.body.buf	= Buf()
+
 		this.req		= req
 		this.out		= req.body.buf.out
 		this.boundary	= "Boundary-" + Buf.random(16).toHex
