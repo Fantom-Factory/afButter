@@ -1,0 +1,20 @@
+
+For 1.1.4
+=========
+
+
+
+For Future
+==========
+support for continue 100
+
+Allow streaming.
+
+http-keep-alive - keep socket open / pass socket in data map to HTTP Term {
+	introduce the concept of a socket, that's kept open in a session, or in the client 
+	 - currently it's all just request / response -> one req doesn't interfer with another
+	 - think about web sockets and upgrading the connection!
+	
+	We need the concept of a client, that requests are made to 
+}
+

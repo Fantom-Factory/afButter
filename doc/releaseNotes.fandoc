@@ -1,0 +1,94 @@
+Versions
+********
+
+v1.2.2
+======
+ - Chg: 'ButterResponse.dump()' de-gzips body before dumping.
+ - Chg: 'Body.in()' is no longer deprecated.
+ - Bug: Multipart forms weren't being rendered correctly.
+
+v1.2.0
+======
+ - New: Multipart form support - see 'ButterRequest.writeMultipartForm()'.
+ - New: Added 'Butter.postJson()', 'Butter.putJson()', and 'Body.json'.
+ - New: 'dump()' methods for 'ButterRequest' and 'ButterResponse'.
+ - New: Requests and responses are logged to DEBUG.
+ - Chg: Updated to work with Fantom 1.0.68.
+ - Chg: 'FollowRedirectsMiddleware' resolves partial redirect URIs against the request URL.
+ - Chg: 'QualityValues' now understands '*' wildcards.
+ - Bug: Responses didn't set the Str charset on the 'body.buf'.
+ - Bug: Autoset request Content-Length should there be a Content-Type.
+
+v1.1.8
+======
+ - Chg: Finally nailed the 'nullability' of the properties of 'Body'.
+ - Bug: 'Body' methods could overwrite previously set header 'MimeTypes'.
+
+v1.1.6
+======
+ - New: 'setHeader()' and 'setMethod()' builder methods on 'ButterRequest'.
+ - Chg: 'Butter.middleware()' list is now modifiable.
+ - Bug: 'FollowRedirectsMiddleware' now re-sets the 'host' header.
+
+v1.1.4
+======
+ - New: StickyHeaders getters and setters.
+ - Chg: 'Body' fields now handle 'null' values.
+ - Chg: Request headers are not set when 'Body' content is set to 'null'.
+ - Bug: The 'Buf' in 'Body' is now reset to the beginning when used in a response.
+
+v1.1.2
+======
+ - New: 'Body.form' field for getting / setting URL encoded forms.
+ - New: 'ButterResponse.makeFromBuf()' ctor for [Bounce]`pod:afBounce`.
+ - Chg: Better gzip management in 'GzipMiddleware'.
+
+v1.1.0
+======
+ - New: 'ProxyMiddleware' re-uses the proxy mechanism used by 'web::WebClient'.
+ - New: Added more REST methods to 'Butter'.
+ - Chg: 'ButterRequest' and 'ButterResponse' now share a common 'Body' object. (Breaking change)
+ - Chg: 'BadStatusErr' displays more request / response details.
+
+v1.0.6
+======
+ - Chg: Added 'ButterRequest.setBodyFromStr()' and 'ButterRequest.setBodyFromJson()'.
+ - Chg: Added 'ButterResponse.asJson()' and 'ButterResponse.asJsonMap()'.
+ - Bug: HttpTerminator sets 'Content-Length' header for GET requests with a non-empty body.
+ - Bug: 'GzipMiddleware' updated to work with Fantom-1.0.67.
+
+v1.0.4
+======
+ - Chg: Removed OAuth classes pending a more robust implementation.
+ - Bug: A patch for Fantom's ChunkInStream bug. See `http://fantom.org/sidewalk/topic/2365`.
+
+v1.0.2
+======
+ - New: Added 'getCookie()' and 'removeCookie()' to 'StickyCookiesMiddleware'.
+ - Chg: 'HttpRequestHeaders.host' is now a 'Str'.
+
+v1.0.0
+======
+ - New: Added 'GzipMiddleware'.
+ - Chg: Renamed 'ButterRequest.uri' -> 'ButterRequest.url'.
+ - Chg: Request header 'Host' is normalised.
+
+v0.0.8
+======
+ - New: 'ErrOn5xxMiddleware' detects and re-throws any Errs processed by [BedSheet]`pod:afBedSheet`.
+ - Chg: Rejigged the default middleware stack so Cookies can be captured in re-direct responses.
+
+v0.0.6
+======
+ - Chg: Added support for HTTP 1.1 308 Redirects.
+
+v0.0.4
+======
+ - New: Added 'ErrOn4xxMiddleware' to cacth those annoying 404s!
+ - Chg: Support for HTTP resposne headers that may appear multiple times, e.g. 'Set-Cookie'
+ - Chg: Renamed 'ButterRequest.data()' -> 'stash()'.
+ - Bug: Could not post case-insensitive forms - see [Uri.encodeQuery throws UnsupportedOperationException]`http://fantom.org/sidewalk/topic/2236`
+
+v0.0.2
+======
+ - New: Preview Release
