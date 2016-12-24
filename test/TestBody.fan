@@ -60,4 +60,11 @@ internal class TestBody : ButterTest {
 		body.jsonMap = ["wot":"ever"]
 		verifyEq(body.jsonMap, Str:Obj?["wot":"ever"])
 	}
+	
+	Void testReset() {
+		body := Body.makeForReq(HttpRequestHeaders([:]))
+		body.str = "Hello Mum!"
+		body.str = "Hello!"
+		verifyEq(body.str, "Hello!")	// was "Hello!Mum!"
+	}
 }

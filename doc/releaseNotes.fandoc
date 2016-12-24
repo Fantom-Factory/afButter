@@ -1,6 +1,11 @@
 Versions
 ********
 
+v1.2.4
+======
+ - New: Added 'HttpResponseHeaders.wwwAuthenticate'.
+ - Bug: Re-setting the 'Body.str' didn't clear out original value.
+
 v1.2.2
 ======
  - Chg: 'ButterResponse.dump()' de-gzips body before dumping.

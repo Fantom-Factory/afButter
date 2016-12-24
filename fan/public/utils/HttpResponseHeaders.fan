@@ -142,6 +142,14 @@ class HttpResponseHeaders {
 		private set { }
 	}
 
+	** WWW-Authenticate header to indicate supported authentication mechanisms.
+	** 
+	** Example: 'WWW-Authenticate: SCRAM hash=SHA-256'
+	Str? wwwAuthenticate {
+		get { getFirst("WWW-Authenticate") }
+		private set { }
+	}
+	
 	** Clickjacking protection, set to:
 	**  - 'deny' - no rendering within a frame, 
 	**  - 'sameorigin' - no rendering if origin mismatch
