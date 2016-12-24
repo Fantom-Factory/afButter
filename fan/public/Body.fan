@@ -33,7 +33,7 @@ class Body {
 		set {
 			if (it != null && reqHeaders.contentType == null)
 				reqHeaders.contentType = MimeType("text/plain; charset=${_strCharset}")
-			buffer = (it == null) ? null : (buf ?: Buf() { it.charset = _strCharset }).seek(0).writeChars(it)
+			buffer = (it == null) ? null : (buf ?: Buf() { it.charset = _strCharset }).clear.writeChars(it)
 		}
 	}
 
