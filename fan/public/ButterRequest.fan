@@ -62,7 +62,7 @@ class ButterRequest {
 		buf := StrBuf()
 		out := buf.out
 
-		out.print("${method} ${url.encode} HTTP/${version}\n")
+		out.print("${method} ${url.relToAuth.encode} HTTP/${version}\n")
 		headers.each |v, k| { out.print("${k}: ${v}\n") }
 		out.print("\n")
 

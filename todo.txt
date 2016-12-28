@@ -1,7 +1,8 @@
 
-For 1.1.4
-=========
 
+StubTerminator for testing
+
+Auth middleware for user@password basic encoding and scram
 
 
 For Future

@@ -27,12 +27,19 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 		redirect := true
 		redirectCount := 0
 		while (redirect) {
+			doDump := log.isDebug && redirectCount > 0
+			if (doDump)
+				log.debug("\n\nButter Request:\n${req.dump}\n")
+
 			if (redirectCount++ > tooManyRedirects)
 				throw ButterErr(ErrMsgs.tooManyRedirects(tooManyRedirects), locations)
-			
+
 			locations.add(req.url)
 			res = butter.sendRequest(req)
 			redirect = false
+
+			if (doDump)
+				log.debug("\n\nButter Response:\n${res.dump}\n")
 
 			if (redirectCodes.contains(res.statusCode)) {
 				if (res.headers.location == null)
@@ -40,25 +47,19 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 				else {
 					newUrl := res.headers.location
 
-					if (newUrl.scheme == null && newUrl.auth == null && newUrl.pathStr.isEmpty.not && newUrl.isPathAbs.not)
+					if (newUrl.isRel)
 						newUrl = req.url + newUrl
-					
-					if (newUrl.auth == null && req.url.auth != null)
-						newUrl = req.url.auth.toUri.plusSlash + newUrl.relTo(`/`)
-
-					if (newUrl.scheme == null && req.url.scheme != null)
-						newUrl = `${req.url.scheme}://${newUrl}`
 
 					req.url = newUrl
-					req.headers.host = res.headers.location.host
+					req.headers.host = newUrl.host
 					redirect = true
-					
+
 					if (303 == res.statusCode)
 						req.method = "get"
 					
 					if ([301, 302].contains(res.statusCode) && res.version == Butter.http10)
 						req.method = "get"
-					
+
 					// Should we store permanent redirects and auto-change the req url?
 					// Naa, that's web browser behaviour to speed up page rendering.
 					// We're just mooching around the net!
