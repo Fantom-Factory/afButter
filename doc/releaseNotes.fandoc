@@ -4,7 +4,9 @@ Versions
 v1.2.4
 ======
  - New: Added 'HttpResponseHeaders.wwwAuthenticate'.
+ - New: Redirect requests and responses are logged to DEBUG.
  - Bug: Re-setting the 'Body.str' didn't clear out original value.
+ - Bug: Redirects for relative URLs didn't always work.
 
 v1.2.2
 ======

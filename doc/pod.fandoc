@@ -4,6 +4,14 @@ Butter is a library that helps ease HTTP requests through a stack of middleware.
 
 Butter is a replacement for `web::WebClient` providing an extensible chain of middleware for making repeated HTTP requests and processing the responses. The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
 
+Features above and beyond Fantom's default 'WebClient':
+
+ - Instances may be re-used for multiple requests
+ - Automatic support for Cookies and sessions
+ - Throws Err on 40x & 50x response codes (configurable)
+ - Utility classes for commonly used HTTP headers
+ - Proper support for 303 redirects
+
 Butter was inspired by Ruby's [Faraday]`https://github.com/lostisland/faraday` library.
 
 

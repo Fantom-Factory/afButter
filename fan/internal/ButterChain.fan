@@ -19,16 +19,16 @@ internal class ButterChain : Butter {
 				// throw 'cos what can we return?
 				throw ButterErr(ErrMsgs.terminatorNotFound(middleware.last?.typeof))
 			
-			dump := log.isDebug && depth == middleware.size - 1
-			if (dump && middleware[depth] is HttpTerminator)
+			doDump := log.isDebug && depth == middleware.size - 1
+			if (doDump && middleware[depth] is HttpTerminator)
 				req._primeForSend	// ensure we dump *exactly* what's being sent
-			if (dump)
+			if (doDump)
 				log.debug("\n\nButter Request:\n${req.dump}\n")
 			
 			// make the call!
 			res := middleware[depth].sendRequest(this, req)
 			
-			if (dump)
+			if (doDump)
 				log.debug("\n\nButter Response:\n${res.dump}\n")
 			return res
 			
