@@ -3,7 +3,7 @@ internal class TestStickyHeadersMiddleware : ButterTest {
 	
 	Void testStickyHeaders() {
 		mw	:= StickyHeadersMiddleware()
-		res := ButterResponse(200, "", HttpResponseHeaders(), "")
+		res := ButterResponse(200)
 		end := MockTerminator([res, res])
 		
 		mw.headers.userAgent = "Whoop!"
@@ -17,7 +17,7 @@ internal class TestStickyHeadersMiddleware : ButterTest {
 
 	Void testStickyHeadersOverride() {
 		mw	:= StickyHeadersMiddleware()
-		res := ButterResponse(200, "", HttpResponseHeaders(), "")
+		res := ButterResponse(200)
 		end := MockTerminator([res, res])
 		
 		mw.headers.userAgent = "Whoop!"
