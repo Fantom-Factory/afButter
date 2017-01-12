@@ -79,7 +79,7 @@ internal class T_NullTerminator : ButterMiddleware {
 	}
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 		stack.add(id)
-		return ButterResponse(200, "OK", HttpResponseHeaders(), "")
+		return ButterResponse(200)
 	}
 }
 

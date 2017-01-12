@@ -1,3 +1,4 @@
+using web::WebRes
 using web::WebUtil
 using util::JsonInStream
 
@@ -22,13 +23,8 @@ class ButterResponse {
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj data	:= [:]
 	
-	** it-block ctor.
-	new make(|This| in) {
-		in(this)
-	}
-
 	** Creates a response reading real HTTP values from an 'InStream'.
-	** The whole response body is read in. 
+	** Note the whole response body is read in. 
 	new makeFromInStream(InStream in) {
 		res := Str.defVal
 		try {
@@ -53,30 +49,21 @@ class ButterResponse {
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
 	}
 
-	** Create a response from a 'Str' body.
-	new makeFromStr(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Str? body, |This|? f := null) {
+	** Create a response. 'body' may either be a 'Str' or a 'Buf'.
+	new make(Int statusCode, [Str:Str]? headers := null, Obj? body := null) {
+		if (body != null && body isnot Str && body isnot Buf)
+			throw ArgErr("Invalid Body, must be either null, Str, or Buf")
 		this.statusCode = statusCode
-		this.statusMsg 	= statusMsg
-		this.headers	= headers
-		this.body 		= Body(this.headers, body)
-		f?.call(this)		
-	}
-	** Create a response from a 'Buf' body.
-	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf? body, |This|? f := null) {
-		this.statusCode = statusCode
-		this.statusMsg 	= statusMsg
-		this.headers	= headers
-		this.body 		= Body(this.headers, body)
- 		f?.call(this)		
-	}
-
-	@NoDoc @Deprecated { msg="Use 'body.makeFromStr' instead" } 
-	new makeFromStrOld(Int statusCode, Str statusMsg, Str:Str headers, Str? body, |This|? f := null) {
-		this.statusCode = statusCode
-		this.statusMsg 	= statusMsg
+		this.statusMsg 	= WebRes.statusMsg[statusCode] ?: "Unknown"
 		this.headers	= HttpResponseHeaders(headers)
-		this.body 		= Body(this.headers, body)
-		f?.call(this)		
+		switch (body?.typeof) {
+			case Str#:
+				this.body	= Body(this.headers, (Str) body)
+			case Buf#:
+				this.body	= Body(this.headers, (Buf) body)
+			default:
+				this.body	= Body(this.headers, null as Str)
+		}
 	}
 
 	** Dumps a debug string that in some way resembles the full HTTP response.
