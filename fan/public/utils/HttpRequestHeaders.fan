@@ -1,4 +1,5 @@
 using web::Cookie
+using web::WebAuthScheme
 using web::WebUtil
 
 ** A wrapper for HTTP request headers with accessors for commonly used headings.
@@ -19,6 +20,8 @@ class HttpRequestHeaders {
 	** Content-Types that are acceptable for the response. 
 	** 
 	** Example: 'Accept: audio/*; q=0.2, audio/basic'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	QualityValues? accept {
 		get { makeIfNotNull("Content-Length") { QualityValues(it, true) }}
 		set { addOrRemove("Accept", it?.toStr) }
@@ -27,6 +30,8 @@ class HttpRequestHeaders {
 	** List of acceptable encodings.
 	** 
 	** Example: 'Accept-Encoding: compress;q=0.5, gzip;q=1.0'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	QualityValues? acceptEncoding {
 		get { makeIfNotNull("Accept-Encoding") { QualityValues(it, true) }}
 		set { addOrRemove("Accept-Encoding", it?.toStr) }
@@ -35,6 +40,8 @@ class HttpRequestHeaders {
 	** List of acceptable human languages for response.
 	** 
 	** Example: 'Accept-Language: da, en-gb;q=0.8, en;q=0.7'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	QualityValues? acceptLanguage {
 		get { makeIfNotNull("Accept-Language") { QualityValues(it, true) }}
 		set { addOrRemove("Accept-Language", it?.toStr) }
@@ -43,17 +50,24 @@ class HttpRequestHeaders {
 	** Authorization header. For *BASIC* authorisation, encode the credentials like this:
 	** 
 	**   syntax: fantom
-	**   creds := "Basic " + "${username}:${password}".toBuf.toBase64 
+	**   headers.authorization = WebAuthScheme("Basic", "${username}:${password}".toBuf.toBase64) 
 	** 
 	** Example: 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
-	Str? authorization {
-		get { headers["Authorization"] }
-		set { addOrRemove("Authorization", it) }
+	** 
+	** Returns 'null' if the header doesn't exist.
+	WebAuthScheme? authorization {
+		get {
+			val := headers["Authorization"]
+			return val == null ? null : WebUtil.parseCredentials(val)
+		}
+		set { addOrRemove("Authorization", it?.toStr) }
 	}
 
 	** The length of the request body in octets (8-bit bytes).
 	** 
 	** Example: 'Content-Length: 348'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Int? contentLength {
 		get { makeIfNotNull("Content-Length") { Int.fromStr(it) }}
 		set { addOrRemove("Content-Length", it?.toStr) }
@@ -62,6 +76,8 @@ class HttpRequestHeaders {
 	** The MIME type of the body of the request (mainly used with POST and PUT requests).
 	** 
 	** Example: 'Content-Type: application/x-www-form-urlencoded'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	MimeType? contentType {
 		get { makeIfNotNull("Content-Type") { MimeType(it, true) }}
 		set { addOrRemove("Content-Type", it?.toStr) }
@@ -70,6 +86,8 @@ class HttpRequestHeaders {
 	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
 	** 
 	** Example: 'Cookie: Version=1; Skin=new;'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Cookie[]? cookie {
 		get { makeIfNotNull("Cookie") { it.split(';'). map { Cookie.fromStr(it) }}}
 		set { addOrRemove("Cookie", it?.join("; ") { it.name + "=" + WebUtil.toQuotedStr(it.val) }) }
@@ -80,6 +98,8 @@ class HttpRequestHeaders {
 	** the service requested.
 	** 
 	** Example: 'Host: www.alienfactory.co.uk:8069'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? host {
 		get { headers["Host"] }
 		set { addOrRemove("Host", it) }
@@ -88,6 +108,8 @@ class HttpRequestHeaders {
 	** Allows a 304 Not Modified to be returned if content is unchanged.
 	** 
 	** Example: 'If-Modified-Since: Sat, 29 Oct 1994 19:43:31 GMT'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	DateTime? ifModifiedSince {
 		get { makeIfNotNull("If-Modified-Since") { DateTime.fromHttpStr(it, true) }}
 		set { addOrRemove("If-Modified-Since", it?.toHttpStr) }
@@ -96,6 +118,8 @@ class HttpRequestHeaders {
 	** Allows a 304 Not Modified to be returned if content is unchanged.
 	** 
 	** Example: 'If-None-Match: "737060cd8c284d8af7ad3082f209582d"'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? ifNoneMatch {
 		get { headers["If-None-Match"] }
 		set { addOrRemove("If-None-Match", it) }
@@ -104,6 +128,8 @@ class HttpRequestHeaders {
 	** Initiates a request for cross-origin resource sharing.
 	** 
 	** Example: 'Origin: http://www.example-social-network.com'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? origin {
 		get { headers["Origin"] }
 		set { addOrRemove("Origin", it) }
@@ -113,6 +139,8 @@ class HttpRequestHeaders {
 	** page was followed. 
 	** 
 	** Example: 'Referer: http://en.wikipedia.org/wiki/Main_Page'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Uri? referrer {
 		// yeah, I know I've mispelt referrer!
 		// see `https://en.wikipedia.org/wiki/HTTP_referrer`
@@ -123,6 +151,8 @@ class HttpRequestHeaders {
 	** The user agent string of the user agent.
 	** 
 	** Example: 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:12.0) Gecko/20100101 Firefox/21.0'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? userAgent {
 		get { headers["User-Agent"] }
 		set { addOrRemove("User-Agent", it) }
@@ -131,6 +161,8 @@ class HttpRequestHeaders {
 	** Mainly used to identify Ajax requests. 
 	** 
 	** Example: 'X-Requested-With: XMLHttpRequest'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? xRequestedWith {
 		get { headers["X-Requested-With"] }
 		set { addOrRemove("X-Requested-With", it) }
@@ -139,6 +171,8 @@ class HttpRequestHeaders {
 	** Identifies the originating IP address of a client connecting through an HTTP proxy. 
 	** 
 	** Example: 'X-Forwarded-For: client, proxy1, proxy2'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str[]? xForwardedFor {
 		get { headers["X-Forwarded-For"]?.split(',') }
 		set { addOrRemove("X-Forwarded-For", it?.join(", ")) }
