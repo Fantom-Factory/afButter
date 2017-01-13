@@ -3,9 +3,10 @@ Versions
 
 v1.2.4
 ======
- - New: Added 'HttpResponseHeaders.wwwAuthenticate'.
+ - New: Added 'HttpResponseHeaders.wwwAuthenticate' & 'HttpRequestHeaders.authorization'.
  - New: Redirect requests and responses are logged to DEBUG.
  - Chg: Refactored 'ButterResponse' ctors. (Potential Breaking Change.)
+ - Chg: Updated dependencies to Fantom 1.0.69 to use 'WebUtil.WebAuthScheme'.
  - Bug: Re-setting the 'Body.str' didn't clear out original value.
  - Bug: Redirects for relative URLs didn't always work.
 

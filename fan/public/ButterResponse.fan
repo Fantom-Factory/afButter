@@ -66,6 +66,16 @@ class ButterResponse {
 		}
 	}
 
+	// Used by Bounce 1.1.4 - so keep around for a while
+	@NoDoc @Deprecated { msg="Use make(...) instead" }
+	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf? body, |This|? f := null) {
+		this.statusCode = statusCode
+		this.statusMsg 	= statusMsg
+		this.headers	= headers
+		this.body 		= Body(this.headers, body)
+ 		f?.call(this)		
+	}
+
 	** Dumps a debug string that in some way resembles the full HTTP response.
 	Str dump() {
 		buf := StrBuf()

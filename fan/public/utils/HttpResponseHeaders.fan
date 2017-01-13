@@ -1,4 +1,5 @@
 using web::Cookie
+using web::WebAuthScheme
 using web::WebUtil
 
 ** A wrapper for HTTP response headers with accessors for commonly used headings. 
@@ -31,6 +32,8 @@ class HttpResponseHeaders {
 	** measured in seconds.
 	** 
 	** Example: 'Cache-Control: max-age=3600'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? cacheControl {
 		get { getFirst("Cache-Control") }
 		private set { }
@@ -39,6 +42,8 @@ class HttpResponseHeaders {
 	** The type of encoding used on the data.
 	** 
 	** Example: 'Content-Encoding: gzip'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? contentEncoding {
 		get { getFirst("Content-Encoding") }
 		private set { }
@@ -47,6 +52,8 @@ class HttpResponseHeaders {
 	** Usually used to direct the client to display a 'save as' dialog.
 	** 
 	** Example: 'Content-Disposition: Attachment; filename=example.html'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	** 
 	** @see `http://tools.ietf.org/html/rfc6266`
 	Str? contentDisposition {
@@ -57,6 +64,8 @@ class HttpResponseHeaders {
 	** The length of the response body in octets (8-bit bytes).
 	** 
 	** Example: 'Content-Length: 348'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Int? contentLength {
 		get { makeIfNotNull("Content-Length") { Int.fromStr(it) }}
 		private set { }
@@ -65,6 +74,8 @@ class HttpResponseHeaders {
 	** The MIME type of this content.
 	** 
 	** Example: 'Content-Type: text/html; charset=utf-8'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	MimeType? contentType {
 		get { makeIfNotNull("Content-Type") { MimeType(it, true) }}
 		private set { }
@@ -73,6 +84,8 @@ class HttpResponseHeaders {
 	** An identifier for a specific version of a resource, often a message digest.
 	** 
 	** Example: 'ETag: "737060cd8c284d8af7ad3082f209582d"'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? eTag {
 		get { makeIfNotNull("ETag") { WebUtil.fromQuotedStr(it) }}
 		private set { }
@@ -81,6 +94,8 @@ class HttpResponseHeaders {
 	** Gives the date/time after which the response is considered stale.
 	** 
 	** Example: 'Expires: Thu, 01 Dec 1994 16:00:00 GMT'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	DateTime? expires {
 		get { makeIfNotNull("Expires") { DateTime.fromHttpStr(it, true)} }
 		private set { }
@@ -89,6 +104,8 @@ class HttpResponseHeaders {
 	** The last modified date for the requested object, in RFC 2822 format.
 	** 
 	** Example: 'Last-Modified: Tue, 15 Nov 1994 12:45:26 +0000'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	DateTime? lastModified {
 		get { makeIfNotNull("Last-Modified") { DateTime.fromHttpStr(it, true)} }
 		private set { }
@@ -97,6 +114,10 @@ class HttpResponseHeaders {
 	** Used in redirection, or when a new resource has been created.
 	** 
 	** Example: 'Location: http://www.w3.org/pub/WWW/People.html'
+	** 
+	** Returns 'null' if the header doesn't exist.
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Uri? location {
 		get { makeIfNotNull("Location") { Uri.decode(it, true) } }
 		private set { }
@@ -113,6 +134,8 @@ class HttpResponseHeaders {
 	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
 	** 
 	** Example: 'Set-Cookie: UserID=JohnDoe; Max-Age=3600'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Cookie[]? setCookies {
 		get { 
 			cookies := getAll("Set-Cookie").map |cookieValue->Cookie| {
@@ -142,11 +165,16 @@ class HttpResponseHeaders {
 		private set { }
 	}
 
-	** WWW-Authenticate header to indicate supported authentication mechanisms.
+	** WWW-Authenticate header to indicate supported authentication mechanisms. Uses 'WebUtil.parseChallenge()'.
 	** 
 	** Example: 'WWW-Authenticate: SCRAM hash=SHA-256'
-	Str? wwwAuthenticate {
-		get { getFirst("WWW-Authenticate") }
+	** 
+	** Returns 'null' if the header doesn't exist.
+	WebAuthScheme[]? wwwAuthenticate {
+		get {
+			auth := getFirst("WWW-Authenticate")
+			return auth == null ? null : WebUtil.parseChallenge(auth)
+		}
 		private set { }
 	}
 	
@@ -155,6 +183,8 @@ class HttpResponseHeaders {
 	**  - 'sameorigin' - no rendering if origin mismatch
 	** 
 	** Example: 'X-Frame-Options: deny'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? xFrameOptions {
 		get { getFirst("X-Frame-Options") }
 		private set { }
@@ -163,6 +193,8 @@ class HttpResponseHeaders {
 	** Cross-site scripting (XSS) filter.
 	** 
 	** Example: 'X-XSS-Protection: 1; mode=block'
+	** 
+	** Returns 'null' if the header doesn't exist.
 	Str? xXssProtection {
 		get { getFirst("X-XSS-Protection") }
 		private set { }
