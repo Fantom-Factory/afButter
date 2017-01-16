@@ -1,5 +1,4 @@
 using web::Cookie
-using web::WebAuthScheme
 using web::WebUtil
 
 ** A wrapper for HTTP response headers with accessors for commonly used headings. 
@@ -170,11 +169,8 @@ class HttpResponseHeaders {
 	** Example: 'WWW-Authenticate: SCRAM hash=SHA-256'
 	** 
 	** Returns 'null' if the header doesn't exist.
-	WebAuthScheme[]? wwwAuthenticate {
-		get {
-			auth := getFirst("WWW-Authenticate")
-			return auth == null ? null : WebUtil.parseChallenge(auth)
-		}
+	Str? wwwAuthenticate {
+		get { getFirst("WWW-Authenticate") }
 		private set { }
 	}
 	

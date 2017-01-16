@@ -1,5 +1,4 @@
 using web::Cookie
-using web::WebAuthScheme
 using web::WebUtil
 
 ** A wrapper for HTTP request headers with accessors for commonly used headings.
@@ -50,17 +49,14 @@ class HttpRequestHeaders {
 	** Authorization header. For *BASIC* authorisation, encode the credentials like this:
 	** 
 	**   syntax: fantom
-	**   headers.authorization = WebAuthScheme("Basic", "${username}:${password}".toBuf.toBase64) 
+	**   headers.authorization = "BASIC " + "${username}:${password}".toBuf.toBase64 
 	** 
 	** Example: 'Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l'
 	** 
 	** Returns 'null' if the header doesn't exist.
-	WebAuthScheme? authorization {
-		get {
-			val := headers["Authorization"]
-			return val == null ? null : WebUtil.parseCredentials(val)
-		}
-		set { addOrRemove("Authorization", it?.toStr) }
+	Str? authorization {
+		get { headers["Authorization"] }
+		set { addOrRemove("Authorization", it) }
 	}
 
 	** The length of the request body in octets (8-bit bytes).
