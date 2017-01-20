@@ -22,7 +22,7 @@ class HttpRequestHeaders {
 	** 
 	** Returns 'null' if the header doesn't exist.
 	QualityValues? accept {
-		get { makeIfNotNull("Content-Length") { QualityValues(it, true) }}
+		get { makeIfNotNull("Accept") { QualityValues(it, true) }}
 		set { addOrRemove("Accept", it?.toStr) }
 	}
 
