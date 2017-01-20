@@ -39,7 +39,7 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 			redirect = false
 
 			if (doDump)
-				log.debug("\n\nButter Response:\n${res.dump}\n")
+				log.debug("\n\nButter Response:\n${res.dump(true)}\n")
 
 			if (redirectCodes.contains(res.statusCode)) {
 				if (res.headers.location == null)

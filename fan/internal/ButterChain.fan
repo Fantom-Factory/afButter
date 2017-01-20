@@ -23,13 +23,13 @@ internal class ButterChain : Butter {
 			if (doDump && middleware[depth] is HttpTerminator)
 				req._primeForSend	// ensure we dump *exactly* what's being sent
 			if (doDump)
-				log.debug("\n\nButter Request:\n${req.dump}\n")
+				log.debug("\n\nButter Request:\n${req.dump(true)}\n")
 			
 			// make the call!
 			res := middleware[depth].sendRequest(this, req)
 			
 			if (doDump)
-				log.debug("\n\nButter Response:\n${res.dump}\n")
+				log.debug("\n\nButter Response:\n${res.dump(true)}\n")
 			return res
 			
 		} finally {
