@@ -77,7 +77,7 @@ class ButterResponse {
 	}
 
 	** Dumps a debug string that in some way resembles the full HTTP response.
-	Str dump() {
+	Str dump(Bool dumpBody := true) {
 		buf := StrBuf()
 		out := buf.out
 
@@ -85,10 +85,11 @@ class ButterResponse {
 		headers.each |v, k| { out.print("${k}: ${v}\n") }
 		out.print("\n")
 
-		if (body.buf != null && body.buf.size > 0) {
-			try	  out.print(GzipMiddleware.deGzipResponse(this).readAllStr)
-			catch out.print("** ERROR: Body does not contain string content **")
-		}
+		if (dumpBody)
+			if (body.buf != null && body.buf.size > 0) {
+				try	  out.print(GzipMiddleware.deGzipResponse(this).readAllStr)
+				catch out.print("** ERROR: Body does not contain string content **")
+			}
 
 		return buf.toStr
 	}

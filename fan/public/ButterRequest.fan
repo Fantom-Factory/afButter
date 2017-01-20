@@ -58,7 +58,7 @@ class ButterRequest {
 	}
 
 	** Dumps a debug string that in some way resembles the full HTTP request.
-	Str dump() {
+	Str dump(Bool dumpBody := true) {
 		buf := StrBuf()
 		out := buf.out
 
@@ -66,10 +66,11 @@ class ButterRequest {
 		headers.each |v, k| { out.print("${k}: ${v}\n") }
 		out.print("\n")
 
-		if (body.buf != null && body.buf.size > 0) {
-			try	  out.print(body.str)
-			catch out.print("** ERROR: Body does not contain string content **")
-		}
+		if (dumpBody)
+			if (body.buf != null && body.buf.size > 0) {
+				try	  out.print(body.str)
+				catch out.print("** ERROR: Body does not contain string content **")
+			}
 
 		return buf.toStr
 	}
