@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afButter"
 		summary = "Helps ease HTTP requests through a stack of middleware"
-		version = Version("1.2.3")
+		version = Version("1.2.4")
 
 		meta	= [
 			"pod.dis"		: "Butter",
