@@ -1,8 +1,9 @@
-#Butter v1.2.2
+#Butter v1.2.4
 ---
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.2.2](http://img.shields.io/badge/pod-v1.2.2-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
-![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
+[![pod: v1.2.4](http://img.shields.io/badge/pod-v1.2.4-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
+![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
 
@@ -10,21 +11,33 @@ Butter is a library that helps ease HTTP requests through a stack of middleware.
 
 Butter is a replacement for [web::WebClient](http://fantom.org/doc/web/WebClient.html) providing an extensible chain of middleware for making repeated HTTP requests and processing the responses. The adoption of the Middleware pattern allows you to seamlessly enhance and modify the behaviour of your HTTP requests.
 
+Features above and beyond Fantom's default `WebClient`:
+
+- Instances may be re-used for multiple requests
+- Automatic support for Cookies and sessions
+- Throws Err on 40x & 50x response codes (configurable)
+- Utility classes for commonly used HTTP headers
+- Proper support for 303 redirects
+
 Butter was inspired by Ruby's [Faraday](https://github.com/lostisland/faraday) library.
 
 ## Install
 
-Install `Butter` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
+Install `Butter` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
-    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afButter
+    C:\> fpm install afButter
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
+Or install `Butter` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afButter
+
+To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afButter 1.2"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afButter/).
+Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afButter/) - the Fantom Pod Repository.
 
 ## Quick Start
 
@@ -55,18 +68,19 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
 
 ## Usage
 
-An instance of [Butter](http://pods.fantomfactory.org/pods/afButter/api/Butter) wraps a stack of [Middleware](http://pods.fantomfactory.org/pods/afButter/api/ButterMiddleware) classes. When a HTTP request is made through Butter, each piece of middleware is called in turn. Middleware classes may either pass the request on to the next piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request and / or response objects.
+An instance of [Butter](http://eggbox.fantomfactory.org/pods/afButter/api/Butter) wraps a stack of [Middleware](http://eggbox.fantomfactory.org/pods/afButter/api/ButterMiddleware) classes. When a HTTP request is made through Butter, each piece of middleware is called in turn. Middleware classes may either pass the request on to the next piece of middleware, or return a response. At each step, the middleware classes have the option of modifying the request and / or response objects.
 
 The ordering of the middleware stack *is* important.
 
-The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default terminator is the [HttpTerminator](http://pods.fantomfactory.org/pods/afButter/api/HttpTerminator) which makes an actual HTTP request to the interweb. (When testing this could be substituted with a mock terminator that returns mocked / canned responses.)
+The last piece of middleware *MUST* return a response. These middleware classes are called *Terminators*. The default terminator is the [HttpTerminator](http://eggbox.fantomfactory.org/pods/afButter/api/HttpTerminator) which makes an actual HTTP request to the interweb. (When testing this could be substituted with a mock terminator that returns mocked / canned responses.)
 
-To create a `Butter` instance, call the static [Butter.churnOut()](http://pods.fantomfactory.org/pods/afButter/api/Butter.churnOut) method, optionally passing in a custom list of middleware:
+To create a `Butter` instance, call the static [Butter.churnOut()](http://eggbox.fantomfactory.org/pods/afButter/api/Butter.churnOut) method, optionally passing in a custom list of middleware:
 
 ```
 middlewareStack := [
     StickyHeadersMiddleware(),
     GzipMiddleware(),
+    BasicAuthMiddleware(),
     FollowRedirectsMiddleware(),
     StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
@@ -86,7 +100,7 @@ html := Butter.churnOut.get(`http://www.fantomfactory.org/`).body.str
 
 ## Butter Dishes
 
-Because functionality is encapsulated in the middleware, you need to access these classes to configure them. Use the [Butter.findMiddleware()](http://pods.fantomfactory.org/pods/afButter/api/Butter.findMiddleware) method to do this:
+Because functionality is encapsulated in the middleware, you need to access these classes to configure them. Use the [Butter.findMiddleware()](http://eggbox.fantomfactory.org/pods/afButter/api/Butter.findMiddleware) method to do this:
 
 ```
 butter := Butter.churnOut()
@@ -112,7 +126,7 @@ Obviously, dynamic invocation should be used with caution.
 
 ### Static Stylie
 
-To call the middleware in a statically typed fashion, use a `ButterDish` class that holds your `Butter` instance and contains helper methods. There is a default [ButterDish](http://pods.fantomfactory.org/pods/afButter/api/ButterDish) class with methods to access middleware in the default stack. Example:
+To call the middleware in a statically typed fashion, use a `ButterDish` class that holds your `Butter` instance and contains helper methods. There is a default [ButterDish](http://eggbox.fantomfactory.org/pods/afButter/api/ButterDish) class with methods to access middleware in the default stack. Example:
 
 ```
 butter := ButterDish(Butter.churnOut())
@@ -124,7 +138,7 @@ When using other middleware, you are encouraged to create your own `ButterDish` 
 
 ## Handling 404 and other Status Codes
 
-If a 404, or a 4xx, status code is returned from a request then, by default, a [BadStatusErr](http://pods.fantomfactory.org/pods/afButter/api/BadStatusErr) is thrown. The same goes for 500 and 5xx status codes. In general this is what you want, a fail fast approach to erroneous status codes. But during testing it is often desirable to disable the errors and check / verify the status codes yourself. To do so, just disable the required middleware:
+If a 404, or a 4xx, status code is returned from a request then, by default, a [BadStatusErr](http://eggbox.fantomfactory.org/pods/afButter/api/BadStatusErr) is thrown. The same goes for 500 and 5xx status codes. In general this is what you want, a fail fast approach to erroneous status codes. But during testing it is often desirable to disable the errors and check / verify the status codes yourself. To do so, just disable the required middleware:
 
 ```
 using afButter
@@ -190,7 +204,7 @@ response := butter.delete(`http://example.org/`)
 
 ### Misc
 
-For complete control over the HTTP requests, create a [ButterRequest](http://pods.fantomfactory.org/pods/afButter/api/ButterRequest) and set the headers and the body yourself:
+For complete control over the HTTP requests, create a [ButterRequest](http://eggbox.fantomfactory.org/pods/afButter/api/ButterRequest) and set the headers and the body yourself:
 
 ```
 butter   := ButterDish(Butter.churnOut())
