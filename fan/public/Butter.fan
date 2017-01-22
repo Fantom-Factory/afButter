@@ -27,6 +27,7 @@ mixin Butter {
 	** The default middleware stack. It currently returns new instances of (in order):
 	**  - `StickyHeadersMiddleware`
 	**  - `GzipMiddleware`
+	**  - `BasicAuthMiddleware`
 	**  - `FollowRedirectsMiddleware`
 	**  - `StickyCookiesMiddleware`
 	**  - `ErrOn4xxMiddleware`
@@ -37,6 +38,7 @@ mixin Butter {
 		ButterMiddleware[
 			StickyHeadersMiddleware(),
 			GzipMiddleware(),
+			BasicAuthMiddleware(),
 			FollowRedirectsMiddleware(),
 			StickyCookiesMiddleware(),		// as cookies can come with a re-direct command, Cookie middleware needs to come *before* Redirect middleware
 			ErrOn4xxMiddleware(),

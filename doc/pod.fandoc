@@ -61,6 +61,7 @@ syntax: fantom
 middlewareStack := [
     StickyHeadersMiddleware(),
     GzipMiddleware(),
+    BasicAuthMiddleware(),
     FollowRedirectsMiddleware(),
     StickyCookiesMiddleware(),
     ErrOn4xxMiddleware(),
