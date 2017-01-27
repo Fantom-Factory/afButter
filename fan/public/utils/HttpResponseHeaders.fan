@@ -164,7 +164,7 @@ class HttpResponseHeaders {
 		private set { }
 	}
 
-	** WWW-Authenticate header to indicate supported authentication mechanisms. Uses 'WebUtil.parseChallenge()'.
+	** WWW-Authenticate header to indicate supported authentication mechanisms.
 	** 
 	** Example: 'WWW-Authenticate: SCRAM hash=SHA-256'
 	** 
