@@ -8,7 +8,6 @@ mixin Butter {
 	** A const value representing HTTP 1.1
 	static const Version http11 := Version("1.1")
 
-
 	** Makes a request and returns the response.
 	abstract ButterResponse sendRequest(ButterRequest req)	
 	
@@ -54,7 +53,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP POST request to the URL with the given form data.
-	** The 'Content-Type' is set to 'application/x-www-form-urlencoded'.
+	** The 'Content-Type' HTTP header is set to 'application/x-www-form-urlencoded'.
 	virtual ButterResponse postForm(Uri url, Str:Str form) {
 		sendRequest(ButterRequest(url) {
 			it.method 	 = "POST"
@@ -63,7 +62,7 @@ mixin Butter {
 	}
 	
 	** Makes a HTTP POST request to the URL with the given String.
-	** The 'Content-Type' is set to 'text/plain'.
+	** The 'Content-Type' HTTP header is set to 'text/plain'.
 	virtual ButterResponse postStr(Uri url, Str content, Charset charset := Charset.utf8) {
 		sendRequest(ButterRequest(url) {
 			it.method		= "POST"
@@ -73,7 +72,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP POST request to the URL with the given JSON Str.
-	** The 'Content-Type' is set to 'application/json'.
+	** The 'Content-Type' HTTP header is set to 'application/json'.
 	virtual ButterResponse postJson(Uri url, Str? json) {
 		sendRequest(ButterRequest(url) {
 			it.method 	 = "POST"
@@ -82,7 +81,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP POST request to the URL with the given JSON Obj.
-	** The 'Content-Type' is set to 'application/json'.
+	** The 'Content-Type' HTTP header is set to 'application/json'.
 	virtual ButterResponse postJsonObj(Uri url, Obj? jsonObj) {
 		sendRequest(ButterRequest(url) {
 			it.method 	 	= "POST"
@@ -91,7 +90,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP POST request to the URL with the given file.
-	** The 'Content-Type' is set from the file extension's MIME type, or 'application/octet-stream' if unknown.
+	** The 'Content-Type' HTTP header is set from the file extension's MIME type, or 'application/octet-stream' if unknown.
 	virtual ButterResponse postFile(Uri url, File file) {
 		sendRequest(ButterRequest(url) {
 			it.method = "POST"
@@ -101,7 +100,7 @@ mixin Butter {
 	}	
 
 	** Makes a HTTP PUT request to the URL with the given String.
-	** The 'Content-Type' is set to 'text/plain'.
+	** The 'Content-Type' HTTP header is set to 'text/plain'.
 	virtual ButterResponse putStr(Uri url, Str content, Charset charset := Charset.utf8) {
 		sendRequest(ButterRequest(url) {
 			it.method		= "PUT"
@@ -111,7 +110,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP PUT request to the URL with the given JSON string.
-	** The 'Content-Type' is set to 'application/json'.
+	** The 'Content-Type' HTTP header is set to 'application/json'.
 	virtual ButterResponse putJson(Uri url, Str? json) {
 		sendRequest(ButterRequest(url) {
 			it.method 	 = "PUT"
@@ -120,7 +119,7 @@ mixin Butter {
 	}
 
 	** Makes a HTTP PUT request to the URL with the given JSON Obj.
-	** The 'Content-Type' is set to 'application/json'.
+	** The 'Content-Type' HTTP header is set to 'application/json'.
 	virtual ButterResponse putJsonObj(Uri url, Obj? jsonObj) {
 		sendRequest(ButterRequest(url) {
 			it.method 		= "PUT"
