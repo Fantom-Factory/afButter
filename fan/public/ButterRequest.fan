@@ -164,7 +164,7 @@ class MultipartForm {
 			out.print("Content-Type: ${contentType}\r\n")
 		out.print("\r\n")
 		out.writeBuf(content.seek(0))
-		out.print("\r\n")		
+		out.print("\r\n")
 		return this
 	}
 
