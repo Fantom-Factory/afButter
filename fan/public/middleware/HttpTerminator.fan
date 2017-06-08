@@ -43,7 +43,7 @@ class HttpTerminator : ButterMiddleware {
 				req.body.buf.seek(0).in.pipe(out)
 				out.flush
 			}
-		
+
 			return ButterResponse(socket.in)
 
 		} finally {

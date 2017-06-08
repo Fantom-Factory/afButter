@@ -1,4 +1,5 @@
 using util::JsonOutStream
+using web::WebUtil
 
 ** The HTTP request.
 class ButterRequest {
@@ -159,7 +160,7 @@ class MultipartForm {
 	** Writes a part.
 	This write(Str name, Buf content, MimeType? contentType := null) {
 		_writeBoundry
-		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"\r\n")
+		out.print("Content-Disposition: form-data; name=${_quote(name)}\r\n")
 		if (contentType != null)
 			out.print("Content-Type: ${contentType}\r\n")
 		out.print("\r\n")
@@ -178,7 +179,7 @@ class MultipartForm {
 			// files *should* always have a MimeType
 			mimeType = file.mimeType ?: MimeType("application/octet-stream")
 
-		out.print("Content-Disposition: form-data; name=\"${_quote(name)}\"; filename=\"${_quote(file.name)}\"\r\n")
+		out.print("Content-Disposition: form-data; name=${_quote(name)}; filename=${_quote(file.name)}\r\n")
 		out.print("Content-Type: ${mimeType}\r\n")
 		out.print("\r\n")
 		out.writeBuf(file.readAllBuf)
@@ -194,8 +195,7 @@ class MultipartForm {
 		out.print("--").print(boundary).print("--\r\n")
 	}
 	
-	private Str _quote(Str name) {
-		// TODO quote as per RFC 2047
-		name.toCode(null)
+	private static Str _quote(Str name) {
+		WebUtil.toQuotedStr(name)
 	}
 }
