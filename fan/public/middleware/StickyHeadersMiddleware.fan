@@ -13,7 +13,7 @@ class StickyHeadersMiddleware : ButterMiddleware {
 	
 	@NoDoc
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {		
-		headers.map.each |val, key| {
+		headers.val.each |val, key| {
 			if (!req.headers.containsKey(key))
 				req.headers[key] = val
 		}

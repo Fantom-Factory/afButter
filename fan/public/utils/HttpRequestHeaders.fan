@@ -194,11 +194,14 @@ class HttpRequestHeaders {
 	
 	** Returns 'true' if the given header has been set
 	Bool containsKey(Str key) {
-		map.containsKey(key)
+		headers.containsKey(key)
 	}
 	
+	@NoDoc @Deprecated { msg="Use 'val' instead." }
+	Str:Str map() { val }
+	
 	** Returns the case insensitive map that backs the headers.
-	Str:Str map() {
+	Str:Str val() {
 		headers
 	}
 	

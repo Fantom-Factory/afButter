@@ -1,6 +1,7 @@
 
 v1.2.6
 ======
+ - Chg: Deprecated 'XXXHeaders.map' in favour of 'val'.
  - Bug: Fixed rare NPE in 'GzipMiddleware'.
 
 v1.2.4
