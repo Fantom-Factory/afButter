@@ -1,5 +1,7 @@
-Versions
-********
+
+v1.2.6
+======
+ - Bug: Fixed rare NPE in 'GzipMiddleware'.
 
 v1.2.4
 ======
