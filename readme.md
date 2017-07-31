@@ -1,8 +1,8 @@
-#Butter v1.2.4
+#Butter v1.2.6
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v1.2.4](http://img.shields.io/badge/pod-v1.2.4-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
+[![pod: v1.2.6](http://img.shields.io/badge/pod-v1.2.6-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
 ![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)
 
 ## Overview
