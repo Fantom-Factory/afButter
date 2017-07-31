@@ -2,6 +2,7 @@
 v1.2.6
 ======
  - Chg: Deprecated 'XXXHeaders.map' in favour of 'val'.
+ - Bug: The main 'ButterResponse' ctor didn't recognise a given 'Buf' and set the body to 'null'.
  - Bug: Fixed rare NPE in 'GzipMiddleware'.
 
 v1.2.4
