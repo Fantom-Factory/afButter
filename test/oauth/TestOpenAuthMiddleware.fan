@@ -11,7 +11,7 @@ internal class TestOpenAuthMiddleware : ButterTest {
 		req	:= ButterRequest(`http://yboss.yahooapis.com/ysearch/web?q=yahoo&format=xml`)
 		mw.sendRequest(end, req)
 	
-		verifyEq(req.headers.map.size, 1)
+		verifyEq(req.headers.val.size, 1)
 		verifyEq(req.headers["Authorization"], Str<|OAuth oauth_consumer_key="key", oauth_nonce="dMEVdXmIzpdK", oauth_signature="3mwCzCORDFl3AYgKnetTYir1fbM%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1368988686", oauth_version="1.0"|>)
 	}
 

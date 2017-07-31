@@ -207,8 +207,11 @@ class HttpResponseHeaders {
 		keyVals.findAll { it.key.equalsIgnoreCase(name) }.map |kv->Str| { kv.val }
 	}
 
+	@NoDoc @Deprecated { msg="Use 'val' instead." }
+	Str:Str map() { val }
+
 	** Returns a read-only case insensitive map of the headers.
-	Str:Str map() {
+	Str:Str val() {
 		(keyVals.reduce(Str:Str[:] { it.caseInsensitive = true}) |Str:Str map, kv -> Str:Str| {
 			map[kv.key] = map.containsKey(kv.key) ?  map[kv.key] + "," + kv.val : kv.val
 		} as Str:Str).ro
@@ -228,7 +231,7 @@ class HttpResponseHeaders {
 
 	@NoDoc
 	override Str toStr() {
-		map.toStr
+		val.toStr
 	}
 	
 	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {

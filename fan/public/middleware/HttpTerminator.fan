@@ -28,7 +28,7 @@ class HttpTerminator : ButterMiddleware {
 		out 	 := socket.out
 
 		try {
-			reqOutStream := WebUtil.makeContentOutStream(req.headers.map, out)
+			reqOutStream := WebUtil.makeContentOutStream(req.headers.val, out)
 
 			// request uri is absolute if proxy, relative otherwise
 			reqPath := (proxyUrl != null ? req.url : req.url.relToAuth).encode
