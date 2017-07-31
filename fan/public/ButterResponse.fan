@@ -56,14 +56,15 @@ class ButterResponse {
 		this.statusCode = statusCode
 		this.statusMsg 	= WebRes.statusMsg[statusCode] ?: "Unknown"
 		this.headers	= HttpResponseHeaders(headers)
-		switch (body?.typeof) {
-			case Str#:
-				this.body	= Body(this.headers, (Str) body)
-			case Buf#:
-				this.body	= Body(this.headers, (Buf) body)
-			default:
-				this.body	= Body(this.headers, null as Str)
-		}
+		
+		// can't use "switch" 'cos Buf is actually a MemBuf!
+		if (body is Str)
+			this.body	= Body(this.headers, (Str) body)
+		else
+		if (body is Buf)
+			this.body	= Body(this.headers, (Buf) body)
+		else
+			this.body	= Body(this.headers, null as Str)
 	}
 
 	// Used by Bounce 1.1.4 - so keep around for a while
