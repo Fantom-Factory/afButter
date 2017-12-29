@@ -7,7 +7,7 @@ using web::WebUtil
 ** 
 ** @see `http://en.wikipedia.org/wiki/List_of_HTTP_header_fields`
 class HttpRequestHeaders {
-	
+	private const static Log 	log := Utils.getLog(HttpRequestHeaders#)
 	private Str:Str headers	:= Str:Str[:] { it.caseInsensitive = true }
 
 	** Creates 'HttpRequestHeaders' copying over values in the given map. 
@@ -65,7 +65,7 @@ class HttpRequestHeaders {
 	** 
 	** Returns 'null' if the header doesn't exist.
 	Int? contentLength {
-		get { makeIfNotNull("Content-Length") { Int.fromStr(it) }}
+		get { makeIfNotNull("Content-Length") { Int.fromStr(it, 10, true) }}
 		set { addOrRemove("Content-Length", it?.toStr) }
 	}
 
@@ -140,7 +140,7 @@ class HttpRequestHeaders {
 	Uri? referrer {
 		// yeah, I know I've mispelt referrer!
 		// see `https://en.wikipedia.org/wiki/HTTP_referrer`
-		get { headers["Referer"] == null ? null : Uri.decode(headers["Referer"]) }
+		get { makeIfNotNull("Referer") { Uri.decode(it, true) } }
 		set { addOrRemove("Referer", it?.encode) }
 	}
 
@@ -211,7 +211,11 @@ class HttpRequestHeaders {
 	
 	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
 		val := headers[name]
-		return (val == null) ? null : func(val)
+		if (val == null)
+			return val
+		try		return func(val)
+		catch	log.warn("Could not parse dodgy ${name} HTTP Header: ${val}")
+		return	null
 	}
 
 	private Void addOrRemove(Str name, Str? value) {

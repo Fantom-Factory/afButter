@@ -1,3 +1,6 @@
+v1.2.8
+======
+ - Chg: More lenient HTTP request header parsing.
 
 v1.2.6
 ======
