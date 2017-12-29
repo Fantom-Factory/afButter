@@ -126,9 +126,9 @@ class HttpRequestHeaders {
 	** Example: 'Origin: http://www.example-social-network.com'
 	** 
 	** Returns 'null' if the header doesn't exist.
-	Str? origin {
-		get { headers["Origin"] }
-		set { addOrRemove("Origin", it) }
+	Uri? origin {
+		get { makeIfNotNull("Origin") { Uri.decode(it, true) } }
+		set { addOrRemove("Origin", it?.encode) }
 	}
 
 	** This is the address of the previous web page from which a link to the currently requested 
