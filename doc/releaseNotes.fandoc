@@ -1,6 +1,11 @@
 v1.2.8
 ======
- - New: Added 'contentSecurityPolicy', 'referrerPolicy', 'strictTransportSecurity', 'xContentTypeOptions' to 'HttpResponseHeaders'.
+ - New: Added to 'HttpResponseHeaders':
+   - 'contentSecurityPolicy'
+   - 'contentSecurityPolicyReportOnly'
+   - 'referrerPolicy'
+   - 'strictTransportSecurity'
+   - 'xContentTypeOptions'
  - Chg: More lenient HTTP request header parsing.
  - Chg: Converted 'HttpRequestHeaders.origin' from a 'Str' to a 'URI'. (Potential breaking change.)
 

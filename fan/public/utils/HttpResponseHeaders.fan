@@ -77,6 +77,20 @@ class HttpResponseHeaders {
 		private set { }
 	}
 
+	** Similar to `contentSecurityPolicy` only violations aren't blocked, just reported. Useful for development / testing.
+	** 
+	**   Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.googleapis.com/; object-src 'none'
+	[Str:Str]? contentSecurityPolicyReportOnly {
+		get { makeIfNotNull("Content-Security-Policy-Report-Only") {
+			it.split(';').reduce(Str:Str[:]{it.ordered=true}) |Str:Str map, Str dir->Obj| {
+				vals := dir.split(' ')
+				map[vals.first] = vals[1..-1].join(" ")
+				return map
+			}
+		}}
+		private set { }
+	}
+
 	** The MIME type of this content.
 	** 
 	**   Content-Type: text/html; charset=utf-8
