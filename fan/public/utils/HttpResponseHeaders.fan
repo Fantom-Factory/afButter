@@ -1,7 +1,8 @@
 using web::Cookie
 using web::WebUtil
 
-** A wrapper for HTTP response headers with accessors for commonly used headings. 
+** A wrapper for HTTP response headers with accessors for commonly used headings.
+** Accessors return 'null' if the header doesn't exist, or isn't encoded properly.
 ** 
 ** @see `https://en.wikipedia.org/wiki/List_of_HTTP_header_fields`
 class HttpResponseHeaders {
@@ -30,9 +31,7 @@ class HttpResponseHeaders {
 	** Tells all caching mechanisms from server to client whether they may cache this object. It is 
 	** measured in seconds.
 	** 
-	** Example: 'Cache-Control: max-age=3600'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Cache-Control: max-age=3600
 	Str? cacheControl {
 		get { getFirst("Cache-Control") }
 		private set { }
@@ -40,9 +39,7 @@ class HttpResponseHeaders {
 
 	** The type of encoding used on the data.
 	** 
-	** Example: 'Content-Encoding: gzip'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Content-Encoding: gzip
 	Str? contentEncoding {
 		get { getFirst("Content-Encoding") }
 		private set { }
@@ -50,9 +47,7 @@ class HttpResponseHeaders {
 
 	** Usually used to direct the client to display a 'save as' dialog.
 	** 
-	** Example: 'Content-Disposition: Attachment; filename=example.html'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Content-Disposition: Attachment; filename=example.html
 	** 
 	** @see `http://tools.ietf.org/html/rfc6266`
 	Str? contentDisposition {
@@ -62,19 +57,29 @@ class HttpResponseHeaders {
 
 	** The length of the response body in octets (8-bit bytes).
 	** 
-	** Example: 'Content-Length: 348'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Content-Length: 348
 	Int? contentLength {
 		get { makeIfNotNull("Content-Length") { Int.fromStr(it) }}
 		private set { }
 	}
 
+	** Mitigates XSS attacks by telling browsers to restrict where content can be loaded from.
+	** 
+	**   Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.googleapis.com/; object-src 'none'
+	[Str:Str]? contentSecurityPolicy {
+		get { makeIfNotNull("Content-Security-Policy") {
+			it.split(';').reduce(Str:Str[:]{it.ordered=true}) |Str:Str map, Str dir->Obj| {
+				vals := dir.split(' ')
+				map[vals.first] = vals[1..-1].join(" ")
+				return map
+			}
+		}}
+		private set { }
+	}
+
 	** The MIME type of this content.
 	** 
-	** Example: 'Content-Type: text/html; charset=utf-8'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Content-Type: text/html; charset=utf-8
 	MimeType? contentType {
 		get { makeIfNotNull("Content-Type") { MimeType(it, true) }}
 		private set { }
@@ -82,9 +87,7 @@ class HttpResponseHeaders {
 
 	** An identifier for a specific version of a resource, often a message digest.
 	** 
-	** Example: 'ETag: "737060cd8c284d8af7ad3082f209582d"'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   ETag: "737060cd8c284d8af7ad3082f209582d"
 	Str? eTag {
 		get { makeIfNotNull("ETag") { WebUtil.fromQuotedStr(it) }}
 		private set { }
@@ -92,9 +95,7 @@ class HttpResponseHeaders {
 	
 	** Gives the date/time after which the response is considered stale.
 	** 
-	** Example: 'Expires: Thu, 01 Dec 1994 16:00:00 GMT'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Expires: Thu, 01 Dec 1994 16:00:00 GMT
 	DateTime? expires {
 		get { makeIfNotNull("Expires") { DateTime.fromHttpStr(it, true)} }
 		private set { }
@@ -102,9 +103,7 @@ class HttpResponseHeaders {
 
 	** The last modified date for the requested object, in RFC 2822 format.
 	** 
-	** Example: 'Last-Modified: Tue, 15 Nov 1994 12:45:26 +0000'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Last-Modified: Tue, 15 Nov 1994 12:45:26 +0000
 	DateTime? lastModified {
 		get { makeIfNotNull("Last-Modified") { DateTime.fromHttpStr(it, true)} }
 		private set { }
@@ -112,11 +111,7 @@ class HttpResponseHeaders {
 
 	** Used in redirection, or when a new resource has been created.
 	** 
-	** Example: 'Location: http://www.w3.org/pub/WWW/People.html'
-	** 
-	** Returns 'null' if the header doesn't exist.
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Location: http://www.w3.org/pub/WWW/People.html
 	Uri? location {
 		get { makeIfNotNull("Location") { Uri.decode(it, true) } }
 		private set { }
@@ -124,17 +119,31 @@ class HttpResponseHeaders {
 
 	** Implementation-specific headers.
 	** 
-	** Example: 'Pragma: no-cache'
+	**   Pragma: no-cache
 	Str? pragma {
 		get { getFirst("Pragma") }
 		private set { }
 	}
 
+	** Tells browsers how and when to transmit the HTTP 'Referer' (sic) header. 
+	** 
+	**   Referrer-Policy: same-origin
+	Str? referrerPolicy {
+		get { getFirst("Referrer-Policy") }
+		private set { }
+	}
+
+	** Tells browsers to always use HTTPS. 
+	** 
+	**   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+	Str? strictTransportSecurity {
+		get { getFirst("Strict-Transport-Security") }
+		private set { }
+	}
+
 	** HTTP cookies previously sent by the server with 'Set-Cookie'. 
 	** 
-	** Example: 'Set-Cookie: UserID=JohnDoe; Max-Age=3600'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   Set-Cookie: UserID=JohnDoe; Max-Age=3600
 	Cookie[]? setCookies {
 		get { 
 			cookies := getAll("Set-Cookie").map |cookieValue->Cookie| {
@@ -166,21 +175,25 @@ class HttpResponseHeaders {
 
 	** WWW-Authenticate header to indicate supported authentication mechanisms.
 	** 
-	** Example: 'WWW-Authenticate: SCRAM hash=SHA-256'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   WWW-Authenticate: SCRAM hash=SHA-256
 	Str? wwwAuthenticate {
 		get { getFirst("WWW-Authenticate") }
 		private set { }
 	}
 	
+	** Tells browsers to trust the 'Content-Type' header. 
+	** 
+	**   X-Content-Type-Options: nosniff
+	Str? xContentTypeOptions {
+		get { getFirst("X-Content-Type-Options") }
+		private set { }
+	}
+
 	** Clickjacking protection, set to:
 	**  - 'deny' - no rendering within a frame, 
 	**  - 'sameorigin' - no rendering if origin mismatch
 	** 
-	** Example: 'X-Frame-Options: deny'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   X-Frame-Options: deny
 	Str? xFrameOptions {
 		get { getFirst("X-Frame-Options") }
 		private set { }
@@ -188,9 +201,7 @@ class HttpResponseHeaders {
 
 	** Cross-site scripting (XSS) filter.
 	** 
-	** Example: 'X-XSS-Protection: 1; mode=block'
-	** 
-	** Returns 'null' if the header doesn't exist.
+	**   X-XSS-Protection: 1; mode=block
 	Str? xXssProtection {
 		get { getFirst("X-XSS-Protection") }
 		private set { }
