@@ -45,7 +45,7 @@ class StickyCookiesMiddleware : ButterMiddleware {
 	override ButterResponse sendRequest(Butter butter, ButterRequest req) {
 
 		// remove any old cookies
-		cookieData = cookieData.exclude { it.cookie.maxAge != null && (it.timeSet + it.cookie.maxAge) < DateTime.now }
+		cookieData = cookieData.exclude { it.cookie.maxAge != null && (it.timeSet + it.cookie.maxAge) <= DateTime.now }
 		
 		// set request cookies - being careful not to override any user set cookies
 		cookies := (req.headers.cookie == null) ? [:] : Str:Cookie[:].addList(req.headers.cookie) { it.name }
@@ -60,6 +60,8 @@ class StickyCookiesMiddleware : ButterMiddleware {
 		
 		// keep any response returned cookies
 		res.headers.setCookies?.each { addCookie(it) }
+		
+		// we could delete old cookies now, but as long as they don't get sent back up, why duplicate work!?
 		
 		return res
 	}
