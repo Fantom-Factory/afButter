@@ -1,3 +1,10 @@
+v1.2
+****
+
+v1.2.10
+======
+ - Chg: Re-jigged 'ButterResponse' ctors (mainly for [Bounce]`pod:afBounce`).
+
 v1.2.8
 ======
  - New: Added to 'HttpResponseHeaders':
@@ -45,6 +52,11 @@ v1.2.0
  - Bug: Responses didn't set the Str charset on the 'body.buf'.
  - Bug: Autoset request Content-Length should there be a Content-Type.
 
+
+
+v1.1
+****
+
 v1.1.8
 ======
  - Chg: Finally nailed the 'nullability' of the properties of 'Body'.
@@ -76,6 +88,11 @@ v1.1.0
  - Chg: 'ButterRequest' and 'ButterResponse' now share a common 'Body' object. (Breaking change)
  - Chg: 'BadStatusErr' displays more request / response details.
 
+
+
+v1.0
+****
+
 v1.0.6
 ======
  - Chg: Added 'ButterRequest.setBodyFromStr()' and 'ButterRequest.setBodyFromJson()'.
@@ -98,6 +115,11 @@ v1.0.0
  - New: Added 'GzipMiddleware'.
  - Chg: Renamed 'ButterRequest.uri' -> 'ButterRequest.url'.
  - Chg: Request header 'Host' is normalised.
+
+
+
+v0.0
+****
 
 v0.0.8
 ======
