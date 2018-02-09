@@ -50,6 +50,8 @@ class ButterResponse {
 	}
 
 	** Create a response. 'body' may either be a 'Str' or a 'Buf'.
+	** 
+	** This is a convenience ctor suitable for most applications, but for headers with 
 	new make(Int statusCode, [Str:Str]? headers := null, Obj? body := null) {
 		if (body != null && body isnot Str && body isnot Buf)
 			throw ArgErr("Invalid Body, must be either null, Str, or Buf")
@@ -67,14 +69,22 @@ class ButterResponse {
 			this.body	= Body(this.headers, null as Str)
 	}
 
-	// Used by Bounce 1.1.4 - so keep around for a while
-	@NoDoc @Deprecated { msg="Use make(...) instead" }
-	new makeFromBuf(Int statusCode, Str statusMsg, HttpResponseHeaders headers, Buf? body, |This|? f := null) {
+	// Used by Bounce - so keep around!
+	** Create a response. 'body' may either be a 'Str' or a 'Buf'.
+	new makeWithHeaders(Int statusCode, HttpResponseHeaders headers, Obj? body := null) {
+		if (body != null && body isnot Str && body isnot Buf)
+			throw ArgErr("Invalid Body, must be either null, Str, or Buf")
 		this.statusCode = statusCode
-		this.statusMsg 	= statusMsg
+		this.statusMsg 	= WebRes.statusMsg[statusCode] ?: "Unknown"
 		this.headers	= headers
-		this.body 		= Body(this.headers, body)
- 		f?.call(this)		
+		// can't use "switch" 'cos Buf is actually a MemBuf!
+		if (body is Str)
+			this.body	= Body(this.headers, (Str) body)
+		else
+		if (body is Buf)
+			this.body	= Body(this.headers, (Buf) body)
+		else
+			this.body	= Body(this.headers, null as Str)
 	}
 
 	** Dumps a debug string that in some way resembles the full HTTP response.

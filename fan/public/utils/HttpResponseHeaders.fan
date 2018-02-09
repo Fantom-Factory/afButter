@@ -10,6 +10,8 @@ class HttpResponseHeaders {
 	private static const Int LF  := '\n'
 	private static const Int maxTokenSize := 4096
 
+	** Rather than this list of keyVals, I could have a Str map whose vals are either Str or Str[],
+	** (like the mailgun API) - but I can't think of any real advantages of this to warrant changing the code!?
 	@NoDoc
 	const KeyVal[]	keyVals	
 
@@ -321,4 +323,6 @@ const class KeyVal {
 		this.key = key
 		this.val = val
 	}
+	@NoDoc
+	override Str toStr() { "$key = $val" }
 }
