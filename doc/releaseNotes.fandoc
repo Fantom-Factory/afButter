@@ -2,8 +2,9 @@ v1.2
 ****
 
 v1.2.10
-======
+=======
  - Chg: Re-jigged 'ButterResponse' ctors (mainly for [Bounce]`pod:afBounce`).
+ - Chg: Moar lenient 'HttpResponseHeaders.location' URL decoding - not all URLs are % encoded.
 
 v1.2.8
 ======

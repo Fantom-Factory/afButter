@@ -26,6 +26,12 @@ class ButterResponse {
 	** Creates a response reading real HTTP values from an 'InStream'.
 	** Note the whole response body is read in. 
 	new makeFromInStream(InStream in) {
+//		// for testing
+//		// note this WILL hang when reading a chunked response
+//		out := `test/response2.txt`.toFile.out(false, 0)
+//		while (true)
+//			out.write(in.read).flush
+		
 		res := Str.defVal
 		try {
 			resVer	:= (Version?) null
