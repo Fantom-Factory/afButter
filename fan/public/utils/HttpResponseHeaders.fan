@@ -129,7 +129,8 @@ class HttpResponseHeaders {
 	** 
 	**   Location: http://www.w3.org/pub/WWW/People.html
 	Uri? location {
-		get { makeIfNotNull("Location") { Uri.decode(it, true) } }
+		// moar lenient URL decoding - not all URLs are % encoded
+		get { makeIfNotNull("Location") { Uri.decode(it, false) ?: Uri(it, false) } }
 		private set { }
 	}
 
