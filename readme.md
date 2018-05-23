@@ -2,8 +2,8 @@
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v1.2.8](http://img.shields.io/badge/pod-v1.2.8-yellow.svg)](http://www.fantomfactory.org/pods/afButter)
-![Licence: ISC Licence](http://img.shields.io/badge/licence-ISC Licence-blue.svg)
+[![pod: v1.2.8](http://img.shields.io/badge/pod-v1.2.8-yellow.svg)](http://eggbox.fantomfactory.org/pods/afButter)
+![Licence: ISC Licence](http://img.shields.io/badge/licence-ISC%20Licence-blue.svg)
 
 ## Overview
 
