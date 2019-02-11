@@ -262,7 +262,7 @@ class HttpResponseHeaders {
 		val.toStr
 	}
 	
-	private Obj? makeIfNotNull(Str name, |Str->Obj| func) {
+	private Obj? makeIfNotNull(Str name, |Str->Obj?| func) {
 		val := getFirst(name)
 		return (val == null) ? null : func(val)
 	}
