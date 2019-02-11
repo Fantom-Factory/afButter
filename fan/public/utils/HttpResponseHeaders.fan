@@ -61,7 +61,7 @@ class HttpResponseHeaders {
 	** 
 	**   Content-Length: 348
 	Int? contentLength {
-		get { makeIfNotNull("Content-Length") { Int.fromStr(it) }}
+		get { makeIfNotNull("Content-Length") { Int.fromStr(it, 10, false) }}
 		private set { }
 	}
 
@@ -70,7 +70,7 @@ class HttpResponseHeaders {
 	**   Content-Security-Policy: default-src 'self'; font-src 'self' https://fonts.googleapis.com/; object-src 'none'
 	[Str:Str]? contentSecurityPolicy {
 		get { makeIfNotNull("Content-Security-Policy") {
-			it.split(';').reduce(Str:Str[:]{it.ordered=true}) |Str:Str map, Str dir->Obj| {
+			it.split(';').reduce(Str:Str[:] { it.ordered=true }) |Str:Str map, Str dir->Obj| {
 				vals := dir.split(' ')
 				map[vals.first] = vals[1..-1].join(" ")
 				return map
@@ -84,7 +84,7 @@ class HttpResponseHeaders {
 	**   Content-Security-Policy-Report-Only: default-src 'self'; font-src 'self' https://fonts.googleapis.com/; object-src 'none'
 	[Str:Str]? contentSecurityPolicyReportOnly {
 		get { makeIfNotNull("Content-Security-Policy-Report-Only") {
-			it.split(';').reduce(Str:Str[:]{it.ordered=true}) |Str:Str map, Str dir->Obj| {
+			it.split(';').reduce(Str:Str[:] { it.ordered=true }) |Str:Str map, Str dir->Obj| {
 				vals := dir.split(' ')
 				map[vals.first] = vals[1..-1].join(" ")
 				return map
@@ -97,7 +97,7 @@ class HttpResponseHeaders {
 	** 
 	**   Content-Type: text/html; charset=utf-8
 	MimeType? contentType {
-		get { makeIfNotNull("Content-Type") { MimeType(it, true) }}
+		get { makeIfNotNull("Content-Type") { MimeType(it, false) }}
 		private set { }
 	}
 
@@ -113,7 +113,7 @@ class HttpResponseHeaders {
 	** 
 	**   Expires: Thu, 01 Dec 1994 16:00:00 GMT
 	DateTime? expires {
-		get { makeIfNotNull("Expires") { DateTime.fromHttpStr(it, true)} }
+		get { makeIfNotNull("Expires") { DateTime.fromHttpStr(it, false)} }
 		private set { }
 	}
 
@@ -121,7 +121,7 @@ class HttpResponseHeaders {
 	** 
 	**   Last-Modified: Tue, 15 Nov 1994 12:45:26 +0000
 	DateTime? lastModified {
-		get { makeIfNotNull("Last-Modified") { DateTime.fromHttpStr(it, true)} }
+		get { makeIfNotNull("Last-Modified") { DateTime.fromHttpStr(it, false)} }
 		private set { }
 	}
 
@@ -179,7 +179,7 @@ class HttpResponseHeaders {
 						values[pair[0]] = pair.getSafe(1)
 				}
 				return Cookie(cName, cValue) {
-					it.maxAge 	= values.containsKey("Max-Age") ? Duration.fromStr(values["Max-Age"] + "sec", true) : null  
+					it.maxAge 	= values.containsKey("Max-Age") ? Duration.fromStr(values["Max-Age"] + "sec", false) : null  
 					it.domain 	= values["Domain"]  
 					it.path 	= values["Path"]  
 					it.secure 	= values.containsKey("Secure")
