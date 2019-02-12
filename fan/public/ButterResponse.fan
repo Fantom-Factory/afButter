@@ -32,10 +32,11 @@ class ButterResponse {
 //		while (true)
 //			out.write(in.read).flush
 		
-		res := Str.defVal
+		res := null as Str
 		try {
 			resVer	:= (Version?) null
 			res 	= in.readLine
+			if		(res == null) throw IOErr("Received no response")
 			if 		(res.startsWith("HTTP/1.0")) resVer = Butter.http10
 			else if (res.startsWith("HTTP/1.1")) resVer = Butter.http11
 			else throw IOErr("Unknown HTTP version: ${res}")

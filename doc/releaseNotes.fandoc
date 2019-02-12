@@ -5,6 +5,7 @@ v1.2.10
 =======
  - Chg: Re-jigged 'ButterResponse' ctors (mainly for [Bounce]`pod:afBounce`).
  - Chg: Moar lenient 'HttpResponseHeaders', to be more accepting of what the Internet throws at you.
+ - Chg: 'ButterResponse' now checks that a HTTP response was actualy given before deciphering it.
 
 v1.2.8
 ======
