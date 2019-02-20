@@ -17,21 +17,21 @@ class ButterResponse {
 	** HTTP version of the response.
 	Version version	:= Butter.http11
 
-	** The request body. 
+	** The request body.
 	Body	body { private set }
-	
+
 	** A temporary store for request data, use to pass data between middleware.
 	Str:Obj data	:= [:]
-	
+
 	** Creates a response reading real HTTP values from an 'InStream'.
-	** Note the whole response body is read in. 
+	** Note the whole response body is read in.
 	new makeFromInStream(InStream in) {
 //		// for testing
 //		// note this WILL hang when reading a chunked response
 //		out := `test/response2.txt`.toFile.out(false, 0)
 //		while (true)
 //			out.write(in.read).flush
-		
+
 		res := null as Str
 		try {
 			resVer	:= (Version?) null
@@ -42,30 +42,39 @@ class ButterResponse {
 			else throw IOErr("Unknown HTTP version: ${res}")
 
 			statusCode 	= res[9..11].toInt
-			statusMsg 	= res[13..-1]
+			statusMsg 	= res.size > 13 ? res[13..-1] : ""
 			headers		= HttpResponseHeaders(WebUtil.parseHeaders(in))
+
+			// Should we perhaps check and replace the Charset with a fake valid one?
+			// sys::ParseErr: Invalid Charset: 'ISO-8859': java.nio.charset.UnsupportedCharsetException: ISO-8859
+			//   fan.sys.Charset.fromStr (Charset.java:47)
+			//   fan.sys.Charset.fromStr (Charset.java:26)
+			//   fan.sys.MimeType.charset (MimeType.java:288)
+			//   web::WebUtil.headersToCharset (WebUtil.fan:240)
+			//   web::WebUtil.doMakeContentInStream (WebUtil.fan:281)
+			//   web::WebUtil.makeContentInStream (WebUtil.fan:260)
 
 			// ChunkInStream throws NullErr if the response has no body, e.g. HEAD requests
 			// see http://fantom.org/sidewalk/topic/2365
 			// I could check the Content-Length header, but why should I trust it!?
 			instream := WebUtil.makeContentInStream(headers.val, in)
-			
+
 			body = Body(headers, instream)
 		}
-		catch (IOErr e) throw e 
+		catch (IOErr e) throw e
 		catch (Err err) throw IOErr("Invalid HTTP response: $res", err)
 	}
 
 	** Create a response. 'body' may either be a 'Str' or a 'Buf'.
-	** 
-	** This is a convenience ctor suitable for most applications, but for headers with 
+	**
+	** This is a convenience ctor suitable for most applications, but for headers with
 	new make(Int statusCode, [Str:Str]? headers := null, Obj? body := null) {
 		if (body != null && body isnot Str && body isnot Buf)
 			throw ArgErr("Invalid Body, must be either null, Str, or Buf")
 		this.statusCode = statusCode
 		this.statusMsg 	= WebRes.statusMsg[statusCode] ?: "Unknown"
 		this.headers	= HttpResponseHeaders(headers)
-		
+
 		// can't use "switch" 'cos Buf is actually a MemBuf!
 		if (body is Str)
 			this.body	= Body(this.headers, (Str) body)
@@ -111,32 +120,32 @@ class ButterResponse {
 
 		return buf.toStr
 	}
-	
-	@NoDoc @Deprecated { msg="Use 'body.str' instead" } 
+
+	@NoDoc @Deprecated { msg="Use 'body.str' instead" }
 	Str? asStr() {
 		body.str
 	}
 
-	@NoDoc @Deprecated { msg="Use 'body.buf' instead" } 
+	@NoDoc @Deprecated { msg="Use 'body.buf' instead" }
 	Buf? asBuf() {
 		body.buf
 	}
 
-	@NoDoc @Deprecated { msg="Use 'body.buf.seek(0).in' instead" } 
+	@NoDoc @Deprecated { msg="Use 'body.buf.seek(0).in' instead" }
 	InStream? asInStream() {
 		body.buf?.seek(0)?.in
 	}
 
-	@NoDoc @Deprecated { msg="Use 'body.jsonObj' instead" } 
+	@NoDoc @Deprecated { msg="Use 'body.jsonObj' instead" }
 	Obj? asJson() {
 		body.jsonObj
 	}
-	
-	@NoDoc @Deprecated { msg="Use 'body.jsonMap' instead" } 
+
+	@NoDoc @Deprecated { msg="Use 'body.jsonMap' instead" }
 	[Str:Obj?]? asJsonMap() {
 		body.jsonMap
 	}
-	
+
 	@NoDoc
 	override Str toStr() {
 		"$statusCode - $statusMsg"
