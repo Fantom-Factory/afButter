@@ -255,4 +255,37 @@ internal class TestFollowRedirectsMiddleware : ButterTest {
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.statusMsg, "Danger, Will Robinson!")
 	}
+
+	Void testUrlEncoding() {
+		// Real example to be seen at:
+		// http://www.grahamstevenson.me.uk/index.php?option=com_content&view=article&id=985:the-memo..
+		mw.tooManyRedirects	= 3
+		end	:= MockTerminator([
+			ButterResponse(301, ["Location":"http://wotever/?id=985%3Awotever"]), 
+			ButterResponse(200) { it.statusMsg = "Danger, Will Robinson!" }
+		])
+		res := mw.sendRequest(end, ButterRequest(`http://www.example.com/lostInSpace/willRobinson`))
+		verifyEq(res.statusCode, 200)
+		verifyEq(res.statusMsg, "Danger, Will Robinson!")
+		
+		// Fantom's very proper URI encoding
+		verifyEq(end.req.url, `http://wotever/?id=985:wotever`)
+
+		end	= MockTerminator([
+			ButterResponse(301, ["Location":"http://wotever/?id=985%3Awotever"]), 
+			ButterResponse(301, ["Location":"http://wotever/?id=985%3Awotever"]), 
+			ButterResponse(200) { it.statusMsg = "Danger, Will Robinson!" }
+		])
+		res = mw.sendRequest(end, ButterRequest(`http://www.example.com/lostInSpace/willRobinson`))
+		verifyEq(res.statusCode, 200)
+		verifyEq(res.statusMsg, "Danger, Will Robinson!")
+
+		// note this website WANTS the % encoding - even though it's not required
+		verifyEq(end.req.url, `http://wotever/?id=985%3Awotever`)
+	}
+	
+//		s := Butter.churnOut.get(`http://www.grahamstevenson.me.uk/index.php?option=com_content&view=article&id=985:the-memo..`)
+		
+			
+//		t := "https://grahamstevenson.me.uk/?option=com_content&view=article&id=985%3Athe-memo.."
 }

@@ -45,8 +45,10 @@ class ButterResponse {
 			statusMsg 	= res.size > 13 ? res[13..-1] : ""
 			headers		= HttpResponseHeaders(WebUtil.parseHeaders(in))
 
+			// See "Custom Charset Implementations" - https://fantom.org/forum/topic/2740
 			// Should we perhaps check and replace the Charset with a fake valid one?
 			// sys::ParseErr: Invalid Charset: 'ISO-8859': java.nio.charset.UnsupportedCharsetException: ISO-8859
+			// sys::ParseErr: Invalid Charset: 'UTF-7': java.nio.charset.UnsupportedCharsetException: UTF-7
 			//   fan.sys.Charset.fromStr (Charset.java:47)
 			//   fan.sys.Charset.fromStr (Charset.java:26)
 			//   fan.sys.MimeType.charset (MimeType.java:288)
@@ -67,7 +69,7 @@ class ButterResponse {
 
 	** Create a response. 'body' may either be a 'Str' or a 'Buf'.
 	**
-	** This is a convenience ctor suitable for most applications, but for headers with
+	** This is a convenience ctor suitable for most applications.
 	new make(Int statusCode, [Str:Str]? headers := null, Obj? body := null) {
 		if (body != null && body isnot Str && body isnot Buf)
 			throw ArgErr("Invalid Body, must be either null, Str, or Buf")

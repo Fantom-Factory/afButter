@@ -23,32 +23,32 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 			return butter.sendRequest(req)
 		
 		// +1 for the original req uri
-		locations := Uri[,] { it.capacity = tooManyRedirects + 1 }
-		redirect := true
-		redirectCount := 0
+		locations	:= Uri[,] { it.capacity = tooManyRedirects + 1 }
+		redirect	:= true
 		while (redirect) {
-			doDump := log.isDebug && redirectCount > 0
-			if (doDump)
-				log.debug("\n\nButter Request:\n${req.dump}\n")
-
-			if (redirectCount++ > tooManyRedirects)
+			if (locations.size > tooManyRedirects)
 				throw ButterErr(ErrMsgs.tooManyRedirects(tooManyRedirects), locations)
-
 			locations.add(req.url)
+
 			res = butter.sendRequest(req)
 			redirect = false
-
-			if (doDump)
-				log.debug("\n\nButter Response:\n${res.dump(true)}\n")
 
 			if (redirectCodes.contains(res.statusCode)) {
 				if (res.headers.location == null)
 					log.warn(LogMsgs.redirectGivenWithNoLocation(res.statusCode))
 				else {
-					newUrl := res.headers.location
+					loc		:= res.headers.getFirst("Location")
 
+					newUrl	:= Uri.decode(loc, false)
 					if (newUrl.isRel)
 						newUrl = req.url + newUrl
+
+					// if we've already tried and failed with the newUrl - try interpreting it differently
+					if (locations.contains(newUrl)) {
+						newUrl	= Uri.fromStr(loc, false)
+						if (newUrl.isRel)
+							newUrl = req.url + newUrl
+					}
 
 					req.url = newUrl
 					req.headers.host = newUrl.host
@@ -63,6 +63,9 @@ class FollowRedirectsMiddleware : ButterMiddleware {
 					// Should we store permanent redirects and auto-change the req url?
 					// Naa, that's web browser behaviour to speed up page rendering.
 					// We're just mooching around the net!
+					
+					if (log.isDebug)
+						log.debug("Redirecting to: ${newUrl}")
 				}
 			}
 		}

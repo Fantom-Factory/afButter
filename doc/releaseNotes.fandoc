@@ -7,6 +7,7 @@ v1.2.10
  - Chg: Moar lenient 'HttpResponseHeaders', to be more accepting of what the Internet throws at you.
  - Chg: 'ButterResponse' now checks that a HTTP response was actualy given before deciphering it.
  - Chg: 'ButterResponse' handles dodgy responses with no status message.
+ - Chg: 'FollowRedirectsMiddleware' is adaptive to previous failed redirects with respect to URL encoding.
 
 v1.2.8
 ======
