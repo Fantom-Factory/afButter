@@ -86,7 +86,8 @@ class HttpRequestHeaders {
 	** Returns 'null' if the header doesn't exist.
 	Cookie[]? cookie {
 		get { makeIfNotNull("Cookie") { it.split(';'). map { Cookie.fromStr(it) }}}
-		set { addOrRemove("Cookie", it?.join("; ") { it.name + "=" + WebUtil.toQuotedStr(it.val) }) }
+		// let's not complicate matters by quoting strings - web::Cookie doesn't handle it
+		set { addOrRemove("Cookie", it?.join("; ") { it.name + "=" + it.val }) }
 	}
 
 	** The domain name of the server (for virtual hosting), and the TCP port number on which the 

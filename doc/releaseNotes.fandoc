@@ -1,5 +1,8 @@
 v1.2
 ****
+v1.2.12
+=======
+ - Chg: Cookies values in 'HttpRequestHeaders' are no longer quoted when set ('web::Cookie' doesn't handle the case very well which can break 'Bounce' tests).
 
 v1.2.10
 =======
