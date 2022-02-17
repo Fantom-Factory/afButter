@@ -16,7 +16,7 @@ internal class TestOpenAuthMiddleware : ButterTest {
 	}
 
 	** @see http://term.ie/oauth/example/index.php
-	Void testAgainstRealServer() {
+	Void XtestAgainstRealServer() {
 		consumerKey		:= "key"
 		consumerSecret	:= "secret"
 		

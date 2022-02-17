@@ -1,5 +1,9 @@
 v1.2
 ****
+v1.2.14
+======
+ - Chg: Updated to be compatible with Fantom 1.0.77 AND retain compatibility with older versions. *(The new 'crypto' pod broke TLS / HTTPS backwards compatibility.)*
+
 v1.2.12
 =======
  - Chg: Cookies values in 'HttpRequestHeaders' are no longer quoted when set ('web::Cookie' doesn't handle the case very well which can break 'Bounce' tests).

@@ -56,7 +56,7 @@ class HttpTerminator : ButterMiddleware {
 		connUrl := proxyUrl ?: req.url
 		isHttps := connUrl.scheme == "https"
 		defPort := isHttps ? 443 : 80
-		socket 	:= isHttps ? TcpSocket.makeTls: TcpSocket.make
+		socket 	:= isHttps ? newTlsTcpSocket : TcpSocket()
 		if (options != null) socket.options.copyFrom(this.options)
 
 		socket.connect(IpAddr(connUrl.host), connUrl.port ?: defPort)
@@ -75,6 +75,13 @@ class HttpTerminator : ButterMiddleware {
 	@NoDoc	// used by Bounce
 	static Str normaliseHost(Uri url) {
 		ButterRequest.normaliseHost(url)
+	}
+	
+	** Retain backwards compatibility with all recent versions of Fantom.
+	private static TcpSocket newTlsTcpSocket() {
+		Pod.find("inet").version >= Version("1.0.77")
+			? TcpSocket()->upgradeTls
+			: TcpSocket#.method("makeTls").call
 	}
 }
 
